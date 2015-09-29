@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<Window size="800,600" sizebox="4,4,4,4" caption="0,0,0,32" mininfo="600,400" roundcorner="8,8">
+	<Default name="Slider" value="thumbsize=&quot;10,10&quot; bkimage=&quot;file='bg.bmp' corner='6,0,6,0' mask='#FFFF00FF'&quot; foreimage=&quot;file='fg.bmp' corner='6,0,6,0' mask='#FFFF00FF'&quot; thumbimage=&quot;file='thumb.bmp' source='30,0,40,10' mask='#FFDAEBF9'&quot; thumbhotimage=&quot;file='thumb.bmp' source='10,0,20,10' mask='#FFDAEBF9'&quot; " />
+	<Default name="Button" value="textcolor=&quot;#000000&quot; hottextcolor=&quot;#FFFFFF&quot; focusedtextcolor=&quot;#000000&quot; pushedtextcolor=&quot;#77a8de&quot; normalimage=&quot;file='Button/btn.png' corner='5,11,5,11' source='0,0,96,24'&quot; hotimage=&quot;file='Button/btn.png' corner='5,11,5,11' source='0,24,96,48'&quot; pushedimage=&quot;file='Button/btn.png' corner='5,11,5,11' source='0,48,96,72'&quot; disabledimage=&quot;file='Button/btn.png' corner='5,11,5,11' source='0,72,96,96'&quot;" />
+	<Default name="Option" value="textcolor=&quot;#FFbac0c5&quot; hottextcolor=&quot;#FF386382&quot; selectedtextcolor=&quot;#FF386382&quot; disabledtextcolor=&quot;#FFbac0c5&quot; textpadding=&quot;18,2,0,0&quot; align=&quot;left&quot; selectedimage=&quot;file='Button/RadioBtnSel.png' source='0,0,13,13' dest='0,5,14,19'&quot; normalimage=&quot;file='Button/RadioBtnNon.png' source='0,0,13,13' dest='0,5,14,19'&quot;" />
+	<Default name="CheckBox" value="textcolor=&quot;#FFbac0c5&quot; hottextcolor=&quot;#FF386382&quot; selectedtextcolor=&quot;#FF386382&quot; disabledtextcolor=&quot;#FFbac0c5&quot; textpadding=&quot;20,2,0,0&quot; align=&quot;left&quot; selectedimage=&quot;file='CheckBox/checked.png' dest='0,2,16,18'&quot; normalimage=&quot;file='CheckBox/unchecked.png' dest='0,2,16,18'&quot;" />
+    <VerticalLayout bkcolor="#FFF0F0F0" bkcolor2="#FFAAAAA0">
+        <HorizontalLayout height="32" bkcolor="#FFE6E6DC" bkcolor2="#FFAAAAA0">
+            <VerticalLayout />
+            <VerticalLayout width="77">
+                <Button name="minbtn" tooltip="最小化" float="true" pos="0,5,0,0" width="23" height="19" textcolor="#FF000000" disabledtextcolor="#FFA7A6AA" align="center" normalimage=" file=&apos;SysBtn\MinNormal.bmp&apos; " hotimage=" file=&apos;SysBtn\MinFocus.bmp&apos; " pushedimage=" file=&apos;SysBtn\MinFocus.bmp&apos; " />
+                <Button name="maxbtn" tooltip="最大化" float="true" pos="22,5,0,0" width="23" height="19" textcolor="#FF000000" disabledtextcolor="#FFA7A6AA" align="center" normalimage=" file=&apos;SysBtn\MaxNormal.bmp&apos; " hotimage=" file=&apos;SysBtn\MaxFocus.bmp&apos; " pushedimage=" file=&apos;SysBtn\MaxFocus.bmp&apos; " />
+                <Button name="restorebtn" tooltip="还原" visible="false" float="true" pos="22,5,0,0" width="23" height="19" align="center" normalimage=" file=&apos;SysBtn\StoreNormal.bmp&apos; " hotimage=" file=&apos;SysBtn\StoreFocus.bmp&apos; " pushedimage=" file=&apos;SysBtn\StoreFocus.bmp&apos; " />
+                <Button name="closebtn" tooltip="关闭" float="true" pos="44,5,0,0" width="28" height="19" textcolor="#FF000000" disabledtextcolor="#FFA7A6AA" align="center" normalimage=" file=&apos;SysBtn\CloseNormal.bmp&apos; " hotimage=" file=&apos;SysBtn\CloseFocus.bmp&apos; " pushedimage=" file=&apos;SysBtn\CloseFocus.bmp&apos; " />
+            </VerticalLayout>
+        </HorizontalLayout>
+        <HorizontalLayout name="toph" menu="true">
+            <Winbtn name="Win32Btn" float="true" pos="19,23,0,0" width="89" height="36" />
+            <Combo name="Combox" float="true" pos="17,227,0,0" width="139" height="30" normalimage="file='ComboBox/Combo_nor.bmp'" hotimage="file='ComboBox/Combo_over.bmp'" pushedimage="file='ComboBox/Combo_over.bmp' " >
+				<ListContainerElement text="李四" height="30" selected="true">
+					<Label text="李四" />
+				</ListContainerElement>
+				<ListContainerElement text="张三" height="30">
+					<Label text="张三" />
+				</ListContainerElement>
+				 <!--ListLabelElement text="张三" selected="true" />
+                <ListLabelElement text="李四" /-->
+			</Combo>
+			<TreeView float="true" pos="210,15,0,0" width="255" height="245" bkcolor="#ffffffff" visiblefolderbtn="true" visiblecheckbtn="true" vscrollbar="true" >
+			<TreeNode text="A1" folderattr="padding=&quot;0,1,0,0&quot; width=&quot;16&quot; height=&quot;16&quot; normalimage=&quot;file='Icon/treeview_b.png' source='0,0,16,16' &quot; hotimage=&quot;file='Icon/treeview_b.png' source='16,0,32,16' &quot; selectedimage=&quot;file='Icon/treeview_a.png' source='0,0,16,16' &quot; selectedhotimage=&quot;file='Icon/treeview_a.png' source='16,0,32,16' &quot;" checkboxattr="width=&quot;16&quot; height=&quot;16&quot; normalimage=&quot;file='Icon/unchecked.png' &quot; selectedimage=&quot;file='Icon/checked.png' &quot;" >
+			<TreeNode text="B1" folderattr="padding=&quot;0,1,0,0&quot; width=&quot;16&quot; height=&quot;16&quot; normalimage=&quot;file='Icon/treeview_b.png' source='0,0,16,16' &quot; hotimage=&quot;file='Icon/treeview_b.png' source='16,0,32,16' &quot; selectedimage=&quot;file='Icon/treeview_a.png' source='0,0,16,16' &quot; selectedhotimage=&quot;file='Icon/treeview_a.png' source='16,0,32,16' &quot;" checkboxattr="width=&quot;16&quot; height=&quot;16&quot; normalimage=&quot;file='Icon/unchecked.png' &quot; selectedimage=&quot;file='Icon/checked.png' &quot;" >
+				<TreeNode text="C1" folderattr="padding=&quot;0,1,0,0&quot; width=&quot;16&quot; height=&quot;16&quot; normalimage=&quot;file='Icon/treeview_b.png' source='0,0,16,16' &quot; hotimage=&quot;file='Icon/treeview_b.png' source='16,0,32,16' &quot; selectedimage=&quot;file='Icon/treeview_a.png' source='0,0,16,16' &quot; selectedhotimage=&quot;file='Icon/treeview_a.png' source='16,0,32,16' &quot;" checkboxattr="width=&quot;16&quot; height=&quot;16&quot; normalimage=&quot;file='Icon/unchecked.png' &quot; selectedimage=&quot;file='Icon/checked.png' &quot;" >
+					<TreeNode text="D1" folderattr="padding=&quot;0,1,0,0&quot; width=&quot;16&quot; height=&quot;16&quot; normalimage=&quot;file='Icon/treeview_b.png' source='0,0,16,16' &quot; hotimage=&quot;file='Icon/treeview_b.png' source='16,0,32,16' &quot; selectedimage=&quot;file='Icon/treeview_a.png' source='0,0,16,16' &quot; selectedhotimage=&quot;file='Icon/treeview_a.png' source='16,0,32,16' &quot;" checkboxattr="width=&quot;16&quot; height=&quot;16&quot; normalimage=&quot;file='Icon/unchecked.png' &quot; selectedimage=&quot;file='Icon/checked.png' &quot;" >
+						<Button text="扩展按钮" width="100" />
+					</TreeNode>
+					<Button text="扩展按钮" width="100" />
+				</TreeNode>
+				<Edit text="扩展文本框" tipvalue="扩展文本框" width="100" />
+			</TreeNode>
+			<Edit text="扩展文本框" tipvalue="扩展文本框" width="100" />
+			</TreeNode>
+			<TreeNode text="A2" folderattr="padding=&quot;0,1,0,0&quot; width=&quot;16&quot; height=&quot;16&quot; normalimage=&quot;file='Icon/treeview_b.png' source='0,0,16,16' &quot; hotimage=&quot;file='Icon/treeview_b.png' source='16,0,32,16' &quot; selectedimage=&quot;file='Icon/treeview_a.png' source='0,0,16,16' &quot; selectedhotimage=&quot;file='Icon/treeview_a.png' source='16,0,32,16' &quot;" checkboxattr="width=&quot;16&quot; height=&quot;16&quot; normalimage=&quot;file='Icon/unchecked.png' &quot; selectedimage=&quot;file='Icon/checked.png' &quot;" >
+			<TreeNode text="B2" folderattr="padding=&quot;0,1,0,0&quot; width=&quot;16&quot; height=&quot;16&quot; normalimage=&quot;file='Icon/treeview_b.png' source='0,0,16,16' &quot; hotimage=&quot;file='Icon/treeview_b.png' source='16,0,32,16' &quot; selectedimage=&quot;file='Icon/treeview_a.png' source='0,0,16,16' &quot; selectedhotimage=&quot;file='Icon/treeview_a.png' source='16,0,32,16' &quot;" checkboxattr="width=&quot;16&quot; height=&quot;16&quot; normalimage=&quot;file='Icon/unchecked.png' &quot; selectedimage=&quot;file='Icon/checked.png' &quot;" >
+				<TreeNode text="C2" folderattr="padding=&quot;0,1,0,0&quot; width=&quot;16&quot; height=&quot;16&quot; normalimage=&quot;file='Icon/treeview_b.png' source='0,0,16,16' &quot; hotimage=&quot;file='Icon/treeview_b.png' source='16,0,32,16' &quot; selectedimage=&quot;file='Icon/treeview_a.png' source='0,0,16,16' &quot; selectedhotimage=&quot;file='Icon/treeview_a.png' source='16,0,32,16' &quot;" checkboxattr="width=&quot;16&quot; height=&quot;16&quot; normalimage=&quot;file='Icon/unchecked.png' &quot; selectedimage=&quot;file='Icon/checked.png' &quot;" >
+					<TreeNode text="D2" folderattr="padding=&quot;0,1,0,0&quot; width=&quot;16&quot; height=&quot;16&quot; normalimage=&quot;file='Icon/treeview_b.png' source='0,0,16,16' &quot; hotimage=&quot;file='Icon/treeview_b.png' source='16,0,32,16' &quot; selectedimage=&quot;file='Icon/treeview_a.png' source='0,0,16,16' &quot; selectedhotimage=&quot;file='Icon/treeview_a.png' source='16,0,32,16' &quot;" checkboxattr="width=&quot;16&quot; height=&quot;16&quot; normalimage=&quot;file='Icon/unchecked.png' &quot; selectedimage=&quot;file='Icon/checked.png' &quot;" >
+						<Option text="扩展单选框" width="100" group="RadioBoxTest" />
+					</TreeNode>
+					<Option text="扩展单选框" width="100" group="RadioBoxTest" />
+				</TreeNode>
+				<CheckBox text="扩展复选框" width="100" />
+			</TreeNode>
+			<CheckBox text="扩展复选框" width="100" />
+			</TreeNode>
+		</TreeView>
+        <TabLayout name="Tablayout" float="true" pos="480,19,0,0" width="307" height="244"bkcolor="#FF757676">
+				 <HorizontalLayout>
+                   <Xml name="Menuxml" />
+                </HorizontalLayout>
+		</TabLayout>
+        </HorizontalLayout>
+        <HorizontalLayout>
+			<HorizontalLayout>
+            <List name="ListDemo1" bkcolor="#FFFFFFFF" itemtextcolor="#FF000000" itembkcolor="#FFE2DDDF" itemselectedtextcolor="#FF000000" itemselectedbkcolor="#FFC1E3FF" itemhottextcolor="#FF000000" itemhotbkcolor="#FFE9F5FF" itemdisabledtextcolor="#FFCCCCCC" itemdisabledbkcolor="#FFFFFFFF" headerbkimage="List/list_header_bg.png" vscrollbar="true" hscrollbar="true">
+                <ListHeader name="domain" bkimage="List/list_header_bg.png">
+                    <ListHeaderItem name="fileindex" text="文件编号" width="167" height="23" minwidth="16" textcolor="#FF000000" sepwidth="1" align="center" hotimage="List/list_header_hot.png" pushedimage="List/list_header_pushed.png" sepimage="List/list_header_sep.png" >
+						<CheckBox text="check" float="true" pos="0,0,60,20" width="60"/>
+					</ListHeaderItem>
+                    <ListHeaderItem name="filename" text="文件名称" width="200" height="23" minwidth="16" textcolor="#FF000000" sepwidth="1" align="center" hotimage="List/list_header_hot.png" pushedimage="List/list_header_pushed.png" sepimage="List/list_header_sep.png" >
+					<CheckBox text="check" float="true" pos="0,0,60,20" width="60"/>
+					</ListHeaderItem>
+                    <ListHeaderItem name="filepatn" text="文件路径" width="200" height="23" minwidth="16" textcolor="#FF000000" sepwidth="1" align="center" hotimage="List/list_header_hot.png" pushedimage="List/list_header_pushed.png" sepimage="List/list_header_sep.png" >
+					<CheckBox text="check" float="true" pos="0,0,60,20" width="60"/>
+					</ListHeaderItem>
+                    <ListHeaderItem name="fileop" text="文件操作" width="100" height="23" minwidth="16" textcolor="#FF000000" sepwidth="1" align="center" hotimage="List/list_header_hot.png" pushedimage="List/list_header_pushed.png" sepimage="List/list_header_sep.png" >
+					<CheckBox text="check" float="true" pos="0,0,60,20" width="60"/>
+					</ListHeaderItem>
+                </ListHeader>
+            </List>
+			</HorizontalLayout>
+			<!--TileLayout-->
+			<HorizontalLayout>
+			<VerticalLayout>
+				<TileLayout bkcolor="#eef0f0f0" height="100" columns="4" hscrollbar="true" vscrollbar="true">
+					<Label text="123" />
+					<Label text="123" />
+					<Label text="123" />
+					<Label text="123" />
+					<Label text="123" />
+					<Label text="123" />
+					<Label text="123" />
+					<Label text="123" />
+					<Label text="123" />
+					<Label text="123" />
+					<Label text="123" />
+					<Label text="123" />
+				</TileLayout>
+			</VerticalLayout>
+			</HorizontalLayout>
+        </HorizontalLayout>
+    </VerticalLayout>
+</Window>

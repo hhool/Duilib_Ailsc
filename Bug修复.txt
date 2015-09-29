@@ -1,0 +1,23 @@
+1.最大化最小化
+WinImplBase.cpp的OnSysCommand中增加：
+if( ::IsZoomed(*this) != bZoomed )
+	{
+		CControlUI *pBtnMax = static_cast<CControlUI *>(m_PaintManager.FindControl(_T("maxbtn")));
+		CControlUI *pBtnRestore = static_cast<CControlUI *>(m_PaintManager.FindControl(_T("restorebtn")));
+		if(pBtnMax && pBtnRestore)
+		{
+			pBtnMax->SetVisible(TRUE == bZoomed);
+			pBtnRestore->SetVisible(FALSE == bZoomed);
+		}
+	}
+
+
+2。Slider当鼠标滑动的时候消息响应：valuechanged
+在UISlider.cpp中的DoEvent函数中增加
+if( event.Type == UIEVENT_MOUSEMOVE )
+{
+	。。。
+	Invalidate();
+	m_pManager->SendNotify(this, DUI_MSGTYPE_VALUECHANGED);
+	return;
+}

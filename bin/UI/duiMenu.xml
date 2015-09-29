@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Window>
+	<Menu name="MainMenu" bkcolor="#ff00ff00">
+		<MenuElement text="hellow word!" />
+		<MenuElement text="hellow word!" />
+		<MenuElement name="subMenu" text="hellow word!">
+			<MenuElement text="hellow word!" />
+			<MenuElement text="hellow word!" />
+			<MenuElement text="hellow word!" />
+		</MenuElement>
+		<MenuElement text="hellow word!" />
+	</Menu>
+</Window>
