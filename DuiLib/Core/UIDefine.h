@@ -218,6 +218,9 @@ protected:                                                                \
 //////////////BEGIN控件名称宏定义//////////////////////////////////////////////////
 ///
 
+#define  DUI_CTR_XML							 (_T("Xml"))
+
+#define  DUI_CTR_MENU							 (_T("Menu"))
 #define  DUI_CTR_EDIT                            (_T("Edit"))
 #define  DUI_CTR_LIST                            (_T("List"))
 #define  DUI_CTR_TEXT                            (_T("Text"))
@@ -252,6 +255,7 @@ protected:                                                                \
 
 #define  DUI_CTR_CHILDLAYOUT                     (_T("ChildLayout"))
 #define  DUI_CTR_LISTELEMENT                     (_T("ListElement"))
+#define  DUI_CTR_MENUELEMENT					 (_T("MenuElement"))
 
 #define  DUI_CTR_DIALOGLAYOUT                    (_T("DialogLayout"))
 
@@ -264,6 +268,7 @@ protected:                                                                \
 #define  DUI_CTR_LISTLABELELEMENT                (_T("ListLabelElement"))
 
 #define  DUI_CTR_LISTCONTAINERELEMENT            (_T("ListContainerElement"))
+#define  DUI_CTR_LISTCONTAINERELEMENTEX            (_T("ListContainerElementEx"))
 
 ///
 //////////////END控件名称宏定义//////////////////////////////////////////////////

@@ -255,6 +255,7 @@ void CControlUI::SetPos(RECT rc)
     if( ::IsRectEmpty(&invalidateRc) ) invalidateRc = rc;
 
     m_rcItem = rc;
+	//> 如果没有增加到某个容器的时候则m_pManager = NULL
     if( m_pManager == NULL ) return;
 
     if( !m_bSetPos ) {
@@ -291,7 +292,7 @@ void CControlUI::SetPos(RECT rc)
             return;
         }
     }
-    m_pManager->Invalidate(invalidateRc);
+	m_pManager->Invalidate(invalidateRc);
 }
 
 int CControlUI::GetWidth() const
@@ -869,6 +870,7 @@ CControlUI* CControlUI::ApplyAttributeList(LPCTSTR pstrList)
         sValue.Empty();
         while( *pstrList != _T('\0') && *pstrList != _T('=') ) {
             LPTSTR pstrTemp = ::CharNext(pstrList);
+			//> 属性名称空格也包含进去了所以不能有多余的空格
             while( pstrList < pstrTemp) {
                 sItem += *pstrList++;
             }
@@ -886,6 +888,7 @@ CControlUI* CControlUI::ApplyAttributeList(LPCTSTR pstrList)
         ASSERT( *pstrList == _T('\"') );
         if( *pstrList++ != _T('\"') ) return this;
         SetAttribute(sItem, sValue);
+		///>当一个属性解析完毕之后 如果不是空格则 返回
         if( *pstrList++ != _T(' ') ) return this;
     }
     return this;

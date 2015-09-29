@@ -240,7 +240,7 @@ public:
 /////////////////////////////////////////////////////////////////////////////////////
 //
 
-class UILIB_API CListHeaderItemUI : public CControlUI
+class UILIB_API CListHeaderItemUI : public CContainerUI/*CControlUI*/
 {
 public:
     CListHeaderItemUI();
@@ -439,10 +439,10 @@ protected:
     IListOwnerUI* m_pOwner;
 };
 
-class UILIB_API CListContainerElementUIEx:public CListContainerElementUI
+class UILIB_API CListContainerElementExUI:public CListContainerElementUI
 {
 public:
-	CListContainerElementUIEx(){};
+	CListContainerElementExUI(){};
 	virtual void SetPos(RECT rc);
 };
 } // namespace DuiLib

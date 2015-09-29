@@ -105,4 +105,6 @@
 #include "Control/UIActiveX.h"
 #include "Control/UIWebBrowser.h"
 #include "Control/UIFlash.h"
-
+#include "Control/UIWinWnd.h"
+#include "Control/UIMenu.h"
+#include "Control/UIXml.h"
