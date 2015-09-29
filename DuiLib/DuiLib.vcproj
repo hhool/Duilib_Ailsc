@@ -630,10 +630,6 @@
 					>
 				</File>
 				<File
-					RelativePath=".\Control\UIMenu.cpp"
-					>
-				</File>
-				<File
 					RelativePath=".\Control\UIOption.cpp"
 					>
 				</File>
@@ -663,14 +659,6 @@
 				</File>
 				<File
 					RelativePath=".\Control\UIWebBrowser.cpp"
-					>
-				</File>
-				<File
-					RelativePath=".\Control\UIWinWnd.cpp"
-					>
-				</File>
-				<File
-					RelativePath=".\Control\UIXml.cpp"
 					>
 				</File>
 			</Filter>
@@ -819,10 +807,6 @@
 					>
 				</File>
 				<File
-					RelativePath=".\Control\UIMenu.h"
-					>
-				</File>
-				<File
 					RelativePath=".\Control\UIOption.h"
 					>
 				</File>
@@ -852,14 +836,6 @@
 				</File>
 				<File
 					RelativePath=".\Control\UIWebBrowser.h"
-					>
-				</File>
-				<File
-					RelativePath=".\Control\UIWinWnd.h"
-					>
-				</File>
-				<File
-					RelativePath=".\Control\UIXml.h"
 					>
 				</File>
 			</Filter>

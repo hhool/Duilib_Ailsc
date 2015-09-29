@@ -382,9 +382,6 @@ CControlUI* CDialogBuilder::_Parse(CMarkupNode* pRoot, CControlUI* pParent, CPai
             case 20:
                 if( _tcscmp(pstrClass, DUI_CTR_LISTCONTAINERELEMENT) == 0 )   pControl = new CListContainerElementUI;
                 break;
-			case 22:
-				if( _tcscmp(pstrClass, DUI_CTR_LISTCONTAINERELEMENTEX) == 0 )   pControl = new CListContainerElementExUI;
-				break;
             }
             // User-supplied control factory
             if( pControl == NULL ) {

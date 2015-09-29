@@ -271,11 +271,6 @@ LRESULT WindowImplBase::OnSysCommand(UINT uMsg, WPARAM wParam, LPARAM lParam, BO
 	return lRes;
 }
 
-LRESULT WindowImplBase::OnCommand(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled)
-{
-	bHandled = FALSE;
-	return 0;
-}
 LRESULT WindowImplBase::OnCreate(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled)
 {
 	LONG styleValue = ::GetWindowLong(*this, GWL_STYLE);
@@ -411,7 +406,6 @@ LRESULT WindowImplBase::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
 	case WM_SIZE:			lRes = OnSize(uMsg, wParam, lParam, bHandled); break;
 	case WM_CHAR:		lRes = OnChar(uMsg, wParam, lParam, bHandled); break;
 	case WM_SYSCOMMAND:		lRes = OnSysCommand(uMsg, wParam, lParam, bHandled); break;
-	case WM_COMMAND:		lRes = OnCommand(uMsg, wParam, lParam, bHandled); break;
 	case WM_KEYDOWN:		lRes = OnKeyDown(uMsg, wParam, lParam, bHandled); break;
 	case WM_KILLFOCUS:		lRes = OnKillFocus(uMsg, wParam, lParam, bHandled); break;
 	case WM_SETFOCUS:		lRes = OnSetFocus(uMsg, wParam, lParam, bHandled); break;
