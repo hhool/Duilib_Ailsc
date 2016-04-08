@@ -217,9 +217,6 @@ protected:                                                                \
 
 //////////////BEGIN控件名称宏定义//////////////////////////////////////////////////
 ///
-
-#define  DUI_CTR_XML							 (_T("Xml"))
-
 #define  DUI_CTR_MENU							 (_T("Menu"))
 #define  DUI_CTR_EDIT                            (_T("Edit"))
 #define  DUI_CTR_LIST                            (_T("List"))
