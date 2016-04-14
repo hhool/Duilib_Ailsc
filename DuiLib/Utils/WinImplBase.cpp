@@ -29,7 +29,7 @@ LRESULT WindowImplBase::ResponseDefaultKeyEvent(WPARAM wParam)
 	}
 	else if (wParam == VK_ESCAPE)
 	{
-		Close();
+		Close(IDCANCEL);
 		return TRUE;
 	}
 
@@ -450,7 +450,7 @@ void WindowImplBase::OnClick(TNotifyUI& msg)
 	CDuiString sCtrlName = msg.pSender->GetName();
 	if( sCtrlName == _T("closebtn") )
 	{
-		Close();
+		Close(IDCANCEL);
 		return; 
 	}
 	else if( sCtrlName == _T("minbtn"))
