@@ -3,10 +3,18 @@
 
 namespace DuiLib
 {
-	CWinWndUI::CWinWndUI(void):m_hWnd(NULL)
+	CWinWndUI::CWinWndUI(BOOL bDieWithControl):m_hWnd(NULL)
 	{
+		m_bDieWithControl = bDieWithControl;
 	}
 
+	CWinWndUI::~CWinWndUI()
+	{
+		if(m_hWnd && m_bDieWithControl && IsWindow(m_hWnd))
+		{
+			::PostMessage(m_hWnd,WM_CLOSE,0,0);
+		}
+	}
 	void CWinWndUI::SetInternVisible(bool bVisible)
 	{
 		__super::SetInternVisible(bVisible);
@@ -35,6 +43,11 @@ namespace DuiLib
 		HWND hWnd = m_hWnd;
 		m_hWnd = NULL;
 		return hWnd;
+	}
+
+	void CWinWndUI::DieWithControl(BOOL bDieWithControl)
+	{
+		m_bDieWithControl = bDieWithControl;
 	}
 }
 
