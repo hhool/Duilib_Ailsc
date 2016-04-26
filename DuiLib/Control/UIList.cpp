@@ -253,7 +253,12 @@ void CListUI::SetPos(RECT rc)
         }
     }
 
-	//CVerticalLayoutUI::SetPos(rc);
+	///> 如果使用了ListContainEx控件则需在表头位置更新后再次通知ListBoday#liulei 否则位置不对
+	if(m_pList)
+	{
+		rc.top += m_pHeader->GetHeight();
+		m_pList->SetPos(rc);
+	}
 }
 
 void CListUI::DoEvent(TEventUI& event)
@@ -925,21 +930,21 @@ void CListBodyUI::SetScrollPos(SIZE szPos)
 
     if( cx == 0 && cy == 0 ) return;
 
-    RECT rcPos;
-    for( int it2 = 0; it2 < m_items.GetSize(); it2++ ) {
-        CControlUI* pControl = static_cast<CControlUI*>(m_items[it2]);
-        if( !pControl->IsVisible() ) continue;
-        if( pControl->IsFloat() ) continue;
-
-        rcPos = pControl->GetPos();
-        rcPos.left -= cx;
-        rcPos.right -= cx;
-        rcPos.top -= cy;
-        rcPos.bottom -= cy;
-        pControl->SetPos(rcPos);
-    }
-
-    Invalidate();
+//     RECT rcPos;
+//     for( int it2 = 0; it2 < m_items.GetSize(); it2++ ) {
+//         CControlUI* pControl = static_cast<CControlUI*>(m_items[it2]);
+//         if( !pControl->IsVisible() ) continue;
+//         if( pControl->IsFloat() ) continue;
+// 
+//         rcPos = pControl->GetPos();
+//         rcPos.left -= cx;
+//         rcPos.right -= cx;
+//         rcPos.top -= cy;
+//         rcPos.bottom -= cy;
+//         pControl->SetPos(rcPos);
+//     }
+// 
+//     Invalidate();
 
     if( cx != 0 && m_pOwner ) {
         CListHeaderUI* pHeader = m_pOwner->GetHeader();
@@ -969,6 +974,23 @@ void CListBodyUI::SetScrollPos(SIZE szPos)
             }
         }
     }
+
+	///> 先更新表头后更新控件位置，否则计算出新的表头位置和ListContainEx可能错误#liulei
+	RECT rcPos;
+	for( int it2 = 0; it2 < m_items.GetSize(); it2++ ) {
+		CControlUI* pControl = static_cast<CControlUI*>(m_items[it2]);
+		if( !pControl->IsVisible() ) continue;
+		if( pControl->IsFloat() ) continue;
+
+		rcPos = pControl->GetPos();
+		rcPos.left -= cx;
+		rcPos.right -= cx;
+		rcPos.top -= cy;
+		rcPos.bottom -= cy;
+		pControl->SetPos(rcPos);
+	}
+	Invalidate();
+
 }
 
 void CListBodyUI::SetPos(RECT rc)
@@ -2402,58 +2424,23 @@ void CListContainerElementUI::DrawItemBk(HDC hDC, const RECT& rcItem)
 
 void CListContainerElementExUI::SetPos( RECT rc )
 {
-	CListUI  *pList=(CListUI*)this->GetParent()->GetParent();
-	TListInfoUI *plistinfo = GetOwner()->GetListInfo(); 
-	CListHeaderUI *pHeader = pList->GetHeader();
-	if(pHeader == NULL)
-	{
-		__super::SetPos(rc);
-		return;
-	}
+	CDuiString xx =this->GetParent()->GetParent()->GetName();
 
 	CControlUI::SetPos(rc);
-	SIZE szAvailable = { rc.right - rc.left, rc.bottom - rc.top }; 
-	plistinfo->nColumns = MIN(pHeader->GetCount(), UILIST_MAX_COLUMNS);
-	// The header/columns may or may not be visible at runtime. In either case
-	// we should determine the correct dimensions...
-
-	if( !pHeader->IsVisible() ) {
-		for( int it = 0; it < pHeader->GetCount(); it++ ) {
-			static_cast<CControlUI*>(pHeader->GetItemAt(it))->SetInternVisible(true);
-		}
-		pHeader->SetPos(CDuiRect(rc.left, 0, rc.right, 0));
-	}
-
-	int iOffset = pList->GetScrollPos().cx;
-	for( int i = 0; i < plistinfo->nColumns; i++ ) {
-		CControlUI* pControl = static_cast<CControlUI*>(pHeader->GetItemAt(i));
-		if( !pControl->IsVisible() ) continue;
-		if( pControl->IsFloat() ) continue;
-
-		RECT rcPos = pControl->GetPos();
-		if( iOffset > 0 ) {
-			rcPos.left -= iOffset;
-			rcPos.right -= iOffset;
-			pControl->SetPos(rcPos);
-		}
-		plistinfo->rcColumn[i] = pControl->GetPos();
-	}
-	if( !pHeader->IsVisible() ) {
-		for( int it = 0; it < pHeader->GetCount(); it++ ) {
-			static_cast<CControlUI*>(pHeader->GetItemAt(it))->SetInternVisible(false);
-		}
-	}
-
 	rc = m_rcItem;  
 	rc.left += m_rcInset.left;  
 	rc.top += m_rcInset.top;  
 	rc.right -= m_rcInset.right;  
 	rc.bottom -= m_rcInset.bottom;  
 
-	for( int it2 = 0; it2 < m_items.GetSize() && it2 < pHeader->GetCount(); it2++ )  
+	TListInfoUI *plistinfo = GetOwner()->GetListInfo(); 
+	SIZE szAvailable = { rc.right - rc.left, rc.bottom - rc.top }; 
+	CListUI  *pList=(CListUI*)this->GetParent()->GetParent();
+	CListHeaderUI* pH = pList->GetHeader();
+	for( int it2 = 0; it2 < m_items.GetSize(); it2++ )  
 	{   
 		CControlUI* pControl = static_cast<CControlUI*>(m_items[it2]);  
-		CListHeaderItemUI* pHItem1= (CListHeaderItemUI* )pHeader->GetItemAt(it2);
+		CListHeaderItemUI* pHItem1= (CListHeaderItemUI* )pH->GetItemAt(it2);
 		if(pHItem1->IsVisible()!=pControl->IsVisible())
 		{
 			pControl->SetVisible(pHItem1->IsVisible());
@@ -2501,6 +2488,12 @@ void CListContainerElementExUI::SetPos( RECT rc )
 			rc.top + sz.cy + rcPadding.top + rcPadding.bottom };  
 			pControl->SetPos(rcCtrl);
 	}
+
+	///> ListContain需要特殊处理，不管怎么移动滚动条都需要保持原来位置不变（填充ListCtrl控件）#liulei
+	rc = m_rcItem;  
+	rc.left = pList->GetList()->GetPos().left;
+	rc.right = pList->GetList()->GetPos().right;
+	CControlUI::SetPos(rc);
 }
 
 } // namespace DuiLib
