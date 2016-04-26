@@ -252,6 +252,8 @@ void CListUI::SetPos(RECT rc)
             static_cast<CControlUI*>(m_pHeader->GetItemAt(it))->SetInternVisible(false);
         }
     }
+
+	//CVerticalLayoutUI::SetPos(rc);
 }
 
 void CListUI::DoEvent(TEventUI& event)
@@ -2400,23 +2402,58 @@ void CListContainerElementUI::DrawItemBk(HDC hDC, const RECT& rcItem)
 
 void CListContainerElementExUI::SetPos( RECT rc )
 {
-	CDuiString xx =this->GetParent()->GetParent()->GetName();
+	CListUI  *pList=(CListUI*)this->GetParent()->GetParent();
+	TListInfoUI *plistinfo = GetOwner()->GetListInfo(); 
+	CListHeaderUI *pHeader = pList->GetHeader();
+	if(pHeader == NULL)
+	{
+		__super::SetPos(rc);
+		return;
+	}
 
 	CControlUI::SetPos(rc);
+	SIZE szAvailable = { rc.right - rc.left, rc.bottom - rc.top }; 
+	plistinfo->nColumns = MIN(pHeader->GetCount(), UILIST_MAX_COLUMNS);
+	// The header/columns may or may not be visible at runtime. In either case
+	// we should determine the correct dimensions...
+
+	if( !pHeader->IsVisible() ) {
+		for( int it = 0; it < pHeader->GetCount(); it++ ) {
+			static_cast<CControlUI*>(pHeader->GetItemAt(it))->SetInternVisible(true);
+		}
+		pHeader->SetPos(CDuiRect(rc.left, 0, rc.right, 0));
+	}
+
+	int iOffset = pList->GetScrollPos().cx;
+	for( int i = 0; i < plistinfo->nColumns; i++ ) {
+		CControlUI* pControl = static_cast<CControlUI*>(pHeader->GetItemAt(i));
+		if( !pControl->IsVisible() ) continue;
+		if( pControl->IsFloat() ) continue;
+
+		RECT rcPos = pControl->GetPos();
+		if( iOffset > 0 ) {
+			rcPos.left -= iOffset;
+			rcPos.right -= iOffset;
+			pControl->SetPos(rcPos);
+		}
+		plistinfo->rcColumn[i] = pControl->GetPos();
+	}
+	if( !pHeader->IsVisible() ) {
+		for( int it = 0; it < pHeader->GetCount(); it++ ) {
+			static_cast<CControlUI*>(pHeader->GetItemAt(it))->SetInternVisible(false);
+		}
+	}
+
 	rc = m_rcItem;  
 	rc.left += m_rcInset.left;  
 	rc.top += m_rcInset.top;  
 	rc.right -= m_rcInset.right;  
 	rc.bottom -= m_rcInset.bottom;  
 
-	TListInfoUI *plistinfo = GetOwner()->GetListInfo(); 
-	SIZE szAvailable = { rc.right - rc.left, rc.bottom - rc.top }; 
-	CListUI  *pList=(CListUI*)this->GetParent()->GetParent();
-	CListHeaderUI* pH = pList->GetHeader();
-	for( int it2 = 0; it2 < m_items.GetSize(); it2++ )  
+	for( int it2 = 0; it2 < m_items.GetSize() && it2 < pHeader->GetCount(); it2++ )  
 	{   
 		CControlUI* pControl = static_cast<CControlUI*>(m_items[it2]);  
-		CListHeaderItemUI* pHItem1= (CListHeaderItemUI* )pH->GetItemAt(it2);
+		CListHeaderItemUI* pHItem1= (CListHeaderItemUI* )pHeader->GetItemAt(it2);
 		if(pHItem1->IsVisible()!=pControl->IsVisible())
 		{
 			pControl->SetVisible(pHItem1->IsVisible());

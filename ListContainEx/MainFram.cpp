@@ -41,9 +41,6 @@ void CMainFram::InitWindow()
 			strFilePatn.Format(_T("%s-%d"),szfilePath[i%4]);
 			AddListItem(i,strFilename,strFilePatn);
 		}
-		RECT rtList = m_pList->GetPos();
-		///> 必须SetPos让Contain计算内部控件位置
-		m_pList->SetPos(rtList);
 	}
 }
 

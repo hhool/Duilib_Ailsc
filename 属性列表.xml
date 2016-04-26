@@ -475,6 +475,8 @@
 		<Attribute name="group" default="" type="STRING" comment="所属组的名称，可不设"/>
 		<Attribute name="selected" default="false" type="BOOL" comment="是否选中"/>
 	</Option>
+	<CheckBox parent="option"><!--具体属性设置参照option-->
+	</CheckBox>
 	<Text parent="Label" notifies="setfocus killfocus timer menu link windowinit(root)">
 		<Attribute name="name" default="" type="STRING" comment="控件名字，同一窗口内必须唯一，如(testbtn)"/>
 		<Attribute name="pos" default="0,0,0,0" type="RECT" comment="位置，如果为float控件则指定位置和大小，否则只指定大小,如(0,0,100,100)"/>
@@ -636,6 +638,7 @@
 		<Attribute name="showhtml" default="false" type="BOOL" comment="是否使用类html富文本绘制,如(false)"/>
 		<Attribute name="readonly" default="false" type="BOOL" comment="是否只读,如(false)"/>
 		<Attribute name="password" default="false" type="BOOL" comment="是否显示密码字符,如(false)"/>
+		<Attribute name="numberonly" default="false" type="BOOL" comment="是否只允许输入数字,如(false)"/>
 		<Attribute name="maxchar" default="255" type="INT" comment="输入字符最大长度，如(100)"/>
 		<Attribute name="normalimage" default="" type="STRING" comment="普通状态图片"/>
 		<Attribute name="hotimage" default="" type="STRING" comment="鼠标悬浮状态图片"/>
