@@ -10,7 +10,6 @@ CListUI::CListUI() : m_pCallback(NULL), m_bScrollSelect(false), m_iCurSel(-1), m
 {
     m_pList = new CListBodyUI(this);
     m_pHeader = new CListHeaderUI;
-
     Add(m_pHeader);
     CVerticalLayoutUI::Add(m_pList);
 
@@ -874,6 +873,7 @@ BOOL CListBodyUI::SortItems(PULVCompareFunc pfnCompare, UINT_PTR dwData)
 {
 	if (!pfnCompare)
 		return FALSE;
+	m_compareData = dwData;
 	m_pCompareFunc = pfnCompare;
 	CControlUI **pData = (CControlUI **)m_items.GetData();
 	qsort_s(m_items.GetData(), m_items.GetSize(), sizeof(CControlUI*), CListBodyUI::ItemComareFunc, this);	
@@ -1829,7 +1829,7 @@ void CListLabelElementUI::DoEvent(TEventUI& event)
     if( event.Type == UIEVENT_BUTTONDOWN || event.Type == UIEVENT_RBUTTONDOWN )
     {
         if( IsEnabled() ) {
-            m_pManager->SendNotify(this, DUI_MSGTYPE_ITEMCLICK);
+            m_pManager->SendNotify(this, DUI_MSGTYPE_ITEMCLICK,GetIndex());
             Select();
             Invalidate();
         }
@@ -2283,7 +2283,7 @@ void CListContainerElementUI::DoEvent(TEventUI& event)
     if( event.Type == UIEVENT_BUTTONDOWN || event.Type == UIEVENT_RBUTTONDOWN )
     {
         if( IsEnabled() ){
-            m_pManager->SendNotify(this, DUI_MSGTYPE_ITEMCLICK);
+            m_pManager->SendNotify(this, DUI_MSGTYPE_ITEMCLICK,GetIndex());
             Select();
             Invalidate();
         }
@@ -2422,6 +2422,13 @@ void CListContainerElementUI::DrawItemBk(HDC hDC, const RECT& rcItem)
     }
 }
 
+CListContainerElementExUI::CListContainerElementExUI(bool bshowIndex)
+{
+	m_bShowIndex = bshowIndex;
+	if(bshowIndex)
+		AddAt(new CLabelUI,0);
+}
+
 void CListContainerElementExUI::SetPos( RECT rc )
 {
 	CDuiString xx =this->GetParent()->GetParent()->GetName();
@@ -2494,6 +2501,30 @@ void CListContainerElementExUI::SetPos( RECT rc )
 	rc.left = pList->GetList()->GetPos().left;
 	rc.right = pList->GetList()->GetPos().right;
 	CControlUI::SetPos(rc);
+}
+
+
+LPCTSTR CListContainerElementExUI::GetClass() const
+{
+	return _T("ListContainerElementUIEX");
+}
+
+LPVOID CListContainerElementExUI::GetInterface(LPCTSTR pstrName)
+{
+	if( _tcscmp(pstrName, DUI_CTR_LISTCONTAINERELEMENTEX) == 0 ) return static_cast<CListContainerElementExUI*>(this);
+	return __super::GetInterface(pstrName);
+}
+
+void CListContainerElementExUI::SetIndex(int iIndex)
+{
+	__super::SetIndex(iIndex);
+	if(m_bShowIndex && GetItemAt(0))
+	{
+		CDuiString strIndex;
+		strIndex.Format(_T("%d"),iIndex + 1);
+		GetItemAt(0)->SetText(strIndex);
+	}
+
 }
 
 } // namespace DuiLib

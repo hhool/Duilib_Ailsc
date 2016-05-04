@@ -124,7 +124,6 @@ public:
 
     int GetChildPadding() const;
     void SetChildPadding(int iPadding);
-
     void SetItemFont(int index);
     void SetItemTextStyle(UINT uStyle);
     void SetItemTextPadding(RECT rc);
@@ -442,8 +441,14 @@ protected:
 class UILIB_API CListContainerElementExUI:public CListContainerElementUI
 {
 public:
-	CListContainerElementExUI(){};
+	CListContainerElementExUI(bool bshowIndex = false/*是否显示序列号*/);
 	virtual void SetPos(RECT rc);
+	LPCTSTR GetClass() const;
+	LPVOID GetInterface(LPCTSTR pstrName);
+	void SetIndex(int iIndex);
+private:
+	bool m_bShowIndex;//是否第一行显示序列号
+
 };
 } // namespace DuiLib
 
