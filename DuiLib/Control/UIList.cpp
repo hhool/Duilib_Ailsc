@@ -1419,7 +1419,20 @@ void CListHeaderItemUI::DoEvent(TEventUI& event)
         }
         else {
             m_uButtonState |= UISTATE_PUSHED;
-            m_pManager->SendNotify(this, DUI_MSGTYPE_HEADERCLICK);
+			int nClickCol = -1;
+			if(GetParent()->GetInterface(DUI_CTR_LISTHEADER))
+			{
+				CListHeaderUI *pHeader = static_cast<CListHeaderUI *>(GetParent());
+				for (int i = 0;i < pHeader->GetCount();++i)
+				{
+					if(pHeader->GetItemAt(i) == this)
+					{
+						nClickCol = i;
+						break;
+					}
+				}
+			}
+			m_pManager->SendNotify(this, DUI_MSGTYPE_HEADERCLICK,nClickCol);
             Invalidate();
         }
         return;
