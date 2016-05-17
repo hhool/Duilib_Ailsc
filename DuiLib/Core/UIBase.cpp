@@ -285,12 +285,12 @@ void CWindowWnd::ShowWindow(bool bShow /*= true*/, bool bTakeFocus /*= false*/)
     ::ShowWindow(m_hWnd, bShow ? (bTakeFocus ? SW_SHOWNORMAL : SW_SHOWNOACTIVATE) : SW_HIDE);
 }
 
-UINT CWindowWnd::ShowModal()
+UINT CWindowWnd::ShowModal(UINT show)
 {
     ASSERT(::IsWindow(m_hWnd));
     UINT nRet = 0;
     HWND hWndParent = GetWindowOwner(m_hWnd);
-    ::ShowWindow(m_hWnd, SW_SHOWNORMAL);
+	::ShowWindow(m_hWnd, show);
     ::EnableWindow(hWndParent, FALSE);
     MSG msg = { 0 };
     while( ::IsWindow(m_hWnd) && ::GetMessage(&msg, NULL, 0, 0) ) {

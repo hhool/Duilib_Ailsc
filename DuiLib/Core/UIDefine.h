@@ -221,7 +221,6 @@ protected:                                                                \
 #define  DUI_CTR_EDIT                            (_T("Edit"))
 #define  DUI_CTR_LIST                            (_T("List"))
 #define  DUI_CTR_TEXT                            (_T("Text"))
-
 #define  DUI_CTR_COMBO                           (_T("Combo"))
 #define  DUI_CTR_LABEL                           (_T("Label"))
 #define  DUI_CTR_FLASH							(_T("Flash"))
@@ -232,6 +231,7 @@ protected:                                                                \
 
 #define  DUI_CTR_CONTROL                         (_T("Control"))
 #define  DUI_CTR_ACTIVEX                         (_T("ActiveX"))
+#define  DUI_CTR_GIFANIM                         (_T("GifAnim"))
 
 #define  DUI_CTR_LISTITEM                        (_T("ListItem"))
 #define  DUI_CTR_PROGRESS                        (_T("Progress"))

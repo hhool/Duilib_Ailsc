@@ -829,7 +829,8 @@ namespace DuiLib
 		if (_tcsicmp(pControl->GetClass(), _T("TreeNodeUI")) != 0)
 			return -1;
 
-		CTreeNodeUI* pParent = static_cast<CTreeNodeUI*>(GetItemAt(iIndex));
+		//#liulei 修复最后一个TreeNode 动态增加的时候错误iIndex - 1 原值是index
+		CTreeNodeUI* pParent = static_cast<CTreeNodeUI*>(GetItemAt(iIndex - 1/*iIndex*/));
 		if(!pParent)
 			return -1;
 
