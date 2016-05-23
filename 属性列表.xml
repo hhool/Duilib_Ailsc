@@ -15,7 +15,18 @@
 		<Attribute name="linkfontcolor" default="0xFF0000FF" type="DWORD" comment="默认的link字体颜色,如(0xFF0000FF)"/>
 		<Attribute name="linkhoverfontcolor" default="0xFFD3215F" type="DWORD" comment="默认的linkhoverfont字体颜色,如(0xFFD3215F)"/>
 		<Attribute name="selectedcolor" default="0xFFBAE4FF" type="DWORD" comment="默认的selected字体颜色,如(0xFFBAE4FF)"/>
+		<Attribute name="showdirty" default="false" type="BOOL" comment="绘制脏矩形(屏幕上更新的区域被称为脏矩形)"/>
 	</Window>
+	<Font>
+		<Attribute name="id" default="-1" type="int" comment="字体的id，must必须指定"/>
+		<Attribute name="name" default="系统默认字体" type="STRING" comment="字体名称 eg(宋体)"/>
+		<Attribute name="size" default="12" type="INT" comment="字体大小"/>
+		<Attribute name="bold" default="false" type="BOOL" comment="字体是否加粗"/>
+		<Attribute name="underline" default="false" type="BOOL" comment="是否下划线"/>
+		<Attribute name="italic" default="false" type="BOOL" comment="是否为斜体"/>
+		<Attribute name="shared" default="false" type="BOOL" comment="是否共享字体"/>
+		<Attribute name="default" default="false" type="BOOL" comment="是否指定为默认字体"/>
+	</Font>
 	<ChildLayout parent="Container" >
 		<Attribute name="xmlfile" default="" type="STRING" comment="子窗体XML布局文件"/>
 	</ChildLayout>
@@ -475,8 +486,6 @@
 		<Attribute name="group" default="" type="STRING" comment="所属组的名称，可不设"/>
 		<Attribute name="selected" default="false" type="BOOL" comment="是否选中"/>
 	</Option>
-	<CheckBox parent="option"><!--具体属性设置参照option-->
-	</CheckBox>
 	<Text parent="Label" notifies="setfocus killfocus timer menu link windowinit(root)">
 		<Attribute name="name" default="" type="STRING" comment="控件名字，同一窗口内必须唯一，如(testbtn)"/>
 		<Attribute name="pos" default="0,0,0,0" type="RECT" comment="位置，如果为float控件则指定位置和大小，否则只指定大小,如(0,0,100,100)"/>
@@ -1097,4 +1106,9 @@
 		<Attribute name="selitemtextcolor" default="0x00000000" type="DWORD" comment="item被选中时文本颜色"/>
 		<Attribute name="selhotitemtextcolor" default="0x00000000" type="DWORD" comment="item被选中时且鼠标进入时的文本颜色"/>
 	</TreeNode>
+	<GifAnim parent="Control" notifies="setfocus killfocus timer menu windowinit(root)">
+		<Attribute name="bkimage" default="" type="STRING" comment="Gif动画图片路径(不支持source等属性设置)"/>
+		<Attribute name="autoplay" default="true" type="BOOL" comment="是否自动播放GIF动画"/>
+		<Attribute name="autosize" default="false" type="BOOL" comment="是否根据图片自动设置控件大小(开启后width和height属性失效)"/>
+	</GifAnim>
 </Controls>
