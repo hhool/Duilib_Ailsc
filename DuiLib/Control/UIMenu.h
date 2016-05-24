@@ -41,18 +41,14 @@ public:
 
     LPCTSTR GetClass() const;
     LPVOID GetInterface(LPCTSTR pstrName);
-
+	CControlUI *FindControl(LPCTSTR pstrSubControlName);
 	virtual void DoEvent(TEventUI& event);
-
     virtual bool Add(CControlUI* pControl);
     virtual bool AddAt(CControlUI* pControl, int iIndex);
-
     virtual int GetItemIndex(CControlUI* pControl) const;
     virtual bool SetItemIndex(CControlUI* pControl, int iIndex);
     virtual bool Remove(CControlUI* pControl, bool bDoNotDestroy=false);
-
 	SIZE EstimateSize(SIZE szAvailable);
-
 	void SetAttribute(LPCTSTR pstrName, LPCTSTR pstrValue);
 };
 
@@ -70,20 +66,23 @@ public:
 	@param xml xml文件可是是资源xml也可以是文件xml
 	@param pSkinType 资源文件类型 _T("xml")
 	*/
-	void Init(POINT point, STRINGorID xml, LPCTSTR pSkinType = NULL, CMenuElementUI* pOwner = NULL);
+	BOOL Init(POINT point, STRINGorID xml, LPCTSTR pSkinType = NULL, CMenuElementUI* pOwner = NULL);
+	CMenuUI *GetMenuUI();
+	void ShowWindow();
+protected:
     LPCTSTR GetWindowClassName() const;
     void OnFinalMessage(HWND hWnd);
     LRESULT HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam);
 	BOOL Receive(ContextMenuParam param);
 	virtual void Notify(TNotifyUI& msg);
-public:
+private:
 	HWND m_hParent;
 	POINT m_BasedPoint;
 	STRINGorID m_xml;
 	CDuiString m_sType;
     CPaintManagerUI m_pm;
     CMenuElementUI* m_pOwner;
-    CMenuUI* m_pLayout;
+    CMenuUI* m_pMenuUI;
 	CPaintManagerUI *m_pParentPm;//Parent的PM 用于消息传递到外部
 };
 

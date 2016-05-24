@@ -29,6 +29,13 @@ LPVOID CMenuUI::GetInterface(LPCTSTR pstrName)
     return CListUI::GetInterface(pstrName);
 }
 
+CControlUI *CMenuUI::FindControl(LPCTSTR pstrSubControlName)
+{
+	if (m_pManager)
+		return m_pManager->FindControl(pstrSubControlName);
+	return NULL;
+}
+
 void CMenuUI::DoEvent(TEventUI& event)
 {
 	return __super::DoEvent(event);
@@ -117,7 +124,7 @@ void CMenuUI::SetAttribute(LPCTSTR pstrName, LPCTSTR pstrValue)
 CMenuWnd::CMenuWnd(CPaintManagerUI *pParentPm,HWND hParent) :
 m_hParent(hParent),
 m_pOwner(NULL),
-m_pLayout(),
+m_pMenuUI(),
 m_xml(_T("")),
 m_pParentPm(pParentPm)
 {}
@@ -166,11 +173,11 @@ void CMenuWnd::Notify(TNotifyUI& msg)
 		m_pParentPm->SendNotify(msg,true);
 	}
 }
-void CMenuWnd::Init(POINT point, STRINGorID xml, LPCTSTR pSkinType, CMenuElementUI* pOwner)
+BOOL CMenuWnd::Init(POINT point, STRINGorID xml, LPCTSTR pSkinType, CMenuElementUI* pOwner)
 {
 	m_BasedPoint = point;
     m_pOwner = pOwner;
-    m_pLayout = NULL;
+	m_pMenuUI = NULL;
 
 	if (pSkinType != NULL)
 		m_sType = pSkinType;
@@ -179,13 +186,65 @@ void CMenuWnd::Init(POINT point, STRINGorID xml, LPCTSTR pSkinType, CMenuElement
 
 	s_context_menu_observer.AddReceiver(this);
 
-	Create((m_pOwner == NULL) ? m_hParent : m_pOwner->GetManager()->GetPaintWindow(), NULL, WS_POPUP, WS_EX_TOOLWINDOW | WS_EX_TOPMOST, CDuiRect());
-    // HACK: Don't deselect the parent's caption
-    HWND hWndParent = m_hWnd;
-    while( ::GetParent(hWndParent) != NULL ) hWndParent = ::GetParent(hWndParent);
-    ::ShowWindow(m_hWnd, SW_SHOW);
+	HWND hWnd = Create((m_pOwner == NULL) ? m_hParent : m_pOwner->GetManager()->GetPaintWindow(), NULL, WS_POPUP, WS_EX_TOOLWINDOW | WS_EX_TOPMOST, CDuiRect());
+	return hWnd ? TRUE : FALSE;
+}
+
+CMenuUI *CMenuWnd::GetMenuUI()
+{
+	return m_pMenuUI;
+}
+void CMenuWnd::ShowWindow()
+{
+	if (m_hWnd == NULL || m_pMenuUI == NULL) return;
+	///> 计算Menu的位置
 #if defined(WIN32) && !defined(UNDER_CE)
-    ::SendMessage(hWndParent, WM_NCACTIVATE, TRUE, 0L);
+			MONITORINFO oMonitor = {}; 
+			oMonitor.cbSize = sizeof(oMonitor);
+			::GetMonitorInfo(::MonitorFromWindow(*this, MONITOR_DEFAULTTOPRIMARY), &oMonitor);
+			CDuiRect rcWork = oMonitor.rcWork;
+#else
+			CDuiRect rcWork;
+			GetWindowRect(m_pOwner->GetManager()->GetPaintWindow(), &rcWork);
+#endif
+			SIZE szAvailable = { rcWork.right - rcWork.left, rcWork.bottom - rcWork.top };
+			szAvailable = m_pMenuUI->EstimateSize(szAvailable);
+			m_pm.SetInitSize(szAvailable.cx, szAvailable.cy);
+
+			DWORD dwAlignment = eMenuAlignment_Left | eMenuAlignment_Top;
+
+			SIZE szInit = m_pm.GetInitSize();
+			CDuiRect rc;
+			CDuiPoint point = m_BasedPoint;
+			rc.left = point.x;
+			rc.top = point.y;
+			rc.right = rc.left + szInit.cx;
+			rc.bottom = rc.top + szInit.cy;
+
+			int nWidth = rc.GetWidth();
+			int nHeight = rc.GetHeight();
+
+			if (dwAlignment & eMenuAlignment_Right)
+			{
+				rc.right = point.x;
+				rc.left = rc.right - nWidth;
+			}
+
+			if (dwAlignment & eMenuAlignment_Bottom)
+			{
+				rc.bottom = point.y;
+				rc.top = rc.bottom - nHeight;
+			}
+			SetForegroundWindow(m_hWnd);
+			MoveWindow(m_hWnd, rc.left, rc.top, rc.GetWidth(), rc.GetHeight(), FALSE);
+			SetWindowPos(m_hWnd, HWND_TOPMOST, rc.left, rc.top, rc.GetWidth(), rc.GetHeight(), SWP_SHOWWINDOW);
+
+	// HACK: Don't deselect the parent's caption
+	HWND hWndParent = m_hWnd;
+	while (::GetParent(hWndParent) != NULL) hWndParent = ::GetParent(hWndParent);
+	::ShowWindow(m_hWnd, SW_SHOW);
+#if defined(WIN32) && !defined(UNDER_CE)
+	::SendMessage(hWndParent, WM_NCACTIVATE, TRUE, 0L);
 #endif	
 }
 
@@ -232,29 +291,29 @@ LRESULT CMenuWnd::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
 			// The trick is to add the items to the new container. Their owner gets
 			// reassigned by this operation - which is why it is important to reassign
 			// the items back to the righfull owner/manager when the window closes.
-			m_pLayout = new CMenuUI();
-			m_pLayout->SetManager(&m_pm, NULL, true);
+			m_pMenuUI = new CMenuUI();
+			m_pMenuUI->SetManager(&m_pm, NULL, true);
 			LPCTSTR pDefaultAttributes = m_pOwner->GetManager()->GetDefaultAttributeList(DUI_CTR_MENU);
 			if( pDefaultAttributes ) 
 			{
 				//#liulei 20160524 修复Menu大于或者等于3层的时候背景设置无效
 				//从这里继承父menu的默认属性
 				m_pm.AddDefaultAttributeList(DUI_CTR_MENU, pDefaultAttributes);
-				m_pLayout->SetAttributeList(pDefaultAttributes);
+				m_pMenuUI->SetAttributeList(pDefaultAttributes);
 			}
-			m_pLayout->SetBkColor(0xFFFFFFFF);
-			m_pLayout->SetBorderColor(0xFF85E4FF);
-			m_pLayout->SetBorderSize(0);
-			m_pLayout->SetAutoDestroy(false);
-			m_pLayout->EnableScrollBar();
+			m_pMenuUI->SetBkColor(0xFFFFFFFF);
+			m_pMenuUI->SetBorderColor(0xFF85E4FF);
+			m_pMenuUI->SetBorderSize(0);
+			m_pMenuUI->SetAutoDestroy(false);
+			m_pMenuUI->EnableScrollBar();
 
 			for( int i = 0; i < m_pOwner->GetCount(); i++ ) {
 				if(m_pOwner->GetItemAt(i)->GetInterface(DUI_CTR_MENUELEMENT) != NULL ){
-					(static_cast<CMenuElementUI*>(m_pOwner->GetItemAt(i)))->SetOwner(m_pLayout);
-					m_pLayout->Add(static_cast<CControlUI*>(m_pOwner->GetItemAt(i)));
+					(static_cast<CMenuElementUI*>(m_pOwner->GetItemAt(i)))->SetOwner(m_pMenuUI);
+					m_pMenuUI->Add(static_cast<CControlUI*>(m_pOwner->GetItemAt(i)));
 				}
 			}
-			m_pm.AttachDialog(m_pLayout);
+			m_pm.AttachDialog(m_pMenuUI);
 			// Position the popup window in absolute space
 			RECT rcOwner = m_pOwner->GetPos();
 			RECT rc = rcOwner;
@@ -368,46 +427,52 @@ LRESULT CMenuWnd::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
 			CDialogBuilder builder;
 			CControlUI* pRoot = builder.Create(m_xml, m_sType.GetData(), NULL, &m_pm);
 			m_pm.AttachDialog(pRoot);
-#if defined(WIN32) && !defined(UNDER_CE)
-			MONITORINFO oMonitor = {}; 
-			oMonitor.cbSize = sizeof(oMonitor);
-			::GetMonitorInfo(::MonitorFromWindow(*this, MONITOR_DEFAULTTOPRIMARY), &oMonitor);
-			CDuiRect rcWork = oMonitor.rcWork;
-#else
-			CDuiRect rcWork;
-			GetWindowRect(m_pOwner->GetManager()->GetPaintWindow(), &rcWork);
-#endif
-			SIZE szAvailable = { rcWork.right - rcWork.left, rcWork.bottom - rcWork.top };
-			szAvailable = pRoot->EstimateSize(szAvailable);
-			m_pm.SetInitSize(szAvailable.cx, szAvailable.cy);
 
-			DWORD dwAlignment = eMenuAlignment_Left | eMenuAlignment_Top;
+			CControlUI *pMenuUI = m_pm.FindSubControlByClass(pRoot,DUI_CTR_MENU);
+			if (pMenuUI->GetInterface(DUI_CTR_MENU))
+				m_pMenuUI = static_cast<CMenuUI*>(pMenuUI->GetInterface(DUI_CTR_MENU));
 
-			SIZE szInit = m_pm.GetInitSize();
-			CDuiRect rc;
-			CDuiPoint point = m_BasedPoint;
-			rc.left = point.x;
-			rc.top = point.y;
-			rc.right = rc.left + szInit.cx;
-			rc.bottom = rc.top + szInit.cy;
-
-			int nWidth = rc.GetWidth();
-			int nHeight = rc.GetHeight();
-
-			if (dwAlignment & eMenuAlignment_Right)
-			{
-				rc.right = point.x;
-				rc.left = rc.right - nWidth;
-			}
-
-			if (dwAlignment & eMenuAlignment_Bottom)
-			{
-				rc.bottom = point.y;
-				rc.top = rc.bottom - nHeight;
-			}
-			SetForegroundWindow(m_hWnd);
-			MoveWindow(m_hWnd, rc.left, rc.top, rc.GetWidth(), rc.GetHeight(), FALSE);
-			SetWindowPos(m_hWnd, HWND_TOPMOST, rc.left, rc.top, rc.GetWidth(), rc.GetHeight(), SWP_SHOWWINDOW);
+			///> 位置计算放在ShowWindow里面，方便以后Menu的动态修改
+// #if defined(WIN32) && !defined(UNDER_CE)
+// 			MONITORINFO oMonitor = {}; 
+// 			oMonitor.cbSize = sizeof(oMonitor);
+// 			::GetMonitorInfo(::MonitorFromWindow(*this, MONITOR_DEFAULTTOPRIMARY), &oMonitor);
+// 			CDuiRect rcWork = oMonitor.rcWork;
+// #else
+// 			CDuiRect rcWork;
+// 			GetWindowRect(m_pOwner->GetManager()->GetPaintWindow(), &rcWork);
+// #endif
+// 			SIZE szAvailable = { rcWork.right - rcWork.left, rcWork.bottom - rcWork.top };
+// 			szAvailable = pRoot->EstimateSize(szAvailable);
+// 			m_pm.SetInitSize(szAvailable.cx, szAvailable.cy);
+// 
+// 			DWORD dwAlignment = eMenuAlignment_Left | eMenuAlignment_Top;
+// 
+// 			SIZE szInit = m_pm.GetInitSize();
+// 			CDuiRect rc;
+// 			CDuiPoint point = m_BasedPoint;
+// 			rc.left = point.x;
+// 			rc.top = point.y;
+// 			rc.right = rc.left + szInit.cx;
+// 			rc.bottom = rc.top + szInit.cy;
+// 
+// 			int nWidth = rc.GetWidth();
+// 			int nHeight = rc.GetHeight();
+// 
+// 			if (dwAlignment & eMenuAlignment_Right)
+// 			{
+// 				rc.right = point.x;
+// 				rc.left = rc.right - nWidth;
+// 			}
+// 
+// 			if (dwAlignment & eMenuAlignment_Bottom)
+// 			{
+// 				rc.bottom = point.y;
+// 				rc.top = rc.bottom - nHeight;
+// 			}
+// 			SetForegroundWindow(m_hWnd);
+// 			MoveWindow(m_hWnd, rc.left, rc.top, rc.GetWidth(), rc.GetHeight(), FALSE);
+// 			SetWindowPos(m_hWnd, HWND_TOPMOST, rc.left, rc.top, rc.GetWidth(), rc.GetHeight(), SWP_SHOWWINDOW);
 		}
 
 		return 0;
