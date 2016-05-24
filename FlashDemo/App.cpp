@@ -2,6 +2,7 @@
 //
 
 #include "stdafx.h"
+#include "flash10a.tlh"
 
 class CFrameWnd : public CWindowWnd, public INotifyUI
 {
@@ -23,46 +24,20 @@ public:
                 return; 
             }
         }
-		else if ( msg.sType == _T("windowinit"))
-		{	// name = flashUI 控件在UI布局中默认注释掉，查看效果需修改xml
-			CFlashUI* pFlashUI		= static_cast<CFlashUI*>(m_pm.FindControl(_T("flashUI")));
-			if ( pFlashUI)
-			{
-				pFlashUI->m_pFlash->put_WMode(_bstr_t(_T("Transparent") ));	// FlashUI没有实现特定接口，需要完善才能支持
-				pFlashUI->m_pFlash->put_Movie( _bstr_t(CPaintManagerUI::GetInstancePath() + _T("\\skin\\FlashRes\\test.swf")) );
-				pFlashUI->m_pFlash->DisableLocalSecurity();
-				pFlashUI->m_pFlash->put_AllowScriptAccess(L"always");
-
-				BSTR request,response;
-				request = SysAllocString(L"<invoke name=\"setButtonText\" returntype=\"xml\"><arguments><string>Click me!</string></arguments></invoke>");
-				response = SysAllocString(L"");
-				pFlashUI->m_pFlash->CallFunction(request, &response);
-				SysFreeString(request);
-				SysFreeString(response);
-			}
-		}
-        else if( msg.sType == _T("showactivex") )
-		{
-			if( msg.pSender->GetName() == _T("flashActiveX") )
-			{
-				IShockwaveFlash* pFlash = NULL;
-				CActiveXUI* pActiveX = static_cast<CActiveXUI*>(msg.pSender);
-				pActiveX->GetControl(IID_IUnknown, (void**)&pFlash);
-				if( pFlash != NULL )
-				{
-					pFlash->put_WMode( _bstr_t(_T("Transparent") ) );
-					pFlash->put_Movie( _bstr_t(CPaintManagerUI::GetInstancePath() + _T("\\skin\\FlashRes\\test.swf")) );
-					pFlash->DisableLocalSecurity();
-					pFlash->put_AllowScriptAccess(L"always");
-
-					BSTR request,response;
-					request = SysAllocString(L"<invoke name=\"setButtonText\" returntype=\"xml\"><arguments><string>Click me!</string></arguments></invoke>");
-					response = SysAllocString(L"");
-					pFlash->CallFunction(request, &response);
-					SysFreeString(request);
-					SysFreeString(response);
-				}
-			}
+        else if( msg.sType == _T("showactivex") ) {
+            if( msg.pSender->GetName() != _T("flash") ) return;
+            IShockwaveFlash* pFlash = NULL;
+            CActiveXUI* pActiveX = static_cast<CActiveXUI*>(msg.pSender);
+            pActiveX->GetControl(IID_IUnknown, (void**)&pFlash);
+            if( pFlash != NULL ) {
+                pFlash->put_WMode( _bstr_t(_T("Transparent") ) );
+                pFlash->put_Movie( _bstr_t(CPaintManagerUI::GetInstancePath() + _T("\\skin\\FlashRes\\test.swf")) );
+                pFlash->DisableLocalSecurity();
+                pFlash->put_AllowScriptAccess(L"always");
+                BSTR response;
+                pFlash->CallFunction(L"<invoke name=\"setButtonText\" returntype=\"xml\"><arguments><string>Click me!</string></arguments></invoke>", &response);
+                pFlash->Release();
+            }  
         }
     }
 
@@ -119,7 +94,7 @@ public:
         if( pt.x >= rcClient.left + rcCaption.left && pt.x < rcClient.right - rcCaption.right \
             && pt.y >= rcCaption.top && pt.y < rcCaption.bottom ) {
                 CControlUI* pControl = static_cast<CControlUI*>(m_pm.FindControl(pt));
-                if( pControl && _tcscmp(pControl->GetClass(), _T("ButtonUI")) != 0 )
+                if( pControl && _tcscmp(pControl->GetClass(), DUI_CTR_BUTTON) != 0 )
                     return HTCAPTION;
         }
 

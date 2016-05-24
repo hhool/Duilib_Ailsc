@@ -13,20 +13,6 @@
 
 using namespace DuiLib;
 
-#ifdef _DEBUG
-#   ifdef _UNICODE
-#       pragma comment(lib, "..\\Lib\\DuiLib_ud.lib")
-#   else
-#       pragma comment(lib, "..\\Lib\\DuiLib_d.lib")
-#   endif
-#else
-#   ifdef _UNICODE
-#       pragma comment(lib, "..\\Lib\\DuiLib_u.lib")
-#   else
-#       pragma comment(lib, "..\\Lib\\DuiLib.lib")
-#   endif
-#endif
-
 #define WM_ADDLISTITEM WM_USER + 50
 /*
 * 存放第二列数据
@@ -46,8 +32,6 @@ struct Prama
     CButtonUI* pSearch;
     CDuiString tDomain;
 };
-
-#include "MenuWnd.h"
 
 class ListMainForm : public CWindowWnd, public INotifyUI, public IListCallbackUI
 {
@@ -245,15 +229,6 @@ public:
 #endif
             ::MessageBox(NULL, sMessage.GetData(), _T("提示(by tojen)"), MB_OK);
         }
-        else if(msg.sType == _T("menu")) 
-        {
-            if( msg.pSender->GetName() != _T("domainlist") ) return;
-            CMenuWnd* pMenu = new CMenuWnd();
-            if( pMenu == NULL ) { return; }
-            POINT pt = {msg.ptMouse.x, msg.ptMouse.y};
-            ::ClientToScreen(*this, &pt);
-            pMenu->Init(msg.pSender, pt);
-        }
         else if( msg.sType == _T("menu_Delete") ) {
             CListUI* pList = static_cast<CListUI*>(msg.pSender);
             int nSel = pList->GetCurSel();
@@ -345,9 +320,9 @@ public:
         if( pt.x >= rcClient.left + rcCaption.left && pt.x < rcClient.right - rcCaption.right \
             && pt.y >= rcCaption.top && pt.y < rcCaption.bottom ) {
                 CControlUI* pControl = static_cast<CControlUI*>(m_pm.FindControl(pt));
-                if( pControl && _tcscmp(pControl->GetClass(), _T("ButtonUI")) != 0 && 
-                    _tcscmp(pControl->GetClass(), _T("OptionUI")) != 0 &&
-                    _tcscmp(pControl->GetClass(), _T("TextUI")) != 0 )
+                if( pControl && _tcscmp(pControl->GetClass(), DUI_CTR_BUTTON) != 0 && 
+                    _tcscmp(pControl->GetClass(), DUI_CTR_OPTION) != 0 &&
+                    _tcscmp(pControl->GetClass(), DUI_CTR_TEXT) != 0 )
                     return HTCAPTION;
         }
 

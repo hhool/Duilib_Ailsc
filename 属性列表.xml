@@ -710,6 +710,14 @@
 		<Attribute name="showbutton1" default="true" type="BOOL" comment="是否显示左或上按钮,如(true)"/>
 		<Attribute name="showbutton2" default="true" type="BOOL" comment="是否显示右或下按钮,如(true)"/>
 	</ScrollBar>
+	<Menu parent="List" notifies="屏蔽了setfocus killfocus itemselect  windowinit" >
+		<Attribute name="bkimage" default="无，默认为黑色背景一般都需要制定背景图片 "/>
+		<!-- <Default name="Menu" value="inset=&quot;2,2,2,2&quot; itemtextpadding=&quot;30,0,0,0&quot; bkimage=&quot;file='skin\res\menu_bk.png' corner='30,8,8,8'&quot; hole=&quot;false&quot;" />-->
+	</Menu>
+		<MenuElement parent="ListContainElement" notifies="itemclick,屏蔽了setfocus killfocus itemselect  windowinit"/>
+		<!--MenuElement 不会主动调节控件高度，如果需要包含其他多个控件，控件请使用HorizontalLayout或者Verticallayout包含，需要主动设置高度-->
+		<!--MenuElemetn 背景绘画使用的是Menu指定item的背景和颜色，不能本身单独设置-->
+	</MenuElement>
 	<List parent="VerticalLayout" notifies="setfocus killfocus timer menu itemselect windowinit(root)">
 		<Attribute name="name" default="" type="STRING" comment="控件名字，同一窗口内必须唯一，如(testbtn)"/>
 		<Attribute name="pos" default="0,0,0,0" type="RECT" comment="位置，如果为float控件则指定位置和大小，否则只指定大小,如(0,0,100,100)"/>

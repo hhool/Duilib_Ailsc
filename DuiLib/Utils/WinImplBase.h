@@ -12,7 +12,7 @@ namespace DuiLib
 		UILIB_ZIPRESOURCE,	// 来自资源的zip压缩包
 	};
 
-	class UILIB_API WindowImplBase
+	class DUILIB_API WindowImplBase
 		: public CWindowWnd
 		, public CNotifyPump
 		, public INotifyUI
@@ -34,7 +34,7 @@ namespace DuiLib
 		virtual CDuiString GetSkinFolder() = 0;
 		virtual CDuiString GetSkinFile() = 0;
 		virtual LPCTSTR GetWindowClassName(void) const = 0 ;
-		virtual LRESULT ResponseDefaultKeyEvent(WPARAM wParam);
+		virtual LRESULT ResponseDefaultKeyEvent(WPARAM wParam, bool& bHandled);
 
 		CPaintManagerUI m_PaintManager;
 		static LPBYTE m_lpResourceZIPBuffer;

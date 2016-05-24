@@ -2,14 +2,14 @@
 
 namespace DuiLib
 {
-	class UILIB_API CWinWndUI :
+	class DUILIB_API CWinWndUI :
 		public CControlUI
 	{
 	public:
 		CWinWndUI(BOOL bDieWithControl = TRUE);
 		~CWinWndUI();
 		virtual void SetInternVisible(bool bVisible = true);
-		virtual void SetPos(RECT rc);
+		virtual void SetPos(RECT rc, bool bNeedInvalidate = true);
 		BOOL Attach(HWND hWndNew);
 		HWND Detach();
 		void DieWithControl(BOOL bDieWithControl);

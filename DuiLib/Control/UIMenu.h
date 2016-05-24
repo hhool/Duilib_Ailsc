@@ -8,11 +8,7 @@
 #include "../Utils/observer_impl_base.hpp"
 
 namespace DuiLib {
-class CMenuUI;
-class CListUI;
-class CMenuWnd;
-class CMenuElementUI;
-class CListContainerElementUI;
+
 /////////////////////////////////////////////////////////////////////////////////////
 //
 struct ContextMenuParam
@@ -33,11 +29,11 @@ enum MenuAlignment
 
 typedef class ObserverImpl<BOOL, ContextMenuParam> ContextMenuObserver;
 typedef class ReceiverImpl<BOOL, ContextMenuParam> ContextMenuReceiver;
-typedef void (*PMODIFYMENUFUNC)(CMenuUI *);
-typedef void (*PMENUCLICK)(CDuiString szMenuElementName);
+
 extern ContextMenuObserver s_context_menu_observer;
 
-class UILIB_API CMenuUI : public CListUI
+class CListUI;
+class CMenuUI : public CListUI
 {
 public:
 	CMenuUI();
@@ -47,45 +43,40 @@ public:
     LPVOID GetInterface(LPCTSTR pstrName);
 
 	virtual void DoEvent(TEventUI& event);
+
     virtual bool Add(CControlUI* pControl);
     virtual bool AddAt(CControlUI* pControl, int iIndex);
+
     virtual int GetItemIndex(CControlUI* pControl) const;
     virtual bool SetItemIndex(CControlUI* pControl, int iIndex);
-    virtual bool Remove(CControlUI* pControl);
+    virtual bool Remove(CControlUI* pControl, bool bDoNotDestroy=false);
 
 	SIZE EstimateSize(SIZE szAvailable);
+
 	void SetAttribute(LPCTSTR pstrName, LPCTSTR pstrValue);
-	void SetOwnWnd(CMenuWnd *pWnd);
-	CMenuWnd *GetOwnWnd();
-private:
-	CMenuWnd *m_pOwnWnd;
 };
 
 /////////////////////////////////////////////////////////////////////////////////////
+//
+class CMenuElementUI;
+class DUILIB_API CMenuWnd : public CWindowWnd, public ContextMenuReceiver,public INotifyUI
 
-class UILIB_API CMenuWnd : public CWindowWnd,public ContextMenuReceiver
 {
-	friend CMenuElementUI;
 public:
-	explicit CMenuWnd(HWND hParent = NULL);
-  
-	void Init(POINT point,STRINGorID xml, LPCTSTR pSkinType = _T("xml"));
-	///> 用于动态修改Menu
-	void SetModifyMenuFunc(PMODIFYMENUFUNC pfunModifyMenu);
-	PMODIFYMENUFUNC GetModifyMenuFunc();
-
-	///> 用于响应Menu事件
-	void SetMenuClickFunc(PMENUCLICK pMenuClick);
-	PMENUCLICK GetMenuClickFunc();
-
-protected:
-	void Init(CMenuElementUI* pOwner, STRINGorID xml, LPCTSTR pSkinType, POINT point);
+	CMenuWnd(CPaintManagerUI *pParentPm, HWND hParent = NULL);
+	/*
+	@param point 菜单位置
+	@param pOwner 是属于哪个菜单的子菜单，如果不是则填NULL
+	@param xml xml文件可是是资源xml也可以是文件xml
+	@param pSkinType 资源文件类型 _T("xml")
+	*/
+	void Init(POINT point, STRINGorID xml, LPCTSTR pSkinType = NULL, CMenuElementUI* pOwner = NULL);
     LPCTSTR GetWindowClassName() const;
     void OnFinalMessage(HWND hWnd);
     LRESULT HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam);
 	BOOL Receive(ContextMenuParam param);
-
-protected:
+	virtual void Notify(TNotifyUI& msg);
+public:
 	HWND m_hParent;
 	POINT m_BasedPoint;
 	STRINGorID m_xml;
@@ -93,26 +84,33 @@ protected:
     CPaintManagerUI m_pm;
     CMenuElementUI* m_pOwner;
     CMenuUI* m_pLayout;
-	PMODIFYMENUFUNC m_pfunModifyMenu;
-	PMENUCLICK	m_pMenuClick;
+	CPaintManagerUI *m_pParentPm;//Parent的PM 用于消息传递到外部
 };
 
-class UILIB_API CMenuElementUI : public CListContainerElementUI
+class CListContainerElementUI;
+class DUILIB_API CMenuElementUI : public CListContainerElementUI
 {
 	friend CMenuWnd;
 public:
     CMenuElementUI();
 	~CMenuElementUI();
 
-protected:
     LPCTSTR GetClass() const;
     LPVOID GetInterface(LPCTSTR pstrName);
-    void DoPaint(HDC hDC, const RECT& rcPaint);
+
+    bool DoPaint(HDC hDC, const RECT& rcPaint, CControlUI* pStopControl);
+
 	void DrawItemText(HDC hDC, const RECT& rcItem);
+
 	SIZE EstimateSize(SIZE szAvailable);
+
 	bool Activate();
+
 	void DoEvent(TEventUI& event);
+
+
 	CMenuWnd* GetMenuWnd();
+
 	void CreateMenuWnd();
 
 protected:

@@ -1,6 +1,3 @@
-#ifndef WIN_IMPL_BASE_HPP
-#define WIN_IMPL_BASE_HPP
-
 #include "stdafx.h"
 
 namespace DuiLib
@@ -21,7 +18,7 @@ void WindowImplBase::OnFinalMessage( HWND hWnd )
 	m_PaintManager.ReapObjects(m_PaintManager.GetRoot());
 }
 
-LRESULT WindowImplBase::ResponseDefaultKeyEvent(WPARAM wParam)
+LRESULT WindowImplBase::ResponseDefaultKeyEvent(WPARAM wParam, bool& bHandled)
 {
 	if (wParam == VK_RETURN)
 	{
@@ -29,6 +26,7 @@ LRESULT WindowImplBase::ResponseDefaultKeyEvent(WPARAM wParam)
 	}
 	else if (wParam == VK_ESCAPE)
 	{
+		bHandled = TRUE;
 		Close(IDCANCEL);
 		return TRUE;
 	}
@@ -61,7 +59,7 @@ CControlUI* WindowImplBase::CreateControl(LPCTSTR pstrClass)
 	return NULL;
 }
 
-LRESULT WindowImplBase::MessageHandler(UINT uMsg, WPARAM wParam, LPARAM /*lParam*/, bool& /*bHandled*/)
+LRESULT WindowImplBase::MessageHandler(UINT uMsg, WPARAM wParam, LPARAM /*lParam*/, bool& bHandled)
 {
 	if (uMsg == WM_KEYDOWN)
 	{
@@ -69,7 +67,7 @@ LRESULT WindowImplBase::MessageHandler(UINT uMsg, WPARAM wParam, LPARAM /*lParam
 		{
 		case VK_RETURN:
 		case VK_ESCAPE:
-			return ResponseDefaultKeyEvent(wParam);
+			return ResponseDefaultKeyEvent(wParam,bHandled);
 		default:
 			break;
 		}
@@ -181,15 +179,14 @@ LRESULT WindowImplBase::OnNcHitTest(UINT uMsg, WPARAM wParam, LPARAM lParam, BOO
 	if( pt.x >= rcClient.left + rcCaption.left && pt.x < rcClient.right - rcCaption.right \
 		&& pt.y >= rcCaption.top && pt.y < rcCaption.bottom ) {
 			CControlUI* pControl = static_cast<CControlUI*>(m_PaintManager.FindControl(pt));
-// 			if( pControl && _tcsicmp(pControl->GetClass(), _T("ButtonUI")) != 0 && 
-// 				_tcsicmp(pControl->GetClass(), _T("OptionUI")) != 0 &&
-// 				_tcsicmp(pControl->GetClass(), _T("TextUI")) != 0 )
+// 			if( pControl && _tcsicmp(pControl->GetClass(), DUI_CTR_BUTTON) != 0 && 
+// 				_tcsicmp(pControl->GetClass(), DUI_CTR_OPTION) != 0 &&
+// 				_tcsicmp(pControl->GetClass(), DUI_CTR_TEXT) != 0 )
 // 				return HTCAPTION;
-			if (IsInStaticControl(pControl))
+			if (!IsInStaticControl(pControl))
 			{
 				return HTCAPTION;
 			}
-
 	}
 
 	return HTCLIENT;
@@ -362,7 +359,7 @@ LRESULT WindowImplBase::OnCreate(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& 
 	}
 	m_PaintManager.AttachDialog(pRoot);
 	m_PaintManager.AddNotifier(this);
-	m_PaintManager.SetBackgroundTransparent(TRUE);
+	//m_PaintManager.SetBackgroundTransparent(TRUE);
 
 	InitWindow();
 	return 0;
@@ -439,7 +436,6 @@ LRESULT WindowImplBase::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
 
 	lRes = HandleCustomMessage(uMsg, wParam, lParam, bHandled);
 	if (bHandled) return lRes;
-
 	if (m_PaintManager.MessageHandler(uMsg, wParam, lParam, lRes))
 		return lRes;
 	return CWindowWnd::HandleMessage(uMsg, wParam, lParam);
@@ -497,39 +493,51 @@ BOOL WindowImplBase::IsInStaticControl(CControlUI *pControl)
 	{
 		return bRet;
 	}
-
 	CDuiString strClassName;
-	std::vector<CDuiString> vctStaticName;
-
 	strClassName = pControl->GetClass();
-	strClassName.MakeLower();
-	vctStaticName.push_back(_T("controlui"));
-	vctStaticName.push_back(_T("textui"));
-	vctStaticName.push_back(_T("labelui"));
-	vctStaticName.push_back(_T("containerui"));
-	vctStaticName.push_back(_T("horizontallayoutui"));
-	vctStaticName.push_back(_T("verticallayoutui"));
-	vctStaticName.push_back(_T("tablayoutui"));
-	vctStaticName.push_back(_T("childlayoutui"));
-	vctStaticName.push_back(_T("dialoglayoutui"));
 
-	std::vector<CDuiString>::iterator it = std::find(vctStaticName.begin(), vctStaticName.end(), strClassName);
-	if (vctStaticName.end() != it)
+	static std::map<CDuiString, int>::value_type map_init_data[] =
 	{
-		CControlUI* pParent = pControl->GetParent();
-		while (pParent)
-		{
-			strClassName = pParent->GetClass();
-			strClassName.MakeLower();
-			it = std::find(vctStaticName.begin(), vctStaticName.end(), strClassName);
-			if (vctStaticName.end() == it)
-			{
-				return bRet;
-			}
+		map<CDuiString, int>::value_type(DUI_CTR_MENU, 1),
+		map<CDuiString, int>::value_type(DUI_CTR_EDIT, 2),
+		map<CDuiString, int>::value_type(DUI_CTR_LIST, 2),
+		map<CDuiString, int>::value_type(DUI_CTR_TEXT, 2),
+		map<CDuiString, int>::value_type(DUI_CTR_TREE, 2),
+		map<CDuiString, int>::value_type(DUI_CTR_HBOX, 2),
+		map<CDuiString, int>::value_type(DUI_CTR_VBOX, 2),
+		map<CDuiString, int>::value_type(DUI_CTR_COMBO, 2),
+		map<CDuiString, int>::value_type(DUI_CTR_LABEL, 2),
+		map<CDuiString, int>::value_type(DUI_CTR_FLASH, 2),
+		map<CDuiString, int>::value_type(DUI_CTR_BUTTON, 2),
+		map<CDuiString, int>::value_type(DUI_CTR_OPTION, 2),
+		map<CDuiString, int>::value_type(DUI_CTR_SLIDER, 2),
+		map<CDuiString, int>::value_type(DUI_CTR_ACTIVEX, 2),
+		map<CDuiString, int>::value_type(DUI_CTR_GIFANIM, 2),
+		map<CDuiString, int>::value_type(DUI_CTR_PROGRESS, 2),
+		map<CDuiString, int>::value_type(DUI_CTR_RICHEDIT, 2),
+		map<CDuiString, int>::value_type(DUI_CTR_CHECKBOX, 2),
+		map<CDuiString, int>::value_type(DUI_CTR_COMBOBOX, 2),
+		map<CDuiString, int>::value_type(DUI_CTR_DATETIME, 2),
+		map<CDuiString, int>::value_type(DUI_CTR_TREEVIEW, 2),
+		map<CDuiString, int>::value_type(DUI_CTR_TREENODE, 2),
+		map<CDuiString, int>::value_type(DUI_CTR_ILISTITEM, 2),
+		map<CDuiString, int>::value_type(DUI_CTR_SCROLLBAR, 2),
+		map<CDuiString, int>::value_type(DUI_CTR_ILISTOWNER, 2),
+		map<CDuiString, int>::value_type(DUI_CTR_LISTHEADER, 2),
+		map<CDuiString, int>::value_type(DUI_CTR_WEBBROWSER, 2),
+		map<CDuiString, int>::value_type(DUI_CTR_MENUELEMENT, 2),
+		map<CDuiString, int>::value_type(DUI_CTR_LISTELEMENT, 2),
+		map<CDuiString, int>::value_type(DUI_CTR_LISTHEADERITEM, 2),
+		map<CDuiString, int>::value_type(DUI_CTR_LISTHBOXELEMENT, 2),
+		map<CDuiString, int>::value_type(DUI_CTR_LISTTEXTELEMENT, 2),
+		map<CDuiString, int>::value_type(DUI_CTR_LISTLABELELEMENT, 2),
+		map<CDuiString, int>::value_type(DUI_CTR_LISTCONTAINERELEMENT, 2),
+		map<CDuiString, int>::value_type(DUI_CTR_TREENODE, 2)
+	};
+	static const std::map<CDuiString, int> mapStaticName(map_init_data, map_init_data + sizeof(map_init_data) / sizeof(map_init_data[0]));
 
-			pParent = pParent->GetParent();
-		}
-
+	if (mapStaticName.count(strClassName))
+	{
 		bRet = TRUE;
 	}
 

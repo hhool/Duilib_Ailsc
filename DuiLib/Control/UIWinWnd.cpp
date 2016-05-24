@@ -21,7 +21,7 @@ namespace DuiLib
 		::ShowWindow(m_hWnd, bVisible);
 	}
 
-	void CWinWndUI::SetPos(RECT rc)
+	void CWinWndUI::SetPos(RECT rc, bool bNeedInvalidate)
 	{
 		__super::SetPos(rc);
 		::SetWindowPos(m_hWnd, NULL, rc.left, rc.top, rc.right - rc.left, rc.bottom - rc.top, SWP_NOZORDER | SWP_NOACTIVATE);

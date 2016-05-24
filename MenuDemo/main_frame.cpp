@@ -24,7 +24,6 @@
 
 #include "resource.h"
 #include "main_frame.hpp"
-#include "UIMenu.h"
 
 const TCHAR* const kTitleControlName = _T("apptitle");
 const TCHAR* const kCloseButtonControlName = _T("closebtn");
@@ -181,11 +180,11 @@ void MainFrame::Notify(TNotifyUI& msg)
 		}
 		else if (_tcsicmp(msg.pSender->GetName(), _T("btn_menu")) == 0)	
 		{
-			CMenuWnd* pMenu = new CMenuWnd(m_hWnd);
-			CPoint point = msg.ptMouse;
+			CMenuWnd* pMenu = new CMenuWnd(&m_PaintManager,m_hWnd);
+			CDuiPoint point = msg.ptMouse;
 			ClientToScreen(m_hWnd, &point);
 			STRINGorID xml(IDR_XML_MENU);
-			pMenu->Init(NULL, xml, _T("xml"), point);
+			pMenu->Init(point, xml,_T("xml"));
 		}
 	}
 	else if (_tcsicmp(msg.sType, kTimer) == 0)
