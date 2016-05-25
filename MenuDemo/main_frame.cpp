@@ -184,7 +184,10 @@ void MainFrame::Notify(TNotifyUI& msg)
 			CDuiPoint point = msg.ptMouse;
 			ClientToScreen(m_hWnd, &point);
 			STRINGorID xml(IDR_XML_MENU);
-			pMenu->Init(point, xml,_T("xml"));
+			if(pMenu->Init(point, xml,_T("xml")))
+			{
+				pMenu->ShowWindow();
+			}
 		}
 	}
 	else if (_tcsicmp(msg.sType, kTimer) == 0)

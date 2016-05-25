@@ -41,15 +41,22 @@ public:
 
     LPCTSTR GetClass() const;
     LPVOID GetInterface(LPCTSTR pstrName);
-	CControlUI *FindControl(LPCTSTR pstrSubControlName);
+	CControlUI *FindControl(LPCTSTR pstrControlName);
+	void SetNotifyPaintManager(CPaintManagerUI *pNotifyPm );
 	virtual void DoEvent(TEventUI& event);
+
     virtual bool Add(CControlUI* pControl);
     virtual bool AddAt(CControlUI* pControl, int iIndex);
+
     virtual int GetItemIndex(CControlUI* pControl) const;
     virtual bool SetItemIndex(CControlUI* pControl, int iIndex);
     virtual bool Remove(CControlUI* pControl, bool bDoNotDestroy=false);
+
 	SIZE EstimateSize(SIZE szAvailable);
 	void SetAttribute(LPCTSTR pstrName, LPCTSTR pstrValue);
+
+public:
+	CPaintManagerUI *m_pNotifyPm;//顶层接受消息的PaintManager
 };
 
 /////////////////////////////////////////////////////////////////////////////////////
@@ -66,16 +73,15 @@ public:
 	@param xml xml文件可是是资源xml也可以是文件xml
 	@param pSkinType 资源文件类型 _T("xml")
 	*/
-	BOOL Init(POINT point, STRINGorID xml, LPCTSTR pSkinType = NULL, CMenuElementUI* pOwner = NULL);
-	CMenuUI *GetMenuUI();
+	bool Init(POINT point, STRINGorID xml, LPCTSTR pSkinType = NULL, CMenuElementUI* pOwner = NULL);
 	void ShowWindow();
-protected:
+	CMenuUI* GetMenuUI();
     LPCTSTR GetWindowClassName() const;
     void OnFinalMessage(HWND hWnd);
     LRESULT HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam);
 	BOOL Receive(ContextMenuParam param);
 	virtual void Notify(TNotifyUI& msg);
-private:
+public:
 	HWND m_hParent;
 	POINT m_BasedPoint;
 	STRINGorID m_xml;
@@ -83,7 +89,7 @@ private:
     CPaintManagerUI m_pm;
     CMenuElementUI* m_pOwner;
     CMenuUI* m_pMenuUI;
-	CPaintManagerUI *m_pParentPm;//Parent的PM 用于消息传递到外部
+	CPaintManagerUI *m_pNotifyPm;//Parent的PM 用于消息传递到外部
 };
 
 class CListContainerElementUI;
@@ -96,24 +102,17 @@ public:
 
     LPCTSTR GetClass() const;
     LPVOID GetInterface(LPCTSTR pstrName);
-
-    bool DoPaint(HDC hDC, const RECT& rcPaint, CControlUI* pStopControl);
-
+	bool DoPaint(HDC hDC, const RECT& rcPaint, CControlUI* pStopControl);
 	void DrawItemText(HDC hDC, const RECT& rcItem);
-
 	SIZE EstimateSize(SIZE szAvailable);
-
 	bool Activate();
-
 	void DoEvent(TEventUI& event);
-
-
-	CMenuWnd* GetMenuWnd();
-
+	CMenuWnd* GetChildMenuWnd();
 	void CreateMenuWnd();
-
+	void SetMenuUI(CMenuUI *pmenuui);
 protected:
-	CMenuWnd* m_pWindow;
+	CMenuWnd* m_pChileMenuWindow;
+	CMenuUI *m_pParentMenuUI;
 };
 
 } // namespace DuiLib
