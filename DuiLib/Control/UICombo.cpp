@@ -118,7 +118,7 @@ bool CComboBodyUI::DoPaint(HDC hDC, const RECT& rcPaint, CControlUI* pStopContro
 //
 //
 
-class CComboWnd : public CWindowWnd
+class CComboWnd : public CWindowWnd, public INotifyUI
 {
 public:
     void Init(CComboUI* pOwner);
@@ -126,10 +126,9 @@ public:
     void OnFinalMessage(HWND hWnd);
 
     LRESULT HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam);
-
     void EnsureVisible(int iIndex);
     void Scroll(int dx, int dy);
-
+	virtual void Notify(TNotifyUI& msg);
 #if(_WIN32_WINNT >= 0x0501)
 	virtual UINT GetClassStyle() const;
 #endif
@@ -202,6 +201,7 @@ void CComboWnd::OnFinalMessage(HWND hWnd)
     m_pOwner->m_pWindow = NULL;
     m_pOwner->m_uButtonState &= ~ UISTATE_PUSHED;
     m_pOwner->Invalidate();
+	m_pm.RemoveNotifier(this);
     delete this;
 }
 
@@ -215,10 +215,39 @@ LRESULT CComboWnd::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
         // the items back to the righfull owner/manager when the window closes.
         m_pLayout = new CComboBodyUI(m_pOwner);
         m_pLayout->SetManager(&m_pm, NULL, true);
+		m_pm.AddNotifier(this);
         LPCTSTR pDefaultAttributes = m_pOwner->GetManager()->GetDefaultAttributeList(_T("VerticalLayout"));
         if( pDefaultAttributes ) {
             m_pLayout->SetAttributeList(pDefaultAttributes);
         }
+
+		LPCTSTR pDefaultVSrcollbarAttributes = m_pOwner->GetManager()->GetDefaultAttributeList(_T("VScrollBar"));
+		LPCTSTR pDefaultHSrcollbarAttributes = m_pOwner->GetManager()->GetDefaultAttributeList(_T("HScrollBar"));
+
+		//#liulei 修正combo的滚动条显示问题，20160530
+		CComboUI *pComUI = static_cast<CComboUI *>(m_pOwner->GetInterface(DUI_CTR_COMBO));
+		ASSERT(pComUI);
+		if (pComUI)
+		{
+			if (pComUI->GetVerticalScrollBar())
+			{
+				m_pLayout->SetAttribute(_T("vscrollbar"), pComUI->GetVerticalScrollBar()->IsVisible() ? _T("true") : _T("false"));
+				if (pDefaultVSrcollbarAttributes && m_pLayout->GetVerticalScrollBar())
+				{
+					m_pLayout->GetVerticalScrollBar()->SetAttributeList(pDefaultVSrcollbarAttributes);
+				}
+			}
+
+			if (pComUI->GetHorizontalScrollBar())
+			{
+				m_pLayout->SetAttribute(_T("hscrollbar"), pComUI->GetHorizontalScrollBar()->IsVisible() ? _T("true") : _T("false"));
+				if (pDefaultHSrcollbarAttributes && m_pLayout->GetHorizontalScrollBar())
+				{
+					m_pLayout->GetHorizontalScrollBar()->SetAttributeList(pDefaultHSrcollbarAttributes);
+				}
+			}
+		}
+
         m_pLayout->SetInset(CDuiRect(1, 1, 1, 1));
         m_pLayout->SetBkColor(0xFFFFFFFF);
         m_pLayout->SetBorderColor(0xFFC6C7D2);
@@ -336,6 +365,18 @@ void CComboWnd::Scroll(int dx, int dy)
     m_pLayout->SetScrollPos(CDuiSize(sz.cx + dx, sz.cy + dy));
 }
 
+void CComboWnd::Notify(TNotifyUI& msg)
+{
+	if (msg.sType == DUI_MSGTYPE_WINDOWINIT 
+		|| msg.sType == DUI_MSGTYPE_SETFOCUS
+		|| msg.sType == DUI_MSGTYPE_KILLFOCUS)
+	{
+		return;
+	}
+
+	if (m_pOwner && m_pOwner->GetManager())
+		m_pOwner->GetManager()->SendNotify(msg, true);
+}
 #if(_WIN32_WINNT >= 0x0501)
 UINT CComboWnd::GetClassStyle() const
 {
