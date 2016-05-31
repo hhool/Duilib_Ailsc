@@ -429,7 +429,7 @@ void CListUI::DoEvent(TEventUI& event)
         }
     }
 
-    CVerticalLayoutUI::DoEvent(event);
+	CVerticalLayoutUI::DoEvent(event);
 }
 
 CListHeaderUI* CListUI::GetHeader() const
@@ -2045,9 +2045,12 @@ void CListElementUI::DoEvent(TEventUI& event)
 
     if( event.Type == UIEVENT_DBLCLICK )
     {
-        if( IsEnabled() ) {
+        if( IsEnabled() )
+		{
             Activate();
             Invalidate();
+			//#liulei 增加双击事件 20160531
+			m_pManager->SendNotify(this, DUI_MSGTYPE_ITEMDBCLICK,0,0,true);
         }
         return;
     }
@@ -2813,9 +2816,12 @@ void CListContainerElementUI::DoEvent(TEventUI& event)
 
     if( event.Type == UIEVENT_DBLCLICK )
     {
-        if( IsEnabled() ) {
+        if( IsEnabled() )
+		{
             Activate();
             Invalidate();
+			//#liulei 增加双击事件 20160531
+			m_pManager->SendNotify(this, DUI_MSGTYPE_ITEMDBCLICK,0,0,true);
         }
         return;
     }
