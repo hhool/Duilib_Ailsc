@@ -2372,12 +2372,12 @@ LPCTSTR CListTextElementUI::GetText(int iIndex) const
 
 void CListTextElementUI::SetText(int iIndex, LPCTSTR pstrText)
 {
-    if( m_pOwner == NULL ) return;
-    TListInfoUI* pInfo = m_pOwner->GetListInfo();
-    if( iIndex < 0 || iIndex >= pInfo->nColumns ) return;
+    //if( m_pOwner == NULL ) return;
+   // TListInfoUI* pInfo = m_pOwner->GetListInfo();
+    if( iIndex < 0 /*|| iIndex >= pInfo->nColumns*/ ) return;
     m_bNeedEstimateSize = true;
     
-    while( m_aTexts.GetSize() < pInfo->nColumns ) { m_aTexts.Add(NULL); }
+	while (m_aTexts.GetSize() <= iIndex/*pInfo->nColumns*/) { m_aTexts.Add(NULL); }
 
     CDuiString* pText = static_cast<CDuiString*>(m_aTexts[iIndex]);
     if( (pText == NULL && pstrText == NULL) || (pText && *pText == pstrText) ) return;

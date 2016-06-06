@@ -31,6 +31,7 @@ namespace DuiLib
 
 		void	SetVisibleTag(bool _IsVisible);
 		bool	GetVisibleTag();
+		void	SetItemFont(int index);
 		void	SetItemText(LPCTSTR pstrValue);
 		CDuiString	GetItemText();
 		void	CheckBoxSelected(bool _Selected);
@@ -131,7 +132,7 @@ namespace DuiLib
 		virtual void SetItemHotTextColor(DWORD _dwItemHotTextColor);
 		virtual void SetSelItemTextColor(DWORD _dwSelItemTextColor);
 		virtual void SetSelItemHotTextColor(DWORD _dwSelHotItemTextColor);
-		
+		virtual void SetItemFont(int index);
 		virtual void SetAttribute(LPCTSTR pstrName, LPCTSTR pstrValue);
 	private:
 		UINT m_uItemMinWidth;

@@ -433,8 +433,16 @@ LRESULT CMenuWnd::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
 		else {
 			m_pm.Init(m_hWnd);
 			m_pm.AddNotifier(this);
-			CDialogBuilder builder;
-			CControlUI* pRoot = builder.Create(m_xml, m_sType.GetData(), NULL, &m_pm);
+			CControlUI* pRoot = NULL;
+			if (lstrcmp(m_xml.m_lpstr,_T("")) == 0)
+			{
+				pRoot = new CMenuUI;
+			}
+			else
+			{
+				CDialogBuilder builder;
+				pRoot = builder.Create(m_xml, m_sType.GetData(), NULL, &m_pm);
+			}
 			m_pm.AttachDialog(pRoot);
 
 			if (m_pm.FindSubControlByClass(pRoot, DUI_CTR_MENU))

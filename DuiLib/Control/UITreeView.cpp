@@ -287,6 +287,12 @@ namespace DuiLib
 		pItemButton->SetText(pstrValue);
 	}
 
+	//#liulei 修复itemfont 属性 20160531
+	void CTreeNodeUI::SetItemFont(int index)
+	{
+		if (pItemButton)
+			pItemButton->SetFont(index);
+	}
 	//************************************
 	// 函数名称: GetItemText
 	// 返回类型: UiLib::CDuiString
@@ -1193,6 +1199,16 @@ namespace DuiLib
 		}
 	}
 
+	//#liulei 修复itemfont 属性 20160531
+	void CTreeViewUI::SetItemFont(int index)
+	{
+		for (int nIndex = 0; nIndex < GetCount(); nIndex++){
+			CTreeNodeUI* pTreeNode = static_cast<CTreeNodeUI*>(GetItemAt(nIndex));
+			if (pTreeNode)
+				pTreeNode->SetItemFont(index);
+		}
+	}
+
 	//************************************
 	// 函数名称: SetAttribute
 	// 返回类型: void
@@ -1202,7 +1218,10 @@ namespace DuiLib
 	//************************************
 	void CTreeViewUI::SetAttribute( LPCTSTR pstrName, LPCTSTR pstrValue )
 	{
-		if(_tcscmp(pstrName,_T("visiblefolderbtn")) == 0)
+		//#liulei 修复itemfont 属性 20160531
+		if (_tcscmp(pstrName, _T("itemfont")) == 0)
+			SetItemFont(_ttoi(pstrValue));
+		else if(_tcscmp(pstrName,_T("visiblefolderbtn")) == 0)
 			SetVisibleFolderBtn(_tcscmp(pstrValue,_T("true")) == 0);
 		else if(_tcscmp(pstrName,_T("visiblecheckbtn")) == 0)
 			SetVisibleCheckBtn(_tcscmp(pstrValue,_T("true")) == 0);
