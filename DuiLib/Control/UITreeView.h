@@ -34,7 +34,7 @@ namespace DuiLib
 		void	SetItemFont(int index);
 		void	SetItemText(LPCTSTR pstrValue);
 		CDuiString	GetItemText();
-		void	CheckBoxSelected(bool _Selected);
+		void	CheckBoxSelected(bool _Selected, bool bTriggerEvent = true);
 		bool	IsCheckBoxSelected() const;
 		bool	IsHasChild() const;
 		long	GetTreeLevel() const;

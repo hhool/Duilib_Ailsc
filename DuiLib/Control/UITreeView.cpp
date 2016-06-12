@@ -309,9 +309,9 @@ namespace DuiLib
 	// 参数信息: bool _Selected
 	// 函数说明: 
 	//************************************
-	void CTreeNodeUI::CheckBoxSelected( bool _Selected )
+	void CTreeNodeUI::CheckBoxSelected(bool _Selected, bool bTriggerEvent)
 	{
-		pCheckBox->Selected(_Selected);
+		pCheckBox->Selected(_Selected, bTriggerEvent);
 	}
 
 	//************************************
@@ -994,6 +994,35 @@ namespace DuiLib
 					if(pItem->GetCountChild())
 						SetItemCheckBox(_Selected,pItem);
 				}
+			}
+
+			///.#liulei 20160612 如果取消了子节点则父节点也取消选择
+			CTreeNodeUI *_ParentNode = _TreeNode->GetParentNode();
+			if (_ParentNode && !_Selected)
+			{
+				_ParentNode->CheckBoxSelected(false, false);
+				CTreeNodeUI *_PparentNode = _TreeNode->GetParentNode();
+				while (_PparentNode)
+				{
+					_PparentNode->CheckBoxSelected(false, false);
+					_PparentNode = _PparentNode->GetParentNode();
+				}
+			}
+			///.#liulei 20160612 如果选中了子节点则判断父节点是否需要选中
+			if (_Selected && _ParentNode && _ParentNode->GetCountChild() > 0)
+			{
+				bool bCheck = true;
+				int nCount = _ParentNode->GetCountChild();
+				for (int nIndex = 0; nIndex < nCount; nIndex++)
+				{
+					CTreeNodeUI* pItem = _ParentNode->GetChildNode(nIndex);
+					if (!pItem->GetCheckBox()->GetCheck())
+					{
+						bCheck = false;
+						break;
+					}
+				}
+				_ParentNode->CheckBoxSelected(bCheck, bCheck ? true:false);
 			}
 			return true;
 		}
