@@ -14,7 +14,7 @@ class DUILIB_API CComboUI : public CContainerUI, public IListOwnerUI
     friend class CComboWnd;
 public:
     CComboUI();
-
+	~CComboUI();
     LPCTSTR GetClass() const;
     LPVOID GetInterface(LPCTSTR pstrName);
 

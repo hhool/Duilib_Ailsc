@@ -202,6 +202,7 @@ void CComboWnd::OnFinalMessage(HWND hWnd)
     m_pOwner->m_uButtonState &= ~ UISTATE_PUSHED;
     m_pOwner->Invalidate();
 	m_pm.RemoveNotifier(this);
+	m_pOwner = NULL;
     delete this;
 }
 
@@ -417,6 +418,12 @@ CComboUI::CComboUI() : m_pWindow(NULL), m_iCurSel(-1), m_uButtonState(0)
     ::ZeroMemory(&m_ListInfo.rcColumn, sizeof(m_ListInfo.rcColumn));
 }
 
+CComboUI::~CComboUI()
+{
+	if (m_pWindow)
+		m_pWindow->SendMessage(WM_CLOSE);
+	m_pWindow = NULL;
+}
 LPCTSTR CComboUI::GetClass() const
 {
     return DUI_CTR_COMBO;
