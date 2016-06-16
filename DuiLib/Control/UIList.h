@@ -229,7 +229,13 @@ public:
 
     LPCTSTR GetClass() const;
     LPVOID GetInterface(LPCTSTR pstrName);
-
+	bool Add(CControlUI* pControl);
+	bool AddAt(CControlUI* pControl, int iIndex);
+	void RemoveAll();
+	bool Remove(CControlUI* pControl, bool bDoNotDestroy = false);
+	bool RemoveAt(int iIndex, bool bDoNotDestroy = false);
+	void SetVisible(bool bVisible = true);
+	void SetItemVisible(int nIndex, bool bVisible = true, bool bInvalidate = true);
     SIZE EstimateSize(SIZE szAvailable);
 };
 
@@ -245,9 +251,8 @@ public:
     LPCTSTR GetClass() const;
     LPVOID GetInterface(LPCTSTR pstrName);
     UINT GetControlFlags() const;
-
     void SetEnabled(bool bEnable = true);
-
+	void SetVisible(bool bVisible = true);
 	bool IsDragable() const;
     void SetDragable(bool bDragable);
 	DWORD GetSepWidth() const;

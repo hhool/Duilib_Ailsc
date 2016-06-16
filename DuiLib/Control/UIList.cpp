@@ -293,8 +293,22 @@ void CListUI::SetPos(RECT rc, bool bNeedInvalidate)
 		int iOffset = m_pList->GetScrollPos().cx;
 		for( int i = 0; i < m_ListInfo.nColumns; i++ ) {
 			CControlUI* pControl = static_cast<CControlUI*>(m_pHeader->GetItemAt(i));
-			if( !pControl->IsVisible() ) continue;
-			if( pControl->IsFloat() ) continue;
+			if (!pControl->IsVisible())
+			{
+				//#liulei 修复由于隐藏最后一列的时候，由于宽度 = m_ListInfo.rcColumn[lastcol].right - m_ListInfo.rcColumn[i].left
+				//所以这里需要修复列宽的计算方法 20160616
+				i == 0 ? m_ListInfo.rcColumn[i].left = m_ListInfo.rcColumn[i].right = 0:
+				m_ListInfo.rcColumn[i].right = m_ListInfo.rcColumn[i].left = m_ListInfo.rcColumn[i - 1].right;
+				continue;
+			}
+			if (pControl->IsFloat())
+			{
+				//#liulei 修复由于隐藏最后一列的时候，由于宽度 = m_ListInfo.rcColumn[lastcol].right - m_ListInfo.rcColumn[i].left
+				//所以这里需要修复列宽的计算方法 20160616
+				i == 0 ? m_ListInfo.rcColumn[i].left = m_ListInfo.rcColumn[i].right = 0 :
+				m_ListInfo.rcColumn[i].right = m_ListInfo.rcColumn[i].left = m_ListInfo.rcColumn[i - 1].right;
+				continue;
+			}
 
 			RECT rcPos = pControl->GetPos();
 			if( iOffset > 0 ) {
@@ -1184,7 +1198,8 @@ void CListBodyUI::SetPos(RECT rc, bool bNeedInvalidate)
         pInfo = m_pOwner->GetListInfo();
         if( pInfo != NULL ) {
             iChildPadding += pInfo->iHLineSize;
-            if (pInfo->nColumns > 0) {
+            if (pInfo->nColumns > 0)
+			{
                 szAvailable.cx = pInfo->rcColumn[pInfo->nColumns - 1].right - pInfo->rcColumn[0].left;
             }
         }
@@ -1426,6 +1441,60 @@ LPVOID CListHeaderUI::GetInterface(LPCTSTR pstrName)
     if( _tcscmp(pstrName, DUI_CTR_LISTHEADER) == 0 ) return this;
     return CHorizontalLayoutUI::GetInterface(pstrName);
 }
+///> #liulei 修复表头删除所有的时候，ListBody位置没有重计算的问题
+bool CListHeaderUI::Add(CControlUI* pControl)
+{
+	bool bRet = __super::Add(pControl);
+	if (bRet)
+		NeedParentUpdate();
+	return bRet;
+}
+///> #liulei 修复表头删除所有的时候，ListBody位置没有重计算的问题
+bool CListHeaderUI::AddAt(CControlUI* pControl, int iIndex)
+{
+	bool bRet = __super::AddAt(pControl, iIndex);
+	if (bRet)
+		NeedParentUpdate();
+	return bRet;
+}
+///> #liulei 修复表头删除所有的时候，ListBody位置没有重计算的问题
+void CListHeaderUI::RemoveAll()
+{
+	__super::RemoveAll();
+	NeedParentUpdate();
+}
+///> #liulei 修复表头删除所有的时候，ListBody位置没有重计算的问题
+bool CListHeaderUI::Remove(CControlUI* pControl, bool bDoNotDestroy)
+{
+	bool bRet = __super::Remove(pControl, bDoNotDestroy);
+	if(bRet)
+		NeedParentUpdate();
+	return bRet;
+}
+///> #liulei 修复表头删除所有的时候，ListBody位置没有重计算的问题
+bool CListHeaderUI::RemoveAt(int iIndex, bool bDoNotDestroy)
+{
+	bool bRet = __super::RemoveAt(iIndex, bDoNotDestroy);
+	if (bRet)
+		NeedParentUpdate();
+	return bRet;
+}
+///> #liulei 修复表头动态显示，ListBody位置没有重计算的问题
+void CListHeaderUI::SetVisible(bool bVisible)
+{
+	__super::SetVisible(bVisible);
+	NeedParentUpdate();
+}
+
+void CListHeaderUI::SetItemVisible(int nIndex, bool bVisible, bool bInvalidate)
+{
+	if (GetItemAt(nIndex))
+	{
+		GetItemAt(nIndex)->SetVisible(bVisible);
+		if (bInvalidate)
+			NeedParentUpdate();
+	}
+}
 
 SIZE CListHeaderUI::EstimateSize(SIZE szAvailable)
 {
@@ -1481,6 +1550,14 @@ void CListHeaderItemUI::SetEnabled(bool bEnable)
     if( !IsEnabled() ) {
         m_uButtonState = 0;
     }
+}
+
+///> #liulei 修复表头动态显示，界面刷新问题
+void CListHeaderItemUI::SetVisible(bool bVisible)
+{
+	__super::SetVisible(bVisible);
+	if (GetParent())
+		GetParent()->NeedParentUpdate();
 }
 
 bool CListHeaderItemUI::IsDragable() const
@@ -1813,7 +1890,8 @@ void CListHeaderItemUI::DoEvent(TEventUI& event)
 
 SIZE CListHeaderItemUI::EstimateSize(SIZE szAvailable)
 {
-    if( m_cxyFixed.cy == 0 ) return CDuiSize(m_cxyFixed.cx, m_pManager->GetDefaultFontInfo()->tm.tmHeight + 8);
+	///#liulei 20160613 修复表头不可见的时候 位置计算,修复水平滚动条位置计算错误
+    if( m_cxyFixed.cy == 0 ) return CDuiSize(IsVisible() ? m_cxyFixed.cx:0, m_pManager->GetDefaultFontInfo()->tm.tmHeight + 8);
 	return __super::EstimateSize(szAvailable);
 }
 
@@ -2563,13 +2641,20 @@ void CListTextElementUI::DrawItemText(HDC hDC, const RECT& rcItem)
         iTextColor = pInfo->dwDisabledTextColor;
     }
     IListCallbackUI* pCallback = m_pOwner->GetTextCallback();
-
+	CListHeaderUI*	pHeader = m_pOwner->GetHeader();
     m_nLinks = 0;
     int nLinks = lengthof(m_rcLinks);
     if (pInfo->nColumns > 0) {
         for( int i = 0; i < pInfo->nColumns; i++ )
         {
             RECT rcItem = { pInfo->rcColumn[i].left, m_rcItem.top, pInfo->rcColumn[i].right, m_rcItem.bottom };
+			//#liulei 如果表头项不可见则item 宽度置为0,当前列内容不绘画
+			if (pHeader&&!pHeader->GetItemAt(i)->IsVisible())
+			{
+				rcItem.right = rcItem.left;
+				continue;
+			}
+
             if (pInfo->iVLineSize > 0 && i < pInfo->nColumns - 1) {
                 RECT rcLine = { rcItem.right - pInfo->iVLineSize / 2, rcItem.top, rcItem.right - pInfo->iVLineSize / 2, rcItem.bottom};
                 CRenderEngine::DrawLine(hDC, rcLine, pInfo->iVLineSize, GetAdjustColor(pInfo->dwVLineColor));
