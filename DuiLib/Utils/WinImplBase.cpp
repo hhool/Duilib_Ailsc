@@ -228,6 +228,12 @@ LRESULT WindowImplBase::OnMouseHover(UINT uMsg, WPARAM wParam, LPARAM lParam, BO
 	bHandled = FALSE;
 	return 0;
 }
+
+LRESULT WindowImplBase::OnMouseLeave(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled)
+{
+	bHandled = FALSE;
+	return 0;
+}
 #endif
 
 LRESULT WindowImplBase::OnSize(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled)
@@ -430,6 +436,7 @@ LRESULT WindowImplBase::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
 	case WM_LBUTTONDOWN:	lRes = OnLButtonDown(uMsg, wParam, lParam, bHandled); break;
 	case WM_MOUSEMOVE:		lRes = OnMouseMove(uMsg, wParam, lParam, bHandled); break;
 	case WM_MOUSEHOVER:	lRes = OnMouseHover(uMsg, wParam, lParam, bHandled); break;
+	case WM_MOUSELEAVE: lRes = OnMouseLeave(uMsg, wParam, lParam, bHandled); break;
 	default:				bHandled = FALSE; break;
 	}
 	if (bHandled) return lRes;
@@ -470,7 +477,14 @@ void WindowImplBase::OnClick(TNotifyUI& msg)
 	}
 	else if( sCtrlName == _T("maxbtn"))
 	{ 
-		SendMessage(WM_SYSCOMMAND, SC_MAXIMIZE, 0); 
+		if (::IsIconic(m_hWnd))
+		{
+			SendMessage(WM_SYSCOMMAND, SC_RESTORE, 0);
+		}
+		else
+		{
+			SendMessage(WM_SYSCOMMAND, SC_MAXIMIZE, 0);
+		}
 		return; 
 	}
 	else if( sCtrlName == _T("restorebtn"))
@@ -501,12 +515,12 @@ BOOL WindowImplBase::IsInStaticControl(CControlUI *pControl)
 		map<CDuiString, int>::value_type(DUI_CTR_MENU, 1),
 		map<CDuiString, int>::value_type(DUI_CTR_EDIT, 2),
 		map<CDuiString, int>::value_type(DUI_CTR_LIST, 2),
-		map<CDuiString, int>::value_type(DUI_CTR_TEXT, 2),
+		//map<CDuiString, int>::value_type(DUI_CTR_TEXT, 2),
 		map<CDuiString, int>::value_type(DUI_CTR_TREE, 2),
 		map<CDuiString, int>::value_type(DUI_CTR_HBOX, 2),
 		map<CDuiString, int>::value_type(DUI_CTR_VBOX, 2),
 		map<CDuiString, int>::value_type(DUI_CTR_COMBO, 2),
-		map<CDuiString, int>::value_type(DUI_CTR_LABEL, 2),
+		//map<CDuiString, int>::value_type(DUI_CTR_LABEL, 2),
 		map<CDuiString, int>::value_type(DUI_CTR_FLASH, 2),
 		map<CDuiString, int>::value_type(DUI_CTR_BUTTON, 2),
 		map<CDuiString, int>::value_type(DUI_CTR_OPTION, 2),

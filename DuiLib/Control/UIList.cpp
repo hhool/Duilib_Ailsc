@@ -5,6 +5,7 @@ namespace DuiLib {
 
 /////////////////////////////////////////////////////////////////////////////////////
 //
+#define VIR_ITEM_HEIGHT 30//虚表项的默认高度
 
 class CListBodyUI : public CVerticalLayoutUI
 {
@@ -16,7 +17,7 @@ public:
     void DoEvent(TEventUI& event);
     bool DoPaint(HDC hDC, const RECT& rcPaint, CControlUI* pStopControl);
     bool SortItems(PULVCompareFunc pfnCompare, UINT_PTR dwData, int& iCurSel);
-
+	void SetVirtualItemDataCallback(PULVirtualItemData pCallback, LPVOID pContext);
 protected:
     static int __cdecl ItemComareFunc(void *pvlocale, const void *item1, const void *item2);
     int __cdecl ItemComareFunc(const void *item1, const void *item2);
@@ -24,7 +25,9 @@ protected:
 protected:
     CListUI* m_pOwner;
     PULVCompareFunc m_pCompareFunc;
-    UINT_PTR m_compareData;
+	PULVirtualItemData m_pVirtualData;
+	UINT_PTR m_compareData;
+	LPVOID m_pContext;
 };
 
 /////////////////////////////////////////////////////////////////////////////////////
@@ -33,9 +36,12 @@ protected:
 
 CListUI::CListUI() : m_pCallback(NULL), m_bScrollSelect(false), m_iCurSel(-1), m_iExpandedItem(-1)
 {
+	m_nVirtualItemHeight = VIR_ITEM_HEIGHT;
+	m_nVirtualItemCount = 0;
+	m_PrepareVirutalItem = NULL;
     m_pList = new CListBodyUI(this);
     m_pHeader = new CListHeaderUI;
-
+	m_bUseVirtualList = false;
     Add(m_pHeader);
     CVerticalLayoutUI::Add(m_pList);
 
@@ -174,6 +180,12 @@ bool CListUI::Add(CControlUI* pControl)
         m_ListInfo.nColumns = MIN(m_pHeader->GetCount(), UILIST_MAX_COLUMNS);
         return ret;
     }
+	//如果是虚拟列表则不允许操作,表头除外
+	if (IsUseVirtualList())
+	{
+		return false;
+	}
+
     // The list items should know about us
     IListItemUI* pListItem = static_cast<IListItemUI*>(pControl->GetInterface(DUI_CTR_ILISTITEM));
     if( pListItem != NULL ) {
@@ -181,6 +193,35 @@ bool CListUI::Add(CControlUI* pControl)
         pListItem->SetIndex(GetCount());
     }
     return m_pList->Add(pControl);
+}
+
+bool CListUI::AddVirtualItem(CControlUI* pControl)
+{
+	// Override the Add() method so we can add items specifically to
+	// the intended widgets. Headers are assumed to be
+	// answer the correct interface so we can add multiple list headers.
+	if (pControl->GetInterface(DUI_CTR_LISTHEADER) != NULL) {
+		if (m_pHeader != pControl && m_pHeader->GetCount() == 0) {
+			CVerticalLayoutUI::Remove(m_pHeader);
+			m_pHeader = static_cast<CListHeaderUI*>(pControl);
+		}
+		m_ListInfo.nColumns = MIN(m_pHeader->GetCount(), UILIST_MAX_COLUMNS);
+		return CVerticalLayoutUI::AddAt(pControl, 0);
+	}
+	// We also need to recognize header sub-items
+	if (_tcsstr(pControl->GetClass(), DUI_CTR_LISTHEADERITEM) != NULL) {
+		bool ret = m_pHeader->Add(pControl);
+		m_ListInfo.nColumns = MIN(m_pHeader->GetCount(), UILIST_MAX_COLUMNS);
+		return ret;
+	}
+
+	// The list items should know about us
+	IListItemUI* pListItem = static_cast<IListItemUI*>(pControl->GetInterface(DUI_CTR_ILISTITEM));
+	if (pListItem != NULL) {
+		pListItem->SetOwner(this);
+		pListItem->SetIndex(GetCount());
+	}
+	return m_pList->Add(pControl);
 }
 
 bool CListUI::AddAt(CControlUI* pControl, int iIndex)
@@ -204,6 +245,12 @@ bool CListUI::AddAt(CControlUI* pControl, int iIndex)
     }
     if (!m_pList->AddAt(pControl, iIndex)) return false;
 
+	//如果是虚拟列表则不允许操作,表头除外
+	if (IsUseVirtualList())
+	{
+		return false;
+	}
+
     // The list items should know about us
     IListItemUI* pListItem = static_cast<IListItemUI*>(pControl->GetInterface(DUI_CTR_ILISTITEM));
     if( pListItem != NULL ) {
@@ -224,6 +271,12 @@ bool CListUI::AddAt(CControlUI* pControl, int iIndex)
 
 bool CListUI::Remove(CControlUI* pControl, bool bDoNotDestroy)
 {
+	//如果是虚拟列表则不允许操作
+	if (IsUseVirtualList())
+	{
+		return false;
+	}
+
     if( pControl->GetInterface(DUI_CTR_LISTHEADER) != NULL ) return CVerticalLayoutUI::Remove(pControl, bDoNotDestroy);
     // We also need to recognize header sub-items
     if( _tcsstr(pControl->GetClass(), DUI_CTR_LISTHEADERITEM) != NULL ) return m_pHeader->Remove(pControl, bDoNotDestroy);
@@ -252,6 +305,12 @@ bool CListUI::Remove(CControlUI* pControl, bool bDoNotDestroy)
 
 bool CListUI::RemoveAt(int iIndex, bool bDoNotDestroy)
 {
+	//如果是虚拟列表则不允许操作
+	if (IsUseVirtualList())
+	{
+		return false;
+	}
+
     if (!m_pList->RemoveAt(iIndex, bDoNotDestroy)) return false;
 
     for(int i = iIndex; i < m_pList->GetCount(); ++i) {
@@ -271,6 +330,12 @@ bool CListUI::RemoveAt(int iIndex, bool bDoNotDestroy)
 
 void CListUI::RemoveAll()
 {
+	//如果是虚拟列表则不允许操作
+	if (IsUseVirtualList())
+	{
+		return ;
+	}
+
     m_iCurSel = -1;
     m_iExpandedItem = -1;
     m_pList->RemoveAll();
@@ -327,7 +392,8 @@ void CListUI::SetPos(RECT rc, bool bNeedInvalidate)
 	}
 
 	CVerticalLayoutUI::SetPos(rc, bNeedInvalidate);
-
+	///> 重新计算虚表缓冲区大小
+	ResizeVirtualItemBuffer();
 	if( m_pHeader == NULL ) return;
 
 	rc = m_rcItem;
@@ -469,6 +535,70 @@ void CListUI::SetScrollSelect(bool bScrollSelect)
 int CListUI::GetCurSel() const
 {
     return m_iCurSel;
+}
+
+void CListUI::SetVirtualItemDataCallback(PULVirtualItemData pCallback, PULVirtualPrepareItem prepareitem,LPVOID pContext)
+{
+	if (!m_pList) return;
+	m_pList->SetVirtualItemDataCallback(pCallback, pContext);
+	m_PrepareVirutalItem = prepareitem;
+	ResizeVirtualItemBuffer();//调整缓冲区大小
+}
+
+void CListUI::SetVirtualList(bool bUse)
+{
+	m_bUseVirtualList = bUse;
+}
+
+bool CListUI::IsUseVirtualList()
+{
+	return m_bUseVirtualList;
+}
+
+int CListUI::GetVirtualItemHeight()
+{
+	return m_nVirtualItemHeight;
+}
+
+int CListUI::GetVirtualItemCount()
+{
+	return m_nVirtualItemCount;
+}
+
+void CListUI::ResizeVirtualItemBuffer()
+{
+	if (!IsUseVirtualList()) return;
+
+ 	if (m_PrepareVirutalItem)
+	{
+		if (GetCount() == 0)
+		{
+			CControlUI *pControl = m_PrepareVirutalItem();
+			if (pControl)
+			{
+				m_nVirtualItemHeight = max(pControl->GetFixedHeight(), pControl->GetHeight());
+				m_nVirtualItemHeight == 0 ? m_nVirtualItemHeight = VIR_ITEM_HEIGHT : 0;
+			}
+		}
+
+		int nItemCount = GetCount();
+		int nItemSize = GetHeight() / m_nVirtualItemHeight + 5;
+
+		for (int i = nItemCount; i < nItemSize; ++i)
+		{
+			CControlUI *pControl = m_PrepareVirutalItem();
+			if (pControl)
+			{
+				AddVirtualItem(pControl);
+			}
+		}
+	}
+}
+
+void CListUI::SetVirtualItemCount(int nCountItem)
+{
+	m_nVirtualItemCount = nCountItem;
+	NeedUpdate();
 }
 
 bool CListUI::SelectItem(int iIndex, bool bTakeFocus, bool bTriggerEvent)
@@ -844,6 +974,7 @@ void CListUI::Scroll(int dx, int dy)
 void CListUI::SetAttribute(LPCTSTR pstrName, LPCTSTR pstrValue)
 {
     if( _tcscmp(pstrName, _T("header")) == 0 ) GetHeader()->SetVisible(_tcscmp(pstrValue, _T("hidden")) != 0);
+	if (_tcscmp(pstrName, _T("virtuallist")) == 0) SetVirtualList(_tcscmp(pstrValue, _T("true")) == 0);
     else if( _tcscmp(pstrName, _T("headerbkimage")) == 0 ) GetHeader()->SetBkImage(pstrValue);
     else if( _tcscmp(pstrName, _T("scrollselect")) == 0 ) SetScrollSelect(_tcscmp(pstrValue, _T("true")) == 0);
     else if( _tcscmp(pstrName, _T("multiexpanding")) == 0 ) SetMultiExpanding(_tcscmp(pstrValue, _T("true")) == 0);
@@ -1092,7 +1223,15 @@ bool CListUI::SortItems(PULVCompareFunc pfnCompare, UINT_PTR dwData)
 
 CListBodyUI::CListBodyUI(CListUI* pOwner) : m_pOwner(pOwner)
 {
+	m_pContext = NULL;
+	m_pVirtualData = NULL;
     ASSERT(m_pOwner);
+}
+
+void CListBodyUI::SetVirtualItemDataCallback(PULVirtualItemData pCallback, LPVOID pContext)
+{
+	m_pContext = pContext;
+	m_pVirtualData = pCallback;
 }
 
 bool CListBodyUI::SortItems(PULVCompareFunc pfnCompare, UINT_PTR dwData, int& iCurSel)
@@ -1148,6 +1287,8 @@ void CListBodyUI::SetScrollPos(SIZE szPos)
     }
 
     if( cx == 0 && cy == 0 ) return;
+
+	if (m_pOwner && m_pOwner->IsUseVirtualList()) cy = 0;
 
     for( int it2 = 0; it2 < m_items.GetSize(); it2++ ) {
         CControlUI* pControl = static_cast<CControlUI*>(m_items[it2]);
@@ -1249,7 +1390,7 @@ void CListBodyUI::SetPos(RECT rc, bool bNeedInvalidate)
     // Position the elements
     SIZE szRemaining = szAvailable;
     int iPosY = rc.top;
-    if( m_pVerticalScrollBar && m_pVerticalScrollBar->IsVisible() ) {
+    if(!m_pOwner->IsUseVirtualList() && m_pVerticalScrollBar && m_pVerticalScrollBar->IsVisible() ) {
         iPosY -= m_pVerticalScrollBar->GetScrollPos();
     }
     int iPosX = rc.left;
@@ -1294,6 +1435,10 @@ void CListBodyUI::SetPos(RECT rc, bool bNeedInvalidate)
     }
     cyNeeded += (nEstimateNum - 1) * iChildPadding;
 
+	if (m_pOwner->IsUseVirtualList())
+	{
+		cyNeeded = m_pOwner->GetVirtualItemHeight()*(m_pOwner->GetVirtualItemCount()+1);
+	}
     // Process the scrollbar
     ProcessScrollBar(rc, cxNeeded, cyNeeded);
 }
@@ -1341,7 +1486,7 @@ bool CListBodyUI::DoPaint(HDC hDC, const RECT& rcPaint, CControlUI* pStopControl
     CRenderClip::GenerateClip(hDC, rcTemp, clip);
     CControlUI::DoPaint(hDC, rcPaint, pStopControl);
 
-    if( m_items.GetSize() > 0 ) {
+	 if( m_items.GetSize() > 0 ) {
         RECT rc = m_rcItem;
         rc.left += m_rcInset.left;
         rc.top += m_rcInset.top;
@@ -1349,10 +1494,34 @@ bool CListBodyUI::DoPaint(HDC hDC, const RECT& rcPaint, CControlUI* pStopControl
         rc.bottom -= m_rcInset.bottom;
         if( m_pVerticalScrollBar && m_pVerticalScrollBar->IsVisible() ) rc.right -= m_pVerticalScrollBar->GetFixedWidth();
         if( m_pHorizontalScrollBar && m_pHorizontalScrollBar->IsVisible() ) rc.bottom -= m_pHorizontalScrollBar->GetFixedHeight();
+     
+		///> 计算虚拟列表的起始位置
+		int nVirtualStartIndex = 0;
+		if (m_pOwner->IsUseVirtualList() && m_items.GetSize() > 0 && m_pVerticalScrollBar && m_pVerticalScrollBar->IsVisible())
+		{
+			CControlUI* pControl = static_cast<CControlUI*>(m_items[0]);
+			nVirtualStartIndex = m_pVerticalScrollBar->GetScrollPos() / pControl->GetHeight();
+		}
 
         if( !::IntersectRect(&rcTemp, &rcPaint, &rc) ) {
             for( int it = 0; it < m_items.GetSize(); it++ ) {
                 CControlUI* pControl = static_cast<CControlUI*>(m_items[it]);
+				//> 如果使用虚拟列表，则设置虚拟列表数据
+				if (m_pOwner->IsUseVirtualList())
+				{
+					if (m_pVirtualData &&
+						nVirtualStartIndex + it < m_pOwner->GetVirtualItemCount() &&
+						nVirtualStartIndex + it >= 0)
+					{
+						pControl->SetVisible(true);
+						m_pVirtualData(pControl, nVirtualStartIndex + it, m_pContext);
+					}
+					else if (m_pOwner->IsUseVirtualList())
+					{
+						pControl->SetVisible(false);
+					}
+				}
+
                 if( pControl == pStopControl ) return false;
                 if( !pControl->IsVisible() ) continue;
                 if( !::IntersectRect(&rcTemp, &rcPaint, &pControl->GetPos()) ) continue;
@@ -1368,6 +1537,22 @@ bool CListBodyUI::DoPaint(HDC hDC, const RECT& rcPaint, CControlUI* pStopControl
             CRenderClip::GenerateClip(hDC, rcTemp, childClip);
             for( int it = 0; it < m_items.GetSize(); it++ ) {
                 CControlUI* pControl = static_cast<CControlUI*>(m_items[it]);
+				//> 如果使用虚拟列表，则设置虚拟列表数据
+				if (m_pOwner->IsUseVirtualList())
+				{
+					if (m_pVirtualData &&
+						nVirtualStartIndex + it < m_pOwner->GetVirtualItemCount() &&
+						nVirtualStartIndex + it >= 0)
+					{
+						pControl->SetVisible(true);
+						m_pVirtualData(pControl, nVirtualStartIndex + it, m_pContext);
+					}
+					else if (m_pOwner->IsUseVirtualList())
+					{
+						pControl->SetVisible(false);
+					}
+				}
+
                 if( pControl == pStopControl ) return false;
                 if( !pControl->IsVisible() ) continue;
                 if( !pControl->IsFloat() ) {
@@ -3110,7 +3295,7 @@ void CListHBoxElementUI::SetPos(RECT rc, bool bNeedInvalidate)
 
 bool CListHBoxElementUI::DoPaint(HDC hDC, const RECT& rcPaint, CControlUI* pStopControl)
 {
-    ASSERT(m_pOwner);
+   // ASSERT(m_pOwner);
     if( m_pOwner == NULL ) return true;
     TListInfoUI* pInfo = m_pOwner->GetListInfo();
     if( pInfo == NULL ) return true;

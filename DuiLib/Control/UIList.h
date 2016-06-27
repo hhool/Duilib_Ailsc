@@ -11,8 +11,16 @@ namespace DuiLib {
 
 typedef int (CALLBACK *PULVCompareFunc)(UINT_PTR, UINT_PTR, UINT_PTR);
 
-class CListHeaderUI;
+////////////////////////////////////#lilei 20160627 虚拟列表接口/////////////////////////////////////////////////
+//@param [in]pControl 当前绘画的行 控件，和 PULVirtualPrepareItem 准备数据行数据对应
+//@param [in]nRow 当前第几行
+//@param [in]lpContext 用户设置的上下文数据
+typedef void (CALLBACK* PULVirtualItemData)(CControlUI *pControl, int nRow,LPVOID lpContext);
+//PULVirtualPrepareItem 未虚拟列表准备行数据行为（格式）
+typedef CControlUI* (CALLBACK* PULVirtualPrepareItem)();
 
+class CListHeaderUI;
+ 
 #define UILIST_MAX_COLUMNS 64
 
 typedef struct tagTListInfoUI
@@ -96,7 +104,7 @@ public:
 
 class CListBodyUI;
 class CListHeaderUI;
-
+//支持虚拟列表
 class DUILIB_API CListUI : public CVerticalLayoutUI, public IListUI
 {
 public:
@@ -105,6 +113,21 @@ public:
     LPCTSTR GetClass() const;
     UINT GetControlFlags() const;
     LPVOID GetInterface(LPCTSTR pstrName);
+	///////////////////////////////虚拟列表接口 #liulei 20160627/////////////////////////////////////////
+	//如果使用了虚拟列表则外部调用Rmove,RemoveAt,Add,AddAt,RemoveAll 无效
+	//> 设置虚表行的数据格式需要指定行高，以及数据回调（原理类似于MFC的虚表）
+	void SetVirtualItemDataCallback(PULVirtualItemData pCallback, PULVirtualPrepareItem prepareitem, LPVOID pContext = NULL);
+	//> 设置是否为虚表显示数据
+	void SetVirtualList(bool bUse = false);
+	//> 设置虚表数据个数
+	void SetVirtualItemCount(int nCountItem);
+	bool IsUseVirtualList();
+	//> 获取虚表的行高度（虚表行高必须保持一致，不支持动态行高）
+	int GetVirtualItemHeight();
+	//> 获取虚表数据个数
+	int GetVirtualItemCount();
+	///////////////////////////////////////////////////////////////////////////////////////////////////
+
 
     bool GetScrollSelect();
     void SetScrollSelect(bool bScrollSelect);
@@ -209,7 +232,11 @@ public:
     virtual CScrollBarUI* GetHorizontalScrollBar() const;
     bool SortItems(PULVCompareFunc pfnCompare, UINT_PTR dwData);
 
+private:
+	void ResizeVirtualItemBuffer();//动态调整虚拟表的缓冲区
+	bool AddVirtualItem(CControlUI* pControl);
 protected:
+	bool m_bUseVirtualList;
     bool m_bScrollSelect;
     int m_iCurSel;
     int m_iExpandedItem;
@@ -217,6 +244,9 @@ protected:
     CListBodyUI* m_pList;
     CListHeaderUI* m_pHeader;
     TListInfoUI m_ListInfo;
+	PULVirtualPrepareItem m_PrepareVirutalItem;
+	int m_nVirtualItemHeight;
+	int m_nVirtualItemCount;
 };
 
 /////////////////////////////////////////////////////////////////////////////////////
