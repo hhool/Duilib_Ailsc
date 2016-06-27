@@ -718,6 +718,8 @@
 		<!--MenuElement 不会主动调节控件高度，如果需要包含其他多个控件，控件请使用HorizontalLayout或者Verticallayout包含，需要主动设置高度-->
 		<!--MenuElemetn 背景绘画使用的是Menu指定item的背景和颜色，不能本身单独设置-->
 	</MenuElement>
+
+	<!--支持虚拟列表 virtuallist 属性-->
 	<List parent="VerticalLayout" notifies="setfocus killfocus timer menu itemselect windowinit(root)">
 		<Attribute name="name" default="" type="STRING" comment="控件名字，同一窗口内必须唯一，如(testbtn)"/>
 		<Attribute name="pos" default="0,0,0,0" type="RECT" comment="位置，如果为float控件则指定位置和大小，否则只指定大小,如(0,0,100,100)"/>
@@ -753,7 +755,7 @@
 		<Attribute name="childpadding" default="0" type="INT" comment="子控件之间的额外距离,如(4)"/>
 		<Attribute name="sepheight" default="0" type="INT" comment="分隔符高度,正负表示分隔符在顶部还是底部,如(4)"/>
 		<Attribute name="sepimm" default="false" type="BOOL" comment="拖动分隔符是否立即改变大小,如(false)"/>
-		<Attribute name="header" default="show" type="BOOL" comment="是否显示表头,如(show) hidden"/>
+		<Attribute name="header" default="true" type="BOOL" comment="是否显示表头,如(hidden)"/>
 		<Attribute name="headerbkimage" default="" type="STRING" comment="表头背景图片"/>
 		<Attribute name="scrollselect" default="false" type="BOOL" comment="是否随滚动改变选中项,如(false)"/>
 		<Attribute name="itemfont" default="-1" type="INT" comment="item的字体id,如(0)"/>
@@ -776,6 +778,7 @@
 		<Attribute name="itemlinecolor" default="0x00000000" type="DWORD" comment="item行分割线颜色"/>
 		<Attribute name="itemshowhtml" default="false" type="BOOL" comment="item是否使用类html富文本绘制,如(false)"/>
 		<Attribute name="multiexpanding" default="false" type="BOOL" comment="是否支持多个item同时打开,如(false)"/>
+		<Attribute name="virtuallist" default="false" type="BOOL" comment="是否使用虚拟列表,如(false)" />
 	</List>
 	<ListHeader parent="HorizontalLayout" notifies="setfocus killfocus timer windowinit(root)">
 		<Attribute name="name" default="" type="STRING" comment="控件名字，同一窗口内必须唯一，如(testbtn)"/>
