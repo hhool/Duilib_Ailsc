@@ -573,7 +573,7 @@ void CListUI::ResizeVirtualItemBuffer()
 			if (pControl)
 			{
 				m_nVirtualItemHeight = max(pControl->GetFixedHeight(), pControl->GetHeight());
-				m_nVirtualItemHeight == 0 ? m_nVirtualItemHeight = VIR_ITEM_HEIGHT : 0;
+				m_nVirtualItemHeight <= 0 ? m_nVirtualItemHeight = VIR_ITEM_HEIGHT : 0;
 			}
 		}
 
@@ -1499,7 +1499,9 @@ bool CListBodyUI::DoPaint(HDC hDC, const RECT& rcPaint, CControlUI* pStopControl
 
         if( !::IntersectRect(&rcTemp, &rcPaint, &rc) ) 
 		{
-			int nItemSize = GetHeight() / (m_pOwner->GetVirtualItemHeight() <= 0 ? m_pOwner->GetVirtualItemHeight() : VIR_ITEM_HEIGHT) + 5;
+			int nItemSize = GetHeight() / (m_pOwner->GetVirtualItemHeight() <= 0 ? VIR_ITEM_HEIGHT : m_pOwner->GetVirtualItemHeight()) + 5;
+			if (!m_pOwner->IsUseVirtualList()) nItemSize = m_items.GetSize();
+
 			for (int it = 0; it < m_items.GetSize() && it < nItemSize; it++) {
                 CControlUI* pControl = static_cast<CControlUI*>(m_items[it]);
 				//> 如果使用虚拟列表，则设置虚拟列表数据
@@ -1531,7 +1533,8 @@ bool CListBodyUI::DoPaint(HDC hDC, const RECT& rcPaint, CControlUI* pStopControl
             int iDrawIndex = 0;
             CRenderClip childClip;
             CRenderClip::GenerateClip(hDC, rcTemp, childClip);
-			int nItemSize = GetHeight() / (m_pOwner->GetVirtualItemHeight() <= 0 ? m_pOwner->GetVirtualItemHeight() : VIR_ITEM_HEIGHT) + 5;
+			int nItemSize = GetHeight() / (m_pOwner->GetVirtualItemHeight() <= 0 ? VIR_ITEM_HEIGHT : m_pOwner->GetVirtualItemHeight()) + 5;
+			if (!m_pOwner->IsUseVirtualList()) nItemSize = m_items.GetSize();
             for( int it = 0; it < m_items.GetSize() && it < nItemSize; it++ ) {
                 CControlUI* pControl = static_cast<CControlUI*>(m_items[it]);
 				//> 如果使用虚拟列表，则设置虚拟列表数据
