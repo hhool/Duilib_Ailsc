@@ -17,7 +17,6 @@ public:
     void DoEvent(TEventUI& event);
     bool DoPaint(HDC hDC, const RECT& rcPaint, CControlUI* pStopControl);
     bool SortItems(PULVCompareFunc pfnCompare, UINT_PTR dwData, int& iCurSel);
-	void SetVirtualItemDataCallback(PULVirtualItemData pCallback, LPVOID pContext);
 protected:
     static int __cdecl ItemComareFunc(void *pvlocale, const void *item1, const void *item2);
     int __cdecl ItemComareFunc(const void *item1, const void *item2);
@@ -25,9 +24,7 @@ protected:
 protected:
     CListUI* m_pOwner;
     PULVCompareFunc m_pCompareFunc;
-	PULVirtualItemData m_pVirtualData;
 	UINT_PTR m_compareData;
-	LPVOID m_pContext;
 };
 
 /////////////////////////////////////////////////////////////////////////////////////
@@ -537,15 +534,14 @@ int CListUI::GetCurSel() const
     return m_iCurSel;
 }
 
-void CListUI::SetVirtualItemDataCallback(PULVirtualItemData pCallback, PULVirtualPrepareItem prepareitem,LPVOID pContext)
+void CListUI::SetVirtualItemData(PULVirtualPrepareItem prepareitem)
 {
 	if (!m_pList) return;
-	m_pList->SetVirtualItemDataCallback(pCallback, pContext);
 	m_PrepareVirutalItem = prepareitem;
 	ResizeVirtualItemBuffer();//调整缓冲区大小
 }
 
-void CListUI::SetVirtualList(bool bUse)
+void CListUI::SetVirtual(bool bUse)
 {
 	m_bUseVirtualList = bUse;
 }
@@ -974,7 +970,7 @@ void CListUI::Scroll(int dx, int dy)
 void CListUI::SetAttribute(LPCTSTR pstrName, LPCTSTR pstrValue)
 {
     if( _tcscmp(pstrName, _T("header")) == 0 ) GetHeader()->SetVisible(_tcscmp(pstrValue, _T("hidden")) != 0);
-	if (_tcscmp(pstrName, _T("virtuallist")) == 0) SetVirtualList(_tcscmp(pstrValue, _T("true")) == 0);
+	if (_tcscmp(pstrName, _T("virtual")) == 0) SetVirtual(_tcscmp(pstrValue, _T("true")) == 0);
     else if( _tcscmp(pstrName, _T("headerbkimage")) == 0 ) GetHeader()->SetBkImage(pstrValue);
     else if( _tcscmp(pstrName, _T("scrollselect")) == 0 ) SetScrollSelect(_tcscmp(pstrValue, _T("true")) == 0);
     else if( _tcscmp(pstrName, _T("multiexpanding")) == 0 ) SetMultiExpanding(_tcscmp(pstrValue, _T("true")) == 0);
@@ -1129,6 +1125,12 @@ void CListUI::SetScrollPos(SIZE szPos)
     m_pList->SetScrollPos(szPos);
 }
 
+void CListUI::DrawVirtualItem(CControlUI *pControl,int nRow)
+{
+	if (m_pManager)
+		m_pManager->SendNotify(this, DUI_MSGTYPE_DRAWITEM, (WPARAM)pControl, (LPARAM)nRow);
+}
+
 void CListUI::LineUp()
 {
     m_pList->LineUp();
@@ -1223,15 +1225,7 @@ bool CListUI::SortItems(PULVCompareFunc pfnCompare, UINT_PTR dwData)
 
 CListBodyUI::CListBodyUI(CListUI* pOwner) : m_pOwner(pOwner)
 {
-	m_pContext = NULL;
-	m_pVirtualData = NULL;
     ASSERT(m_pOwner);
-}
-
-void CListBodyUI::SetVirtualItemDataCallback(PULVirtualItemData pCallback, LPVOID pContext)
-{
-	m_pContext = pContext;
-	m_pVirtualData = pCallback;
 }
 
 bool CListBodyUI::SortItems(PULVCompareFunc pfnCompare, UINT_PTR dwData, int& iCurSel)
@@ -1503,18 +1497,20 @@ bool CListBodyUI::DoPaint(HDC hDC, const RECT& rcPaint, CControlUI* pStopControl
 			nVirtualStartIndex = m_pVerticalScrollBar->GetScrollPos() / pControl->GetHeight();
 		}
 
-        if( !::IntersectRect(&rcTemp, &rcPaint, &rc) ) {
-            for( int it = 0; it < m_items.GetSize(); it++ ) {
+        if( !::IntersectRect(&rcTemp, &rcPaint, &rc) ) 
+		{
+			int nItemSize = GetHeight() / (m_pOwner->GetVirtualItemHeight() <= 0 ? m_pOwner->GetVirtualItemHeight() : VIR_ITEM_HEIGHT) + 5;
+			for (int it = 0; it < m_items.GetSize() && it < nItemSize; it++) {
                 CControlUI* pControl = static_cast<CControlUI*>(m_items[it]);
 				//> 如果使用虚拟列表，则设置虚拟列表数据
 				if (m_pOwner->IsUseVirtualList())
 				{
-					if (m_pVirtualData &&
-						nVirtualStartIndex + it < m_pOwner->GetVirtualItemCount() &&
+					if (nVirtualStartIndex + it < m_pOwner->GetVirtualItemCount() &&
 						nVirtualStartIndex + it >= 0)
 					{
 						pControl->SetVisible(true);
-						m_pVirtualData(pControl, nVirtualStartIndex + it, m_pContext);
+						//m_pVirtualData(pControl, nVirtualStartIndex + it, m_pContext);
+						m_pOwner->DrawVirtualItem(pControl, nVirtualStartIndex + it);
 					}
 					else if (m_pOwner->IsUseVirtualList())
 					{
@@ -1535,17 +1531,18 @@ bool CListBodyUI::DoPaint(HDC hDC, const RECT& rcPaint, CControlUI* pStopControl
             int iDrawIndex = 0;
             CRenderClip childClip;
             CRenderClip::GenerateClip(hDC, rcTemp, childClip);
-            for( int it = 0; it < m_items.GetSize(); it++ ) {
+			int nItemSize = GetHeight() / (m_pOwner->GetVirtualItemHeight() <= 0 ? m_pOwner->GetVirtualItemHeight() : VIR_ITEM_HEIGHT) + 5;
+            for( int it = 0; it < m_items.GetSize() && it < nItemSize; it++ ) {
                 CControlUI* pControl = static_cast<CControlUI*>(m_items[it]);
 				//> 如果使用虚拟列表，则设置虚拟列表数据
 				if (m_pOwner->IsUseVirtualList())
 				{
-					if (m_pVirtualData &&
-						nVirtualStartIndex + it < m_pOwner->GetVirtualItemCount() &&
+					if (nVirtualStartIndex + it < m_pOwner->GetVirtualItemCount() &&
 						nVirtualStartIndex + it >= 0)
 					{
 						pControl->SetVisible(true);
-						m_pVirtualData(pControl, nVirtualStartIndex + it, m_pContext);
+						//m_pVirtualData(pControl, nVirtualStartIndex + it, m_pContext);
+						m_pOwner->DrawVirtualItem(pControl, nVirtualStartIndex + it);
 					}
 					else if (m_pOwner->IsUseVirtualList())
 					{
@@ -1707,6 +1704,10 @@ CListHeaderItemUI::CListHeaderItemUI() : m_bDragable(true), m_uButtonState(0), m
 m_uTextStyle(DT_CENTER | DT_VCENTER | DT_SINGLELINE), m_dwTextColor(0), m_dwSepColor(0), 
 m_iFont(-1), m_bShowHtml(false)
 {
+	m_bEnablebSort = false;
+	m_nSortHeight = 16;
+	m_nSortWidth = 16;
+	m_esrot = E_SORTNO;//默认不排序
 	SetTextPadding(CDuiRect(2, 0, 2, 0));
     ptLastMouse.x = ptLastMouse.y = 0;
     SetMinWidth(16);
@@ -1894,6 +1895,56 @@ void CListHeaderItemUI::SetSepImage(LPCTSTR pStrImage)
 	Invalidate();
 }
 
+void CListHeaderItemUI::SetEnabledSort(bool bEnableSort)
+{
+	if (m_bEnablebSort == bEnableSort) return;
+	m_bEnablebSort = bEnableSort;
+	Invalidate();
+}
+
+void CListHeaderItemUI::SetSort(ESORT esort, bool bTriggerEvent)
+{
+	if (!m_bEnablebSort) return;
+	if (m_esrot == esort) return;
+	m_esrot = esort;
+	Invalidate();
+	if (bTriggerEvent)
+		m_pManager->SendNotify(this, DUI_MSGTYPE_SORT);
+}
+
+ESORT CListHeaderItemUI::GetSort()
+{
+	return m_esrot;
+}
+
+void CListHeaderItemUI::SetSortAscImg(LPCTSTR pStrImage)
+{
+	if (m_diAscSort.sDrawString == pStrImage && m_diAscSort.pImageInfo != NULL) return;
+	m_diAscSort.Clear();
+	m_diAscSort.sDrawString = pStrImage;
+	Invalidate();
+}
+
+void CListHeaderItemUI::SetSortDescImg(LPCTSTR pStrImage)
+{
+	if (m_diDescSort.sDrawString == pStrImage && m_diDescSort.pImageInfo != NULL) return;
+	m_diDescSort.Clear();
+	m_diDescSort.sDrawString = pStrImage;
+	Invalidate();
+}
+
+void CListHeaderItemUI::SetSortWidth(int nSortWidht)
+{
+	m_nSortWidth = nSortWidht;
+	Invalidate();
+}
+
+void CListHeaderItemUI::SetSortHeight(int nSrotHeight)
+{
+	m_nSortHeight = nSrotHeight;
+	Invalidate();
+}
+
 void CListHeaderItemUI::SetAttribute(LPCTSTR pstrName, LPCTSTR pstrValue)
 {
     if( _tcscmp(pstrName, _T("dragable")) == 0 ) SetDragable(_tcscmp(pstrValue, _T("true")) == 0);
@@ -1966,6 +2017,11 @@ void CListHeaderItemUI::SetAttribute(LPCTSTR pstrName, LPCTSTR pstrValue)
         SetSepColor(clrColor);
     }
     else if( _tcscmp(pstrName, _T("sepimage")) == 0 ) SetSepImage(pstrValue);
+	else if (_tcscmp(pstrName, _T("ascimage")) == 0) SetSortAscImg(pstrValue);
+	else if (_tcscmp(pstrName, _T("descimage")) == 0) SetSortDescImg(pstrValue);
+	else if (_tcscmp(pstrName, _T("sort")) == 0) SetEnabledSort(_tcscmp(pstrValue, _T("true")) == 0);
+	else if (_tcscmp(pstrName, _T("sortwidth")) == 0) SetSortWidth(_ttoi(pstrValue));
+	else if (_tcscmp(pstrName, _T("sortheight")) == 0) SetSortHeight(_ttoi(pstrValue));
 	else __super::SetAttribute(pstrName, pstrValue);
 }
 
@@ -1996,6 +2052,26 @@ void CListHeaderItemUI::DoEvent(TEventUI& event)
             }
         }
         else {
+			if (m_bEnablebSort)
+			{
+				//> 重置其他Item的状态
+				if (GetParent() && GetParent()->GetInterface(DUI_CTR_LISTHEADER))
+				{
+					CListHeaderUI *pHeader = static_cast<CListHeaderUI *>(GetParent());
+					for (int i = 0; i < pHeader->GetCount(); ++i)
+					{
+						if (pHeader->GetItemAt(i)->GetInterface(DUI_CTR_LISTHEADERITEM))
+						{
+							CListHeaderItemUI *pHederItem = static_cast<CListHeaderItemUI*>(pHeader->GetItemAt(i)->GetInterface(DUI_CTR_LISTHEADERITEM));
+							if (pHederItem != this)
+								pHederItem->SetSort(E_SORTNO, false);
+						}
+					}
+				}
+
+				SetSort((ESORT)((m_esrot + 1) % E_SORT_MAX));
+			}
+
             m_uButtonState |= UISTATE_PUSHED;
             m_pManager->SendNotify(this, DUI_MSGTYPE_HEADERCLICK);
             Invalidate();
@@ -2086,6 +2162,16 @@ RECT CListHeaderItemUI::GetThumbRect() const
     else return CDuiRect(m_rcItem.left, m_rcItem.top, m_rcItem.left - m_iSepWidth, m_rcItem.bottom);
 }
 
+RECT CListHeaderItemUI::GetSortRect() const
+{
+	return CDuiRect(
+		m_nSortWidth > 0 ? m_rcItem.right - m_nSortWidth - 3 : m_rcItem.left - 3,
+		m_nSortHeight > 0 ? (m_rcItem.top + (m_rcItem.bottom - m_rcItem.top - m_nSortHeight) / 2) : m_rcItem.top,
+		m_nSortWidth > 0 ? m_rcItem.right - 3 : m_rcItem.left - 3,
+		m_nSortHeight > 0 ? (m_rcItem.top + (m_rcItem.bottom - m_rcItem.top - m_nSortHeight) / 2 + m_nSortHeight):m_rcItem.top
+		);
+}
+
 void CListHeaderItemUI::PaintStatusImage(HDC hDC)
 {
 	if( IsFocused() ) m_uButtonState |= UISTATE_FOCUSED;
@@ -2102,6 +2188,28 @@ void CListHeaderItemUI::PaintStatusImage(HDC hDC)
 	}
 	else {
 		DrawImage(hDC, m_diNormal);
+	}
+
+	if (m_bEnablebSort)
+	{
+		if (m_esrot == E_SORT_ASC)
+		{
+			RECT rcThumb = GetSortRect();
+			m_diAscSort.rcDestOffset.left = rcThumb.left - m_rcItem.left;
+			m_diAscSort.rcDestOffset.top = rcThumb.top - m_rcItem.top;
+			m_diAscSort.rcDestOffset.right = rcThumb.right - m_rcItem.left;
+			m_diAscSort.rcDestOffset.bottom = rcThumb.bottom - m_rcItem.top;
+			DrawImage(hDC, m_diAscSort);
+		}
+		else if (m_esrot == E_SORT_DESC)
+		{
+			RECT rcThumb = GetSortRect();
+			m_diDescSort.rcDestOffset.left = rcThumb.left - m_rcItem.left;
+			m_diDescSort.rcDestOffset.top = rcThumb.top - m_rcItem.top;
+			m_diDescSort.rcDestOffset.right = rcThumb.right - m_rcItem.left;
+			m_diDescSort.rcDestOffset.bottom = rcThumb.bottom - m_rcItem.top;
+			DrawImage(hDC, m_diDescSort);
+		}
 	}
 
     if (m_iSepWidth > 0) {

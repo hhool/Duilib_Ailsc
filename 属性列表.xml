@@ -778,7 +778,7 @@
 		<Attribute name="itemlinecolor" default="0x00000000" type="DWORD" comment="item行分割线颜色"/>
 		<Attribute name="itemshowhtml" default="false" type="BOOL" comment="item是否使用类html富文本绘制,如(false)"/>
 		<Attribute name="multiexpanding" default="false" type="BOOL" comment="是否支持多个item同时打开,如(false)"/>
-		<Attribute name="virtuallist" default="false" type="BOOL" comment="是否使用虚拟列表,如(false)" />
+		<Attribute name="virtual" default="false" type="BOOL" comment="是否使用虚拟列表,如(false)" />
 	</List>
 	<ListHeader parent="HorizontalLayout" notifies="setfocus killfocus timer windowinit(root)">
 		<Attribute name="name" default="" type="STRING" comment="控件名字，同一窗口内必须唯一，如(testbtn)"/>
@@ -815,8 +815,13 @@
 		<Attribute name="childpadding" default="0" type="INT" comment="子控件之间的额外距离,如(4)"/>
 		<Attribute name="sepwidth" default="0" type="INT" comment="分隔符宽,正负表示分隔符在左边还是右边,如(-4)"/>
 		<Attribute name="sepimm" default="false" type="BOOL" comment="拖动分隔符是否立即改变大小,如(false)"/>
+		<Attribute name="sort" default="false" type="BOOL" comment="是否支持排序"/>
+		<Attribute name="sortwidth" default="16" type="int" comment="排序图标宽度"/>
+		<Attribute name="sortheight" default="16" type="int" comment="排序图标高度"/>
+		<Attribute name="ascimage" default="" type="STRING" comment="升序图标"/>
+		<Attribute name="descimage" default="" type="STRING" comment="降序图标"/>
 	</ListHeader>
-	<ListHeaderItem parent="Control" notifies="setfocus killfocus timer headerclick windowinit(root)">
+	<ListHeaderItem parent="Control" notifies="setfocus killfocus timer headerclick sort windowinit(root)">
 		<Attribute name="name" default="" type="STRING" comment="控件名字，同一窗口内必须唯一，如(testbtn)"/>
 		<Attribute name="pos" default="0,0,0,0" type="RECT" comment="位置，如果为float控件则指定位置和大小，否则只指定大小,如(0,0,100,100)"/>
 		<Attribute name="padding" default="0,0,0,0" type="RECT" comment="外边距,如(2,2,2,2)"/>

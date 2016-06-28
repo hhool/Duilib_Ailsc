@@ -12,16 +12,14 @@ namespace DuiLib {
 typedef int (CALLBACK *PULVCompareFunc)(UINT_PTR, UINT_PTR, UINT_PTR);
 
 ////////////////////////////////////#lilei 20160627 虚拟列表接口/////////////////////////////////////////////////
-//@param [in]pControl 当前绘画的行 控件，和 PULVirtualPrepareItem 准备数据行数据对应
-//@param [in]nRow 当前第几行
-//@param [in]lpContext 用户设置的上下文数据
-typedef void (CALLBACK* PULVirtualItemData)(CControlUI *pControl, int nRow,LPVOID lpContext);
 //PULVirtualPrepareItem 未虚拟列表准备行数据行为（格式）
-typedef CControlUI* (CALLBACK* PULVirtualPrepareItem)();
+typedef CControlUI* (* PULVirtualPrepareItem)();
 
 class CListHeaderUI;
  
 #define UILIST_MAX_COLUMNS 64
+
+enum ESORT{ E_SORTNO, E_SORT_ASC, E_SORT_DESC, E_SORT_MAX };
 
 typedef struct tagTListInfoUI
 {
@@ -115,10 +113,10 @@ public:
     LPVOID GetInterface(LPCTSTR pstrName);
 	///////////////////////////////虚拟列表接口 #liulei 20160627/////////////////////////////////////////
 	//如果使用了虚拟列表则外部调用Rmove,RemoveAt,Add,AddAt,RemoveAll 无效
-	//> 设置虚表行的数据格式需要指定行高，以及数据回调（原理类似于MFC的虚表）
-	void SetVirtualItemDataCallback(PULVirtualItemData pCallback, PULVirtualPrepareItem prepareitem, LPVOID pContext = NULL);
+	//> 设置虚表行的数据格式需要指定行高（原理类似于MFC的虚表）
+	void SetVirtualItemData(PULVirtualPrepareItem prepareitem);
 	//> 设置是否为虚表显示数据
-	void SetVirtualList(bool bUse = false);
+	void SetVirtual(bool bUse = false);
 	//> 设置虚表数据个数
 	void SetVirtualItemCount(int nCountItem);
 	bool IsUseVirtualList();
@@ -215,6 +213,7 @@ public:
     SIZE GetScrollPos() const;
     SIZE GetScrollRange() const;
     void SetScrollPos(SIZE szPos);
+	void DrawVirtualItem(CControlUI *pControl, int nRow);
     void LineUp();
     void LineDown();
     void PageUp();
@@ -309,17 +308,28 @@ public:
     LPCTSTR GetSepImage() const;
     void SetSepImage(LPCTSTR pStrImage);
 
+	/// 增加表头排序图标//////////////////////////////////////////////
+	void SetEnabledSort(bool bEnableSort);
+	void SetSort(ESORT esort, bool bTriggerEvent = true);
+	ESORT GetSort();
+	void SetSortAscImg(LPCTSTR pStrImage);
+	void SetSortDescImg(LPCTSTR pStrImage);
+	void SetSortWidth(int nSortWidht);
+	void SetSortHeight(int nSrotHeight);
+	//////////////////////////////////////////////////////////////
+
     void DoEvent(TEventUI& event);
     SIZE EstimateSize(SIZE szAvailable);
     void SetAttribute(LPCTSTR pstrName, LPCTSTR pstrValue);
     RECT GetThumbRect() const;
-
+	RECT GetSortRect() const;
     void PaintText(HDC hDC);
     void PaintStatusImage(HDC hDC);
 
 protected:
     POINT ptLastMouse;
     bool m_bDragable;
+	bool m_bEnablebSort;
     UINT m_uButtonState;
     int m_iSepWidth;
     DWORD m_dwTextColor;
@@ -333,6 +343,11 @@ protected:
     TDrawInfo m_diPushed;
     TDrawInfo m_diFocused;
     TDrawInfo m_diSep;
+	TDrawInfo m_diAscSort;
+	TDrawInfo m_diDescSort;
+	ESORT m_esrot;
+	int m_nSortWidth;
+	int m_nSortHeight;
 };
 
 
