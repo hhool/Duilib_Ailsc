@@ -35,7 +35,7 @@ CListUI::CListUI() : m_pCallback(NULL), m_bScrollSelect(false), m_iCurSel(-1), m
 {
 	m_nVirtualItemHeight = VIR_ITEM_HEIGHT;
 	m_nVirtualItemCount = 0;
-	m_PrepareVirutalItem = NULL;
+	m_pVirutalItemFormat = NULL;
     m_pList = new CListBodyUI(this);
     m_pHeader = new CListHeaderUI;
 	m_bUseVirtualList = false;
@@ -534,10 +534,10 @@ int CListUI::GetCurSel() const
     return m_iCurSel;
 }
 
-void CListUI::SetVirtualItemData(PULVirtualPrepareItem prepareitem)
+void CListUI::SetVirtualItemFormat(PULVirtualItemFormat vrtualitemfroamt)
 {
 	if (!m_pList) return;
-	m_PrepareVirutalItem = prepareitem;
+	m_pVirutalItemFormat = vrtualitemfroamt;
 	ResizeVirtualItemBuffer();//调整缓冲区大小
 }
 
@@ -565,11 +565,11 @@ void CListUI::ResizeVirtualItemBuffer()
 {
 	if (!IsUseVirtualList()) return;
 
- 	if (m_PrepareVirutalItem)
+ 	if (m_pVirutalItemFormat)
 	{
 		if (GetCount() == 0)
 		{
-			CControlUI *pControl = m_PrepareVirutalItem();
+			CControlUI *pControl = m_pVirutalItemFormat();
 			if (pControl)
 			{
 				m_nVirtualItemHeight = max(pControl->GetFixedHeight(), pControl->GetHeight());
@@ -582,7 +582,7 @@ void CListUI::ResizeVirtualItemBuffer()
 
 		for (int i = nItemCount; i < nItemSize; ++i)
 		{
-			CControlUI *pControl = m_PrepareVirutalItem();
+			CControlUI *pControl = m_pVirutalItemFormat();
 			if (pControl)
 			{
 				AddVirtualItem(pControl);
@@ -1912,7 +1912,7 @@ void CListHeaderItemUI::SetSort(ESORT esort, bool bTriggerEvent)
 	m_esrot = esort;
 	Invalidate();
 	if (bTriggerEvent)
-		m_pManager->SendNotify(this, DUI_MSGTYPE_SORT);
+		m_pManager->SendNotify(this, DUI_MSGTYPE_SORT,m_esrot);
 }
 
 ESORT CListHeaderItemUI::GetSort()

@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<MenuConfig>
+	<Default name="Menu" value="inset=&quot;2,2,2,2&quot; itemtextpadding=&quot;30,0,0,0&quot; bkimage=&quot;file='skin\res\menu_bk.png' corner='30,8,8,8'&quot; hole=&quot;false&quot;" />
+</MenuConfig>

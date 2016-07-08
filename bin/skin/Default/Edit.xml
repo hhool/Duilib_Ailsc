@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<EditConfig>
+	<Default name="Edit" value="bordersize=&quot;1&quot; bordercolor=&quot;0xff6e9edb&quot;" />
+	<Default name="RichEdit" value="textpadding=&quot;3,2,2,2&quot; bkcolor=&quot;0xffffffff&quot; bordersize=&quot;1&quot; bordercolor=&quot;0xff6e9edb&quot;" />
+</EditConfig>

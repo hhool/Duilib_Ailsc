@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ButtonConfig>
+	<Image name="scrollbar.bmp" />
+	<Default name="Button" value="normalimage=&quot;file='skin\res\btn_normal.png'&quot; hotimage=&quot;file='skin\res\btn_hot.png'&quot; pushedimage=&quot;file='skin\res\btn_pushed.png'&quot;" />
+</ButtonConfig>

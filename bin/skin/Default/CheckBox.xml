@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CheckBoxConfig>
+	<Image name="scrollbar.bmp" />
+	<Default name="CheckBox" value="selectedimage=&quot;file='skin\res\checked.png' dest='0,2,16,18'&quot; normalimage=&quot;file='skin\res\unchecked.png' dest='0,2,16,18'&quot;" />
+</CheckBoxConfig>
+<!--textcolor=&quot;#FFbac0c5&quot; hottextcolor=&quot;#FF386382&quot; selectedtextcolor=&quot;#FF386382&quot; disabledtextcolor=&quot;#FFbac0c5&quot; textpadding=&quot;20,2,0,0&quot; align=&quot;left&quot;-->

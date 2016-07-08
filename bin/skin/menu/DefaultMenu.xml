@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Window roundcorner="4,4">
+  <Font id="0" name="微软雅黑" size="12" bold="false" default="true" />
+  <Font id="1" name="微软雅黑" size="12" bold="true"/>
+  <Include source="skin/Default/Menu.xml" />
+  <Menu>
+  </Menu>
+</Window>

@@ -13,7 +13,7 @@ typedef int (CALLBACK *PULVCompareFunc)(UINT_PTR, UINT_PTR, UINT_PTR);
 
 ////////////////////////////////////#lilei 20160627 虚拟列表接口/////////////////////////////////////////////////
 //PULVirtualPrepareItem 未虚拟列表准备行数据行为（格式）
-typedef CControlUI* (* PULVirtualPrepareItem)();
+typedef CControlUI* (* PULVirtualItemFormat)();
 
 class CListHeaderUI;
  
@@ -113,8 +113,8 @@ public:
     LPVOID GetInterface(LPCTSTR pstrName);
 	///////////////////////////////虚拟列表接口 #liulei 20160627/////////////////////////////////////////
 	//如果使用了虚拟列表则外部调用Rmove,RemoveAt,Add,AddAt,RemoveAll 无效
-	//> 设置虚表行的数据格式需要指定行高（原理类似于MFC的虚表）
-	void SetVirtualItemData(PULVirtualPrepareItem prepareitem);
+	//> 设置虚表行的数据格式,需要指定行高（原理类似于MFC的虚表）
+	void SetVirtualItemFormat(PULVirtualItemFormat vrtualitemfroamt);
 	//> 设置是否为虚表显示数据
 	void SetVirtual(bool bUse = false);
 	//> 设置虚表数据个数
@@ -243,7 +243,7 @@ protected:
     CListBodyUI* m_pList;
     CListHeaderUI* m_pHeader;
     TListInfoUI m_ListInfo;
-	PULVirtualPrepareItem m_PrepareVirutalItem;
+	PULVirtualItemFormat  m_pVirutalItemFormat;//虚拟数据格式指针
 	int m_nVirtualItemHeight;
 	int m_nVirtualItemCount;
 };

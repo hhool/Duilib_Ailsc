@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Window size="500,600"> <!-- ���ڵĳ�ʼ�ߴ� -->
+	<Include source="skin/Default/scrollbar.xml" />
+	<Include source="skin/Default/Button.xml" />
+  <Font id="0" name="微软雅黑" size="12" bold="true" default="true" />
+  <Font id="1" name="微软雅黑" size="12" bold="true"/>
+  <Font id="2" name="微软雅黑" size="12"/>
+	<VerticalLayout bkcolor="0xffFFFFFF">
+		<HorizontalLayout bkcolor="FF325A99" name="JG_IdealTopPanel" height="40">
+		</HorizontalLayout>
+		<HorizontalLayout>
+			<TreeView name="JG_IdealTreeView" vscrollbar="true" menu="true" width="250" />
+			<HorizontalLayout name="tlaxis" width="3" bkcolor="0xffababab" />
+			<List name="JG_IdealListView" menu="true" vscrollbar="true" hscrollbar="true" lockprecol="2" />
+		</HorizontalLayout>
+	</VerticalLayout>
+</Window>
