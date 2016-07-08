@@ -93,10 +93,12 @@ namespace DuiLib
 
 	bool COptionUI::Activate()
 	{
-		if( !CButtonUI::Activate() ) return false;
+		//#liulei 修复事件先后顺序CButtonUI::Activate()
+		if( !CControlUI::Activate() ) return false;
 		if( !m_sGroupName.IsEmpty() ) Selected(true);
 		else Selected(!m_bSelected);
-
+		//#liulei 修复事件先后顺序 Add
+		if( m_pManager != NULL ) m_pManager->SendNotify(this, DUI_MSGTYPE_CLICK);
 		return true;
 	}
 
