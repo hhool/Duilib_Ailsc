@@ -594,12 +594,12 @@ void CControlUI::SetUserData(LPCTSTR pstrText)
     m_sUserData = pstrText;
 }
 
-UINT_PTR CControlUI::GetTag() const
+UINT64 CControlUI::GetTag() const
 {
     return m_pTag;
 }
 
-void CControlUI::SetTag(UINT_PTR pTag)
+void CControlUI::SetTag(UINT64 pTag)
 {
     m_pTag = pTag;
 }

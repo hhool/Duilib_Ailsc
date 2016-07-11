@@ -111,8 +111,9 @@ public:
     // 用户属性
     virtual const CDuiString& GetUserData(); // 辅助函数，供用户使用
     virtual void SetUserData(LPCTSTR pstrText); // 辅助函数，供用户使用
-    virtual UINT_PTR GetTag() const; // 辅助函数，供用户使用
-    virtual void SetTag(UINT_PTR pTag); // 辅助函数，供用户使用
+	//#liulei 32位可能不够用扩展到64位
+	virtual UINT64 GetTag() const; // 辅助函数，供用户使用
+	virtual void SetTag(UINT64 pTag); // 辅助函数，供用户使用
 
     // 一些重要的属性
     virtual bool IsVisible() const;
@@ -208,7 +209,7 @@ protected:
     CDuiString m_sToolTip;
     TCHAR m_chShortcut;
     CDuiString m_sUserData;
-    UINT_PTR m_pTag;
+    UINT64 m_pTag;
 
     DWORD m_dwBackColor;
     DWORD m_dwBackColor2;

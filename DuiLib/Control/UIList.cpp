@@ -340,6 +340,9 @@ void CListUI::RemoveAll()
 
 void CListUI::SetPos(RECT rc, bool bNeedInvalidate)
 {
+	//位置发生改变的时候当前滚动条位置iOffsetNow
+	//位置发生改变之后动条重新计算位置iResizeOffset
+	int iOffsetNow = 0, iResizeOffset = 0;
 	if( m_pHeader != NULL ) { // 设置header各子元素x坐标,因为有些listitem的setpos需要用到(临时修复)
 		int iLeft = rc.left + m_rcInset.left;
 		int iRight = rc.right - m_rcInset.right;
@@ -352,7 +355,7 @@ void CListUI::SetPos(RECT rc, bool bNeedInvalidate)
 			}
 		}
 		m_pHeader->SetPos(CDuiRect(iLeft, 0, iRight, 0), false);
-		int iOffset = m_pList->GetScrollPos().cx;
+		iOffsetNow = m_pList->GetScrollPos().cx;
 		for( int i = 0; i < m_ListInfo.nColumns; i++ ) {
 			CControlUI* pControl = static_cast<CControlUI*>(m_pHeader->GetItemAt(i));
 			if (!pControl->IsVisible())
@@ -373,9 +376,9 @@ void CListUI::SetPos(RECT rc, bool bNeedInvalidate)
 			}
 
 			RECT rcPos = pControl->GetPos();
-			if( iOffset > 0 ) {
-				rcPos.left -= iOffset;
-				rcPos.right -= iOffset;
+			if (iOffsetNow > 0) {
+				rcPos.left -= iOffsetNow;
+				rcPos.right -= iOffsetNow;
 				pControl->SetPos(rcPos, false);
 			}
 			m_ListInfo.rcColumn[i] = pControl->GetPos();
@@ -420,16 +423,16 @@ void CListUI::SetPos(RECT rc, bool bNeedInvalidate)
 		}
 		m_pHeader->SetPos(CDuiRect(rc.left, 0, rc.right, 0), false);
 	}
-	int iOffset = m_pList->GetScrollPos().cx;
+	iResizeOffset = m_pList->GetScrollPos().cx;
 	for( int i = 0; i < m_ListInfo.nColumns; i++ ) {
 		CControlUI* pControl = static_cast<CControlUI*>(m_pHeader->GetItemAt(i));
 		if( !pControl->IsVisible() ) continue;
 		if( pControl->IsFloat() ) continue;
 
 		RECT rcPos = pControl->GetPos();
-		if( iOffset > 0 ) {
-			rcPos.left -= iOffset;
-			rcPos.right -= iOffset;
+		if (iResizeOffset > 0) {
+			rcPos.left -= iResizeOffset;
+			rcPos.right -= iResizeOffset;
 			pControl->SetPos(rcPos, false);
 		}
 		m_ListInfo.rcColumn[i] = pControl->GetPos();
@@ -440,6 +443,11 @@ void CListUI::SetPos(RECT rc, bool bNeedInvalidate)
 		}
 		m_pHeader->SetInternVisible(false);
 	}
+
+
+	//#liulei 如果位置发生改变之前和之后滚动条前后位置不一样则需要刷新ListBody重新计算位置,
+	if (iOffsetNow != iResizeOffset)
+		CVerticalLayoutUI::SetPos(rc, bNeedInvalidate);
 }
 
 void CListUI::Move(SIZE szOffset, bool bNeedInvalidate)
