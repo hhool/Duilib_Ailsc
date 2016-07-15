@@ -445,7 +445,7 @@ public:
     UINT GetControlFlags() const;
 
     LPCTSTR GetText(int iIndex) const;
-    void SetText(int iIndex, LPCTSTR pstrText);
+    void SetText(int iIndex, LPCTSTR pstrText,UINT uTextStyle = 0);
 
     void SetOwner(CControlUI* pOwner);
     CDuiString* GetLinkContent(int iIndex);
@@ -463,7 +463,7 @@ protected:
     int m_nHoverLink;
     IListUI* m_pOwner;
     CDuiPtrArray m_aTexts;
-
+	UINT m_uTextsStyle[UILIST_MAX_COLUMNS];
     CDuiString m_sTextLast;
 };
 

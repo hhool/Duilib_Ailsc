@@ -18,7 +18,6 @@ namespace DuiLib
 		LRESULT HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam);
 		LRESULT OnKillFocus(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled);
 		LRESULT OnEditChanged(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled);
-
 	protected:
 		enum { 
 			DEFAULT_TIMERID = 20,
@@ -61,7 +60,10 @@ namespace DuiLib
 		Edit_SetModify(m_hWnd, FALSE);
 		SendMessage(EM_SETMARGINS, EC_LEFTMARGIN | EC_RIGHTMARGIN, MAKELPARAM(0, 0));
 		Edit_Enable(m_hWnd, m_pOwner->IsEnabled() == true);
-		Edit_SetReadOnly(m_hWnd, m_pOwner->IsReadOnly() == true);
+
+		///> #liulei 20160715只允许小数点输入和NumOnly互斥
+		if (!m_pOwner->IsDecimal())
+			Edit_SetReadOnly(m_hWnd, m_pOwner->IsReadOnly() == true);
 
 		//Styls
 		::ShowWindow(m_hWnd, SW_SHOWNOACTIVATE);
@@ -153,6 +155,19 @@ namespace DuiLib
 		else if( uMsg == WM_KEYDOWN && TCHAR(wParam) == VK_RETURN ) {
 			m_pOwner->GetManager()->SendNotify(m_pOwner, DUI_MSGTYPE_RETURN);
 		}
+		else if (uMsg == WM_CHAR)
+		{
+			TCHAR c = (TCHAR)wParam;
+			if (m_pOwner->IsDecimal())
+			{
+				if (c >= '0' && c <= '9' ||	c == '.' || c == VK_BACK)
+					bHandled = FALSE;
+				else
+					bHandled = TRUE;
+			}
+			else
+				bHandled = FALSE;
+		}
 		else if( uMsg == OCM__BASE + WM_CTLCOLOREDIT  || uMsg == OCM__BASE + WM_CTLCOLORSTATIC ) {
 			if (m_pOwner->GetManager()->IsLayered() && !m_pOwner->GetManager()->IsPainting()) {
 				m_pOwner->GetManager()->AddNativeWindow(m_pOwner, m_hWnd);
@@ -237,13 +252,11 @@ namespace DuiLib
 		if( m_pOwner->GetManager()->IsLayered() ) m_pOwner->Invalidate();
 		return 0;
 	}
-
-
 	/////////////////////////////////////////////////////////////////////////////////////
 	//
 	//
 
-	CEditUI::CEditUI() : m_pWindow(NULL), m_uMaxChar(255), m_bReadOnly(false), 
+	CEditUI::CEditUI() : m_pWindow(NULL), m_uMaxChar(255), m_bReadOnly(false), m_bDecimal(false),
 		m_bPasswordMode(false), m_cPasswordChar(_T('*')), m_bAutoSelAll(false), m_uButtonState(0), 
 		m_dwEditbkColor(0xFFFFFFFF), m_iWindowStyls(0)
 	{
@@ -382,6 +395,16 @@ namespace DuiLib
 				m_pWindow->ShowWindow(SW_HIDE);
 			m_uButtonState = 0;
 		}
+	}
+
+	void CEditUI::SetDecimal(bool bDecimal)
+	{
+		m_bDecimal = bDecimal;
+	}
+
+	bool CEditUI::IsDecimal()
+	{
+		return m_bDecimal;
 	}
 
 	void CEditUI::SetText(LPCTSTR pstrText)
@@ -602,6 +625,7 @@ namespace DuiLib
 	void CEditUI::SetAttribute(LPCTSTR pstrName, LPCTSTR pstrValue)
 	{
 		if( _tcscmp(pstrName, _T("readonly")) == 0 ) SetReadOnly(_tcscmp(pstrValue, _T("true")) == 0);
+		if (_tcscmp(pstrName, _T("decimal")) == 0) SetDecimal(_tcscmp(pstrValue, _T("true")) == 0);
 		else if( _tcscmp(pstrName, _T("numberonly")) == 0 ) SetNumberOnly(_tcscmp(pstrValue, _T("true")) == 0);
 		else if( _tcscmp(pstrName, _T("password")) == 0 ) SetPasswordMode(_tcscmp(pstrValue, _T("true")) == 0);
 		else if( _tcscmp(pstrName, _T("autoselall")) == 0 ) SetAutoSelAll(_tcscmp(pstrValue, _T("true")) == 0);	
@@ -671,4 +695,5 @@ namespace DuiLib
 
 		}
 	}
+
 }

@@ -2716,7 +2716,8 @@ void CListLabelElementUI::DrawItemText(HDC hDC, const RECT& rcItem)
 
 CListTextElementUI::CListTextElementUI() : m_nLinks(0), m_nHoverLink(-1), m_pOwner(NULL)
 {
-    ::ZeroMemory(&m_rcLinks, sizeof(m_rcLinks));
+	::ZeroMemory(m_uTextsStyle,sizeof(m_uTextsStyle));
+    ::ZeroMemory(m_rcLinks, sizeof(m_rcLinks));
 }
 
 CListTextElementUI::~CListTextElementUI()
@@ -2726,7 +2727,7 @@ CListTextElementUI::~CListTextElementUI()
         pText = static_cast<CDuiString*>(m_aTexts[it]);
         if( pText ) delete pText;
     }
-    m_aTexts.Empty();
+    m_aTexts.Empty();	
 }
 
 LPCTSTR CListTextElementUI::GetClass() const
@@ -2752,13 +2753,13 @@ LPCTSTR CListTextElementUI::GetText(int iIndex) const
     return NULL;
 }
 
-void CListTextElementUI::SetText(int iIndex, LPCTSTR pstrText)
+void CListTextElementUI::SetText(int iIndex, LPCTSTR pstrText, UINT uTextStyle)
 {
     //if( m_pOwner == NULL ) return;
    // TListInfoUI* pInfo = m_pOwner->GetListInfo();
     if( iIndex < 0 /*|| iIndex >= pInfo->nColumns*/ ) return;
     m_bNeedEstimateSize = true;
-    
+	if (uTextStyle > 0 && iIndex >= 0 && iIndex < UILIST_MAX_COLUMNS) m_uTextsStyle[iIndex] = uTextStyle;
 	while (m_aTexts.GetSize() <= iIndex/*pInfo->nColumns*/) { m_aTexts.Add(NULL); }
 
     CDuiString* pText = static_cast<CDuiString*>(m_aTexts[iIndex]);
@@ -2975,10 +2976,10 @@ void CListTextElementUI::DrawItemText(HDC hDC, const RECT& rcItem)
             else strText.Assign(GetText(i));
             if( pInfo->bShowHtml )
                 CRenderEngine::DrawHtmlText(hDC, m_pManager, rcItem, strText.GetData(), iTextColor, \
-                &m_rcLinks[m_nLinks], &m_sLinks[m_nLinks], nLinks, pInfo->nFont, pInfo->uTextStyle);
+				&m_rcLinks[m_nLinks], &m_sLinks[m_nLinks], nLinks, pInfo->nFont, m_uTextsStyle[i] == 0 ? pInfo->uTextStyle : m_uTextsStyle[i]);
             else
                 CRenderEngine::DrawText(hDC, m_pManager, rcItem, strText.GetData(), iTextColor, \
-                pInfo->nFont, pInfo->uTextStyle);
+				pInfo->nFont, m_uTextsStyle[i] == 0 ? pInfo->uTextStyle : m_uTextsStyle[i]);
 
             m_nLinks += nLinks;
             nLinks = lengthof(m_rcLinks) - m_nLinks; 
@@ -2997,10 +2998,10 @@ void CListTextElementUI::DrawItemText(HDC hDC, const RECT& rcItem)
         else strText = m_sText;
         if( pInfo->bShowHtml )
             CRenderEngine::DrawHtmlText(hDC, m_pManager, rcItem, strText.GetData(), iTextColor, \
-            &m_rcLinks[m_nLinks], &m_sLinks[m_nLinks], nLinks, pInfo->nFont, pInfo->uTextStyle);
+			&m_rcLinks[m_nLinks], &m_sLinks[m_nLinks], nLinks, pInfo->nFont, pInfo->uTextStyle);
         else
             CRenderEngine::DrawText(hDC, m_pManager, rcItem, strText.GetData(), iTextColor, \
-            pInfo->nFont, pInfo->uTextStyle);
+			pInfo->nFont,pInfo->uTextStyle);
 
         m_nLinks += nLinks;
         nLinks = lengthof(m_rcLinks) - m_nLinks; 

@@ -19,6 +19,8 @@ namespace DuiLib
 		HWND GetNativeWindow() const;
 
 		void SetEnabled(bool bEnable = true);
+		void SetDecimal(bool bDecimal = false);//是否只允许输入带有小数点的数字eg:3.14
+		bool IsDecimal();
 		void SetText(LPCTSTR pstrText);
 		void SetMaxChar(UINT uMax);
 		UINT GetMaxChar();
@@ -65,6 +67,7 @@ namespace DuiLib
 		CEditWnd* m_pWindow;
 
 		UINT m_uMaxChar;
+		bool m_bDecimal;
 		bool m_bReadOnly;
 		bool m_bPasswordMode;
 		bool m_bAutoSelAll;
