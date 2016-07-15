@@ -51,7 +51,20 @@ namespace DuiLib
 		if (m_pOwner->GetText().IsEmpty())
 			::GetLocalTime(&m_pOwner->m_sysTime);
 
+		bool bSet[2] = { false };
+		SYSTEMTIME *sysRange = m_pOwner->GetRange(bSet[0],bSet[1]);
+		
+		UINT uFlage = 0;
+		if (bSet[0])
+			uFlage |= GDTR_MIN;
+		if (bSet[1])
+			uFlage |= GDTR_MAX;
+		
+		if (uFlage != 0)
+			::SendMessage(m_hWnd, DTM_SETRANGE, uFlage, (LPARAM)sysRange);
+
 		::SendMessage(m_hWnd, DTM_SETSYSTEMTIME, 0, (LPARAM)&m_pOwner->m_sysTime);
+		
 		::ShowWindow(m_hWnd, SW_SHOWNOACTIVATE);
 		::SetFocus(m_hWnd);
 
@@ -199,6 +212,10 @@ namespace DuiLib
 		m_nDTUpdateFlag=DT_UPDATE;
 		UpdateText();		// add by:daviyang35 初始化界面时显示时间
 		m_nDTUpdateFlag = DT_NONE;
+		m_sysTimeRange[0] = { 0 };
+		m_sysTimeRange[1] = { 0 };
+		m_bUserTimeRange[0] = false;
+		m_bUserTimeRange[1] = false;
 	}
 
 	LPCTSTR CDateTimeUI::GetClass() const
@@ -247,6 +264,25 @@ namespace DuiLib
 	bool CDateTimeUI::IsReadOnly() const
 	{
 		return m_bReadOnly;
+	}
+
+	void CDateTimeUI::SetMinDateTime(const SYSTEMTIME &minsystem, bool bSet )
+	{
+		m_sysTimeRange[0] = minsystem;
+		m_bUserTimeRange[0] = bSet;
+	}
+
+	void CDateTimeUI::SetMaxDateTime(const SYSTEMTIME &maxsystem, bool bSet )
+	{
+		m_sysTimeRange[1] = maxsystem;
+		m_bUserTimeRange[1] = bSet;
+	}
+
+	SYSTEMTIME* CDateTimeUI::GetRange(bool &bSetMin, bool &bSetMax)
+	{
+		bSetMin = m_bUserTimeRange[0];
+		bSetMax = m_bUserTimeRange[1];
+		return m_sysTimeRange;
 	}
 
 	void CDateTimeUI::UpdateText()

@@ -31,7 +31,7 @@ namespace DuiLib
 
 		void	SetVisibleTag(bool _IsVisible);
 		bool	GetVisibleTag();
-		void	SetItemFont(int index);
+		void	SetItemFont(int index, bool always);
 		void	SetItemText(LPCTSTR pstrValue);
 		CDuiString	GetItemText();
 		void	CheckBoxSelected(bool _Selected, bool bTriggerEvent = true);

@@ -254,6 +254,12 @@ LRESULT WindowImplBase::OnSize(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bH
 	return 0;
 }
 
+LRESULT WindowImplBase::OnMove(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled)
+{
+	bHandled = FALSE;
+	return 0;
+}
+
 LRESULT WindowImplBase::OnChar(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled)
 {
 	bHandled = FALSE;
@@ -425,6 +431,7 @@ LRESULT WindowImplBase::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
 	case WM_GETMINMAXINFO:	lRes = OnGetMinMaxInfo(uMsg, wParam, lParam, bHandled); break;
 	case WM_MOUSEWHEEL:		lRes = OnMouseWheel(uMsg, wParam, lParam, bHandled); break;
 #endif
+	case WM_MOVE:			lRes = OnMove(uMsg, wParam, lParam, bHandled); break;
 	case WM_SIZE:			lRes = OnSize(uMsg, wParam, lParam, bHandled); break;
 	case WM_CHAR:		lRes = OnChar(uMsg, wParam, lParam, bHandled); break;
 	case WM_SYSCOMMAND:		lRes = OnSysCommand(uMsg, wParam, lParam, bHandled); break;

@@ -12,6 +12,7 @@ namespace DuiLib
 		UILIB_ZIPRESOURCE,	// 来自资源的zip压缩包
 	};
 
+	///> 不能再这里重写OnTimer否则滚动条不能用（不知道为嘛）
 	class DUILIB_API WindowImplBase
 		: public CWindowWnd
 		, public CNotifyPump
@@ -60,6 +61,7 @@ namespace DuiLib
 		virtual LRESULT OnMouseHover(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled);
 		virtual LRESULT OnMouseLeave(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled);
 #endif
+		virtual LRESULT OnMove(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled);
 		virtual LRESULT OnSize(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled);
 		virtual LRESULT OnChar(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled);
 		virtual LRESULT OnSysCommand(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled);

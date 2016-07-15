@@ -99,6 +99,8 @@
 		<Attribute name="hscrollbar" default="false" type="BOOL" comment="是否使用横向滚动条,如(true)"/>
 		<Attribute name="childpadding" default="0" type="INT" comment="子控件之间的额外距离,如(4)"/>
 	</Container>
+	<DateTime parent="Label">
+	</DateTime>
 	<VerticalLayout parent="Container" notifies="setfocus killfocus timer menu windowinit(root)">
 		<Attribute name="name" default="" type="STRING" comment="控件名字，同一窗口内必须唯一，如(testbtn)"/>
 		<Attribute name="pos" default="0,0,0,0" type="RECT" comment="位置，如果为float控件则指定位置和大小，否则只指定大小,如(0,0,100,100)"/>
@@ -1101,6 +1103,7 @@
 		<Attribute name="tooltip" default="" type="STRING" comment="鼠标悬浮提示,如(请在这里输入你的密码)"/>
 		<Attribute name="userdata" default="" type="STRING" comment="自定义标识"/>
 		<Attribute name="enabled" default="true" type="BOOL" comment="是否可以响应用户操作,如(true)"/>
+		<Attribute name="font" default="-1" type="INT" comment="字体id,如(0),优先级高于itemfont"/>
 		<Attribute name="mouse" default="true" type="BOOL" comment="本控件是否可以响应鼠标操作,如(true)"/>
 		<Attribute name="mousechild" default="true" type="BOOL" comment="本控件的子控件是否可以响应用户操作,如(true)"/>
 		<Attribute name="visible" default="true" type="BOOL" comment="是否可见,如(true)"/>

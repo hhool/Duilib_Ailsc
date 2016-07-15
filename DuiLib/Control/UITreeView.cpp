@@ -288,10 +288,14 @@ namespace DuiLib
 	}
 
 	//#liulei 修复itemfont 属性 20160531
-	void CTreeNodeUI::SetItemFont(int index)
+	void CTreeNodeUI::SetItemFont(int index, bool always = true)
 	{
-		if (pItemButton)
+		/// >如果已经设置了Font则不在设置：
+		///> 调用顺序先TreeNode的font属性，然后在是TreeView ItemFont，如果设置了font则不在设置Itemfont
+		if (pItemButton && (pItemButton->GetFont() == -1 || always))
+		{
 			pItemButton->SetFont(index);
+		}
 	}
 	//************************************
 	// 函数名称: GetItemText
@@ -491,6 +495,10 @@ namespace DuiLib
 			LPTSTR pstr = NULL;
 			DWORD clrColor = _tcstoul(pstrValue, &pstr, 16);
 			SetSelItemHotTextColor(clrColor);
+		}
+		else if (_tcscmp(pstrName, _T("font")) == 0)
+		{
+			SetItemFont(_ttoi(pstrValue),true);
 		}
 		else CListContainerElementUI::SetAttribute(pstrName,pstrValue);
 	}
@@ -1234,7 +1242,7 @@ namespace DuiLib
 		for (int nIndex = 0; nIndex < GetCount(); nIndex++){
 			CTreeNodeUI* pTreeNode = static_cast<CTreeNodeUI*>(GetItemAt(nIndex));
 			if (pTreeNode)
-				pTreeNode->SetItemFont(index);
+				pTreeNode->SetItemFont(index,false);
 		}
 	}
 
