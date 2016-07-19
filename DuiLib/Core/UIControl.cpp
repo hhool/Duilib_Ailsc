@@ -17,6 +17,7 @@ m_bMouseEnabled(true),
 m_bKeyboardEnabled(true),
 m_bFloat(false),
 m_bSetPos(false),
+m_bKillCombo(true),
 m_chShortcut('\0'),
 m_pTag(NULL),
 m_dwBackColor(0),
@@ -691,6 +692,15 @@ void CControlUI::SetFloat(bool bFloat)
     NeedParentUpdate();
 }
 
+bool CControlUI::IsKillCombo()
+{
+	return m_bKillCombo;
+}
+
+void CControlUI::SetKillCombo(bool bkillcombo)
+{
+	m_bKillCombo = bkillcombo;
+}
 void CControlUI::AddCustomAttribute(LPCTSTR pstrName, LPCTSTR pstrAttr)
 {
 	if( pstrName == NULL || pstrName[0] == _T('\0') || pstrAttr == NULL || pstrAttr[0] == _T('\0') ) return;
@@ -990,6 +1000,7 @@ void CControlUI::SetAttribute(LPCTSTR pstrName, LPCTSTR pstrValue)
     else if( _tcscmp(pstrName, _T("mouse")) == 0 ) SetMouseEnabled(_tcscmp(pstrValue, _T("true")) == 0);
 	else if( _tcscmp(pstrName, _T("keyboard")) == 0 ) SetKeyboardEnabled(_tcscmp(pstrValue, _T("true")) == 0);
     else if( _tcscmp(pstrName, _T("visible")) == 0 ) SetVisible(_tcscmp(pstrValue, _T("true")) == 0);
+	else if (_tcscmp(pstrName, _T("killcombo")) == 0) SetKillCombo(_tcscmp(pstrValue, _T("true")) == 0);
     else if( _tcscmp(pstrName, _T("float")) == 0 ) {
 		CDuiString nValue = pstrValue;
 		if(nValue.Find(',') < 0) {

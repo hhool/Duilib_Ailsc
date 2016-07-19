@@ -129,7 +129,8 @@ public:
     virtual void SetFocus();
     virtual bool IsFloat() const;
     virtual void SetFloat(bool bFloat = true);
-
+	virtual bool IsKillCombo();//如果控件属于Combo，那么点击之后Combo是否消失
+	virtual void SetKillCombo(bool bkillcombo = true);
 	// 自定义(未处理的)属性
 	void AddCustomAttribute(LPCTSTR pstrName, LPCTSTR pstrAttr);
 	LPCTSTR GetCustomAttribute(LPCTSTR pstrName) const;
@@ -202,6 +203,7 @@ protected:
 	bool m_bKeyboardEnabled ;
     bool m_bFocused;
     bool m_bFloat;
+	bool m_bKillCombo;
 	TPercentInfo m_piFloatPercent;
     bool m_bSetPos; // 防止SetPos循环调用
 

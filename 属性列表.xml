@@ -63,6 +63,7 @@
 		<Attribute name="float" default="false" type="BOOL" comment="是否使用绝对定位,如(true)"/>
 		<Attribute name="shortcut" default="" type="CHAR" comment="对应的快捷键,如(P)"/>
 		<Attribute name="menu" default="false" type="BOOL" comment="是否需要右键菜单,如(true)"/>
+		<Attribute name="killcombo" default="true" type="BOOL" comment="如果Control是ComboItem的时候，那么点击之后是否关闭Combo下拉窗口,如(true)"/>
 		<Attribute name="keyboard" default="true" type="BOOL" comment="非CButtonUI类忽略该值，为false时不支持TAB_STOP,且该对象不处理键盘信息"/>
 	</Control>
 	<Container parent="Control" notifies="setfocus killfocus timer menu windowinit(root)">
@@ -341,6 +342,11 @@
 		<Attribute name="itemlinecolor" default="0x00000000" type="DWORD" comment="item行分割线颜色"/>
 		<Attribute name="itemshowhtml" default="false" type="BOOL" comment="item是否使用类html富文本绘制,如(false)"/>
 		<Attribute name="multiexpanding" default="false" type="BOOL" comment="是否支持多个item同时打开,如(false)"/>
+		
+		<!--liulei 扩展属性 edit 默认会根据textpadding占据Combo位置，所以为了Combo显示，设置一下textpadding-->
+		<Attribute name="showselftext" default="false" type="BOOL" comment="是否显示自己本身文本"/>
+		<Attribute name="edit" default="false" type="BOOL" comment="Combo 是否可以进行编辑"/>
+		<Attribute name="editattr" default="" type="STRING" comment="Combo Edit的属性设置"/>
 	</Combo>
 	<Label parent="Control" notifies="setfocus killfocus timer menu windowinit(root)">
 		<Attribute name="name" default="" type="STRING" comment="控件名字，同一窗口内必须唯一，如(testbtn)"/>

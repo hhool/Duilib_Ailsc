@@ -20,7 +20,6 @@ namespace DuiLib
 		m_bEnableLuminous(false),
 		m_fLuminousFuzzy(3),
 		m_gdiplusToken(0),
-		m_dwTextColor1(-1),
 		m_dwTextShadowColorA(0xff000000),
 		m_dwTextShadowColorB(-1),
 		m_GradientAngle(0),

@@ -8,7 +8,7 @@ namespace DuiLib {
 //
 
 class CComboWnd;
-
+class CEditUI;
 class DUILIB_API CComboUI : public CContainerUI, public IListOwnerUI
 {
     friend class CComboWnd;
@@ -20,11 +20,16 @@ public:
 
     void DoInit();
     UINT GetControlFlags() const;
-
+	const CEditUI *GetEdit();
+	void SetText(LPCTSTR pstrText);
     CDuiString GetText() const;
     void SetEnabled(bool bEnable = true);
-
+	void SetEnableEdit(bool bEdit = false);
+	bool IsEnableEdit();
+	void SetVisible(bool bVisible);
+	void SetFocus();
     CDuiString GetDropBoxAttributeList();
+	void SetEditAttrList(LPCTSTR pstrList);
     void SetDropBoxAttributeList(LPCTSTR pstrList);
     SIZE GetDropBoxSize() const;
     void SetDropBoxSize(SIZE szDropBox);
@@ -45,7 +50,14 @@ public:
     void RemoveAll();
 
     bool Activate();
-
+	DWORD GetTextColor() const;
+	void SetTextColor(DWORD dwTextColor);
+	void SetFont(int index);
+	int GetFont() const;
+	UINT GetTextStyle() const;
+	void SetTextStyle(UINT uStyle);
+	void ShowSelfText(bool bShowSelText);
+	bool IsShowSelfText();
 	bool GetShowText() const;
 	void SetShowText(bool flag);
     RECT GetTextPadding() const;
@@ -119,10 +131,15 @@ public:
 
 protected:
     CComboWnd* m_pWindow;
-
+	CEditUI *m_pEdit;
+	int		m_iFont;
+	UINT	m_uTextStyle;
+	DWORD m_dwTextColor;
     int m_iCurSel;
 	bool m_bShowText;
+	bool m_bShowSelfText;
 	bool m_bSelectCloseFlag;
+	bool m_bEnableEdit;
     RECT m_rcTextPadding;
     CDuiString m_sDropBoxAttributes;
     SIZE m_szDropBox;

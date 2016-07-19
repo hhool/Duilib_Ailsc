@@ -287,7 +287,7 @@ LRESULT CComboWnd::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
             ::GetCursorPos(&pt);
             ::ScreenToClient(m_pm.GetPaintWindow(), &pt);
             CControlUI* pControl = m_pm.FindControl(pt);
-            if( pControl && _tcscmp(pControl->GetClass(), DUI_CTR_SCROLLBAR) != 0 ) PostMessage(WM_KILLFOCUS);
+            if( pControl && pControl->IsKillCombo() &&_tcscmp(pControl->GetClass(), DUI_CTR_SCROLLBAR) != 0 ) PostMessage(WM_KILLFOCUS);
         }
     }
     else if( uMsg == WM_KEYDOWN ) {
@@ -387,10 +387,12 @@ UINT CComboWnd::GetClassStyle() const
 ////////////////////////////////////////////////////////
 
 
-CComboUI::CComboUI() : m_pWindow(NULL), m_iCurSel(-1), m_uButtonState(0)
+CComboUI::CComboUI() : m_pWindow(NULL), m_iCurSel(-1), m_uButtonState(0), m_uTextStyle(DT_VCENTER | DT_SINGLELINE), m_dwTextColor(0)
 {
+	m_iFont = -1;
     m_szDropBox = CDuiSize(0, 150);
-    ::ZeroMemory(&m_rcTextPadding, sizeof(m_rcTextPadding));
+   // ::ZeroMemory(&m_rcTextPadding, sizeof(m_rcTextPadding));
+	m_rcTextPadding = {1,1,20,1};
 
     m_ListInfo.nColumns = 0;
     m_ListInfo.uFixedHeight = 0;
@@ -411,11 +413,15 @@ CComboUI::CComboUI() : m_pWindow(NULL), m_iCurSel(-1), m_uButtonState(0)
     m_ListInfo.dwVLineColor = 0xFF3C3C3C;
     m_ListInfo.bShowHtml = false;
     m_ListInfo.bMultiExpandable = false;
-
+	m_bShowSelfText = false;
+	m_bEnableEdit = false;
 	m_bShowText = true;
 	m_bSelectCloseFlag = true;
     ::ZeroMemory(&m_ListInfo.rcTextPadding, sizeof(m_ListInfo.rcTextPadding));
     ::ZeroMemory(&m_ListInfo.rcColumn, sizeof(m_ListInfo.rcColumn));
+	m_pEdit = new CEditUI();
+	m_pEdit->SetFloat(true);
+	m_pEdit->SetVisible(false);
 }
 
 CComboUI::~CComboUI()
@@ -424,6 +430,7 @@ CComboUI::~CComboUI()
 		m_pWindow->SendMessage(WM_CLOSE);
 	m_pWindow = NULL;
 }
+
 LPCTSTR CComboUI::GetClass() const
 {
     return DUI_CTR_COMBO;
@@ -443,6 +450,12 @@ UINT CComboUI::GetControlFlags() const
 
 void CComboUI::DoInit()
 {
+	CControlUI *pParent = GetParent();
+	if (m_pParent->GetInterface(DUI_CTR_ICONTAINER))
+	{
+		CContainerUI *pcontain = static_cast<CContainerUI *>(pParent);
+		pcontain->Add(m_pEdit);
+	}
 }
 
 int CComboUI::GetCurSel() const
@@ -483,6 +496,9 @@ bool CComboUI::SelectItem(int iIndex, bool bTakeFocus, bool bTriggerEvent)
     if( m_pWindow != NULL || bTakeFocus ) pControl->SetFocus();
     pListItem->Select(true, bTriggerEvent);
     if( m_pManager != NULL && bTriggerEvent) m_pManager->SendNotify(this, DUI_MSGTYPE_ITEMSELECT, m_iCurSel, iOldSel);
+
+	if (m_bEnableEdit && m_pEdit && pControl)
+		m_pEdit->SetText(pControl->GetText());
     Invalidate();
 
     return true;
@@ -745,6 +761,9 @@ void CComboUI::DoEvent(TEventUI& event)
 SIZE CComboUI::EstimateSize(SIZE szAvailable)
 {
     if( m_cxyFixed.cy == 0 ) return CDuiSize(m_cxyFixed.cx, m_pManager->GetDefaultFontInfo()->tm.tmHeight + 8);
+	if (m_pEdit)
+		m_pEdit->EstimateSize(szAvailable);
+
     return CControlUI::EstimateSize(szAvailable);
 }
 
@@ -760,22 +779,80 @@ bool CComboUI::Activate()
     return true;
 }
 
+const CEditUI *CComboUI::GetEdit()
+{
+	return m_pEdit;
+}
+
+void CComboUI::SetText(LPCTSTR pstrText)
+{
+	if (m_bEnableEdit && m_pEdit)
+	{
+		m_pEdit->SetText(pstrText);
+	}
+	__super::SetText(pstrText);
+}
+
 CDuiString CComboUI::GetText() const
 {
+	if (m_bShowSelfText)
+		return CControlUI::GetText();
+	if (m_bEnableEdit)
+	{
+		if (m_pEdit)
+			return m_pEdit->GetText();
+		return _T("");
+	}
+
     if( m_iCurSel < 0 ) return _T("");
     CControlUI* pControl = static_cast<CControlUI*>(m_items[m_iCurSel]);
     return pControl->GetText();
 }
 
+void CComboUI::SetVisible(bool bVisible)
+{
+	if (m_bEnableEdit && m_pEdit)
+		m_pEdit->SetVisible(bVisible);
+	__super::SetVisible(bVisible);
+}
+
+void CComboUI::SetFocus()
+{
+	if (m_bEnableEdit && m_pEdit)
+		m_pEdit->SetFocus();
+	__super::SetFocus();
+}
+
 void CComboUI::SetEnabled(bool bEnable)
 {
+	if (m_bEnableEdit && m_pEdit)
+		m_pEdit->SetEnabled(bEnable);
+
     CContainerUI::SetEnabled(bEnable);
     if( !IsEnabled() ) m_uButtonState = 0;
+}
+
+void CComboUI::SetEnableEdit(bool bEdit)
+{
+	m_bEnableEdit = bEdit;
+	if (m_pEdit)
+		m_pEdit->SetVisible(m_bEnableEdit);
+}
+
+bool CComboUI::IsEnableEdit()
+{
+	return m_bEnableEdit;
 }
 
 CDuiString CComboUI::GetDropBoxAttributeList()
 {
     return m_sDropBoxAttributes;
+}
+
+void CComboUI::SetEditAttrList(LPCTSTR pstrList)
+{
+	if (m_pEdit)
+		m_pEdit->SetAttributeList(pstrList);
 }
 
 void CComboUI::SetDropBoxAttributeList(LPCTSTR pstrList)
@@ -791,6 +868,48 @@ SIZE CComboUI::GetDropBoxSize() const
 void CComboUI::SetDropBoxSize(SIZE szDropBox)
 {
     m_szDropBox = szDropBox;
+}
+
+void CComboUI::SetTextStyle(UINT uStyle)
+{
+	m_uTextStyle = uStyle;
+	Invalidate();
+}
+
+UINT CComboUI::GetTextStyle() const
+{
+	return m_uTextStyle;
+}
+
+void CComboUI::SetFont(int index)
+{
+	m_iFont = index;
+}
+
+int CComboUI::GetFont() const
+{
+	return m_iFont;
+}
+
+void CComboUI::SetTextColor(DWORD dwTextColor)
+{
+	m_dwTextColor = dwTextColor;
+	Invalidate();
+}
+
+DWORD CComboUI::GetTextColor() const
+{
+	return m_dwTextColor;
+}
+
+void CComboUI::ShowSelfText(bool bShowSelText)
+{
+	m_bShowSelfText = bShowSelText;
+}
+
+bool CComboUI::IsShowSelfText()
+{
+	return m_bShowSelfText;
 }
 
 bool CComboUI::GetShowText() const
@@ -1125,12 +1244,25 @@ void CComboUI::SetPos(RECT rc, bool bNeedInvalidate)
     // Put all elements out of sight
     RECT rcNull = { 0 };
     for( int i = 0; i < m_items.GetSize(); i++ ) static_cast<CControlUI*>(m_items[i])->SetPos(rcNull, false);
+
+	if (m_bEnableEdit && m_pEdit)
+	{
+		RECT rcText = rc;
+		rcText.left += m_rcTextPadding.left;
+		rcText.right -= m_rcTextPadding.right;
+		rcText.top += m_rcTextPadding.top;
+		rcText.bottom -= m_rcTextPadding.bottom;
+		m_pEdit->SetPos(rcText, bNeedInvalidate);
+	}
     // Position this control
     CControlUI::SetPos(rc, bNeedInvalidate);
 }
 
 void CComboUI::Move(SIZE szOffset, bool bNeedInvalidate)
 {
+	if (m_pEdit)
+		m_pEdit->Move(szOffset, bNeedInvalidate);
+
 	CControlUI::Move(szOffset, bNeedInvalidate);
 }
 
@@ -1145,7 +1277,46 @@ void CComboUI::SetAttribute(LPCTSTR pstrName, LPCTSTR pstrValue)
         rcTextPadding.bottom = _tcstol(pstr + 1, &pstr, 10); ASSERT(pstr);    
         SetTextPadding(rcTextPadding);
     }
+	if (_tcscmp(pstrName, _T("align")) == 0) {
+		if (_tcsstr(pstrValue, _T("left")) != NULL) {
+			m_uTextStyle &= ~(DT_CENTER | DT_RIGHT);
+			m_uTextStyle |= DT_LEFT;
+		}
+		if (_tcsstr(pstrValue, _T("center")) != NULL) {
+			m_uTextStyle &= ~(DT_LEFT | DT_RIGHT);
+			m_uTextStyle |= DT_CENTER;
+		}
+		if (_tcsstr(pstrValue, _T("right")) != NULL) {
+			m_uTextStyle &= ~(DT_LEFT | DT_CENTER);
+			m_uTextStyle |= DT_RIGHT;
+		}
+	}
+	else if (_tcscmp(pstrName, _T("valign")) == 0)
+	{
+		if (_tcsstr(pstrValue, _T("top")) != NULL) {
+			m_uTextStyle &= ~(DT_BOTTOM | DT_VCENTER);
+			m_uTextStyle |= DT_TOP;
+		}
+		if (_tcsstr(pstrValue, _T("vcenter")) != NULL) {
+			m_uTextStyle &= ~(DT_TOP | DT_BOTTOM);
+			m_uTextStyle |= DT_VCENTER;
+		}
+		if (_tcsstr(pstrValue, _T("bottom")) != NULL) {
+			m_uTextStyle &= ~(DT_TOP | DT_VCENTER);
+			m_uTextStyle |= DT_BOTTOM;
+		}
+	}
+	if (_tcscmp(pstrName, _T("textcolor")) == 0) {
+		if (*pstrValue == _T('#')) pstrValue = ::CharNext(pstrValue);
+		LPTSTR pstr = NULL;
+		DWORD clrColor = _tcstoul(pstrValue, &pstr, 16);
+		SetTextColor(clrColor);
+	}
+	else if (_tcscmp(pstrName, _T("editattr")) == 0) SetEditAttrList(pstrValue);
+	else if (_tcscmp(pstrName, _T("edit")) == 0) SetEnableEdit(_tcscmp(pstrValue, _T("true")) == 0);
+	else if (_tcscmp(pstrName, _T("font")) == 0) SetFont(_ttoi(pstrValue));
 	else if( _tcscmp(pstrName, _T("showtext")) == 0 ) SetShowText(_tcscmp(pstrValue, _T("true")) == 0);
+	else if (_tcscmp(pstrName, _T("showselftext")) == 0) ShowSelfText(_tcscmp(pstrValue, _T("true")) == 0);
     else if( _tcscmp(pstrName, _T("normalimage")) == 0 ) SetNormalImage(pstrValue);
     else if( _tcscmp(pstrName, _T("hotimage")) == 0 ) SetHotImage(pstrValue);
     else if( _tcscmp(pstrName, _T("pushedimage")) == 0 ) SetPushedImage(pstrValue);
@@ -1291,6 +1462,18 @@ void CComboUI::PaintStatusImage(HDC hDC)
 void CComboUI::PaintText(HDC hDC)
 {
 	if (!m_bShowText) return;
+	else if (m_bShowSelfText)
+	{
+		RECT rcText = m_rcItem;
+		rcText.left += m_rcTextPadding.left;
+		rcText.right -= m_rcTextPadding.right;
+		rcText.top += m_rcTextPadding.top;
+		rcText.bottom -= m_rcTextPadding.bottom;
+
+		CRenderEngine::DrawText(hDC, m_pManager, rcText, m_sText, GetTextColor(), \
+			GetFont(), GetTextStyle());
+		return;
+	}
 
     RECT rcText = m_rcItem;
     rcText.left += m_rcTextPadding.left;
