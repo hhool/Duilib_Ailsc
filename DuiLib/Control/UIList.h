@@ -119,11 +119,11 @@ public:
 	void SetVirtual(bool bUse = false);
 	//> 设置虚表数据个数
 	void SetVirtualItemCount(int nCountItem);
-	bool IsUseVirtualList();
+	bool IsUseVirtualList() const;
 	//> 获取虚表的行高度（虚表行高必须保持一致，不支持动态行高）
 	int GetVirtualItemHeight();
 	//> 获取虚表数据个数
-	int GetVirtualItemCount();
+	int GetVirtualItemCount() const;
 	///////////////////////////////////////////////////////////////////////////////////////////////////
 
 
@@ -137,12 +137,13 @@ public:
     bool SetItemIndex(CControlUI* pControl, int iIndex);
     bool SetMultiItemIndex(CControlUI* pStartControl, int iCount, int iNewStartIndex);
     int GetCount() const;
+	int GetItemCount() const;//获取实际Item的个数
     bool Add(CControlUI* pControl);
     bool AddAt(CControlUI* pControl, int iIndex);
     bool Remove(CControlUI* pControl, bool bDoNotDestroy=false);
     bool RemoveAt(int iIndex, bool bDoNotDestroy=false);
     void RemoveAll();
-
+	void ResetSortStatus();//重置所有表头排序状态
     void EnsureVisible(int iIndex);
     void Scroll(int dx, int dy);
 
@@ -325,7 +326,8 @@ public:
 	RECT GetSortRect() const;
     void PaintText(HDC hDC);
     void PaintStatusImage(HDC hDC);
-
+private:
+	void SetSortStatus(ESORT esort, bool bTriggerEvent = false);
 protected:
     POINT ptLastMouse;
     bool m_bDragable;

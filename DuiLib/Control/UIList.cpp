@@ -133,8 +133,8 @@ bool CListUI::SetMultiItemIndex(CControlUI* pStartControl, int iCount, int iNewS
 
     int iStartIndex = GetItemIndex(pStartControl);
     if (iStartIndex == iNewStartIndex) return true;
-    if (iStartIndex + iCount > GetCount()) return false;
-    if (iNewStartIndex + iCount > GetCount()) return false;
+    if (iStartIndex + iCount > GetItemCount()) return false;
+	if (iNewStartIndex + iCount > GetItemCount()) return false;
 
     IListItemUI* pSelectedListItem = NULL;
     if( m_iCurSel >= 0 ) pSelectedListItem = 
@@ -155,7 +155,15 @@ bool CListUI::SetMultiItemIndex(CControlUI* pStartControl, int iCount, int iNewS
 
 int CListUI::GetCount() const
 {
+	if (IsUseVirtualList())
+		return GetVirtualItemCount();
+
     return m_pList->GetCount();
+}
+
+int CListUI::GetItemCount() const
+{
+	return m_pList->GetCount();
 }
 
 bool CListUI::Add(CControlUI* pControl)
@@ -187,7 +195,7 @@ bool CListUI::Add(CControlUI* pControl)
     IListItemUI* pListItem = static_cast<IListItemUI*>(pControl->GetInterface(DUI_CTR_ILISTITEM));
     if( pListItem != NULL ) {
         pListItem->SetOwner(this);
-        pListItem->SetIndex(GetCount());
+		pListItem->SetIndex(GetItemCount());
     }
     return m_pList->Add(pControl);
 }
@@ -216,7 +224,7 @@ bool CListUI::AddVirtualItem(CControlUI* pControl)
 	IListItemUI* pListItem = static_cast<IListItemUI*>(pControl->GetInterface(DUI_CTR_ILISTITEM));
 	if (pListItem != NULL) {
 		pListItem->SetOwner(this);
-		pListItem->SetIndex(GetCount());
+		pListItem->SetIndex(GetItemCount());
 	}
 	return m_pList->Add(pControl);
 }
@@ -336,6 +344,15 @@ void CListUI::RemoveAll()
     m_iCurSel = -1;
     m_iExpandedItem = -1;
     m_pList->RemoveAll();
+}
+
+void CListUI::ResetSortStatus()
+{
+	if (m_pHeader && m_pHeader->GetCount())
+	{
+		CListHeaderItemUI *pHeaderItem = static_cast<CListHeaderItemUI*>(m_pHeader->GetItemAt(0));
+		pHeaderItem->SetSort(E_SORTNO);
+	}
 }
 
 void CListUI::SetPos(RECT rc, bool bNeedInvalidate)
@@ -490,7 +507,7 @@ void CListUI::DoEvent(TEventUI& event)
             case VK_HOME:
                 SelectItem(FindSelectable(0, false), true);
             case VK_END:
-                SelectItem(FindSelectable(GetCount() - 1, true), true);
+				SelectItem(FindSelectable(GetItemCount() - 1, true), true);
             case VK_RETURN:
                 if( m_iCurSel != -1 ) GetItemAt(m_iCurSel)->Activate();
             }
@@ -554,7 +571,7 @@ void CListUI::SetVirtual(bool bUse)
 	m_bUseVirtualList = bUse;
 }
 
-bool CListUI::IsUseVirtualList()
+bool CListUI::IsUseVirtualList() const
 {
 	return m_bUseVirtualList;
 }
@@ -564,7 +581,7 @@ int CListUI::GetVirtualItemHeight()
 	return m_nVirtualItemHeight;
 }
 
-int CListUI::GetVirtualItemCount()
+int CListUI::GetVirtualItemCount() const
 {
 	return m_nVirtualItemCount;
 }
@@ -575,7 +592,7 @@ void CListUI::ResizeVirtualItemBuffer()
 
  	if (m_pVirutalItemFormat)
 	{
-		if (GetCount() == 0)
+		if (GetItemCount() == 0)
 		{
 			CControlUI *pControl = m_pVirutalItemFormat();
 			if (pControl)
@@ -585,7 +602,7 @@ void CListUI::ResizeVirtualItemBuffer()
 			}
 		}
 
-		int nItemCount = GetCount();
+		int nItemCount = GetItemCount();
 		int nItemSize = GetHeight() / m_nVirtualItemHeight + 5;
 
 		for (int i = nItemCount; i < nItemSize; ++i)
@@ -1915,12 +1932,32 @@ void CListHeaderItemUI::SetEnabledSort(bool bEnableSort)
 
 void CListHeaderItemUI::SetSort(ESORT esort, bool bTriggerEvent)
 {
+	//> 重置其他Item的状态
+	if (GetParent() && GetParent()->GetInterface(DUI_CTR_LISTHEADER))
+	{
+		CListHeaderUI *pHeader = static_cast<CListHeaderUI *>(GetParent());
+		for (int i = 0; i < pHeader->GetCount(); ++i)
+		{
+			if (pHeader->GetItemAt(i)->GetInterface(DUI_CTR_LISTHEADERITEM))
+			{
+				CListHeaderItemUI *pHederItem = static_cast<CListHeaderItemUI*>(pHeader->GetItemAt(i)->GetInterface(DUI_CTR_LISTHEADERITEM));
+				if (pHederItem != this)
+					pHederItem->SetSortStatus(E_SORTNO);
+			}
+		}
+	}
+
+	SetSortStatus(esort, bTriggerEvent);
+}
+
+void CListHeaderItemUI::SetSortStatus(ESORT esort, bool bTriggerEvent)
+{
 	if (!m_bEnablebSort) return;
 	if (m_esrot == esort) return;
 	m_esrot = esort;
 	Invalidate();
-	if (bTriggerEvent)
-		m_pManager->SendNotify(this, DUI_MSGTYPE_SORT,m_esrot);
+ 	if (bTriggerEvent)
+ 		m_pManager->SendNotify(this, DUI_MSGTYPE_SORT,m_esrot);
 }
 
 ESORT CListHeaderItemUI::GetSort()
@@ -2065,21 +2102,6 @@ void CListHeaderItemUI::DoEvent(TEventUI& event)
         else {
 			if (m_bEnablebSort)
 			{
-				//> 重置其他Item的状态
-				if (GetParent() && GetParent()->GetInterface(DUI_CTR_LISTHEADER))
-				{
-					CListHeaderUI *pHeader = static_cast<CListHeaderUI *>(GetParent());
-					for (int i = 0; i < pHeader->GetCount(); ++i)
-					{
-						if (pHeader->GetItemAt(i)->GetInterface(DUI_CTR_LISTHEADERITEM))
-						{
-							CListHeaderItemUI *pHederItem = static_cast<CListHeaderItemUI*>(pHeader->GetItemAt(i)->GetInterface(DUI_CTR_LISTHEADERITEM));
-							if (pHederItem != this)
-								pHederItem->SetSort(E_SORTNO, false);
-						}
-					}
-				}
-
 				SetSort((ESORT)((m_esrot + 1) % E_SORT_MAX));
 			}
 
