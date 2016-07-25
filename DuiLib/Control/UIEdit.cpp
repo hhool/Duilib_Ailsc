@@ -160,10 +160,33 @@ namespace DuiLib
 			TCHAR c = (TCHAR)wParam;
 			if (m_pOwner->IsDecimal())
 			{
-				if (c >= '0' && c <= '9' ||	c == '.' || c == VK_BACK)
-					bHandled = FALSE;
+// 				int i = 0, j = 0, k = 0;
+// 				i = ::SendMessage(m_hWnd, EM_GETSEL, 0, 0);
+// 				j = HIWORD(i);
+// 				int ln = ::SendMessage(m_hWnd, EM_LINEFROMCHAR, j, 0) + 1;
+// 				k = ::SendMessage(m_hWnd, EM_LINEINDEX, -1, 0);
+				DWORD dwRet = Edit_GetSel(m_hWnd);
+				int nSelPos = HIWORD(dwRet);
+				if (c >= '0' && c <= '9' || c == '.' || c == VK_BACK)
+				{
+					if (c == '.' && m_pOwner->IsTextHavePoint())
+						bHandled = TRUE;
+					else if (c != '.' && c != VK_BACK &&
+						m_pOwner->GetTextDigits(nSelPos) >= m_pOwner->m_nDigits)
+						bHandled = TRUE;
+					else
+						bHandled = FALSE;
+				}
 				else
 					bHandled = TRUE;
+			}
+			///> 如果外部控制了输入则输入进行控制,如果外部处理了则不在处理
+			else if (m_pOwner->m_pInputControl)
+			{
+				if (m_pOwner->m_pInputControl(m_hWnd,c))
+					bHandled = TRUE;
+				else
+					bHandled = FALSE;
 			}
 			else
 				bHandled = FALSE;
@@ -258,7 +281,7 @@ namespace DuiLib
 
 	CEditUI::CEditUI() : m_pWindow(NULL), m_uMaxChar(255), m_bReadOnly(false), m_bDecimal(false),
 		m_bPasswordMode(false), m_cPasswordChar(_T('*')), m_bAutoSelAll(false), m_uButtonState(0), 
-		m_dwEditbkColor(0xFFFFFFFF), m_iWindowStyls(0)
+		m_dwEditbkColor(0xFFFFFFFF), m_iWindowStyls(0), m_nDigits(0), m_pInputControl(NULL)
 	{
 		SetTextPadding(CDuiRect(4, 3, 4, 3));
 		SetBkColor(0xFFFFFFFF);
@@ -386,6 +409,11 @@ namespace DuiLib
 		CLabelUI::DoEvent(event);
 	}
 
+	void CEditUI::SetControlInput(PCONTROLINPUT inputcontrol)
+	{
+		m_pInputControl = inputcontrol;
+	}
+
 	void CEditUI::SetEnabled(bool bEnable)
 	{
 		CControlUI::SetEnabled(bEnable);
@@ -405,6 +433,50 @@ namespace DuiLib
 	bool CEditUI::IsDecimal()
 	{
 		return m_bDecimal;
+	}
+
+	void CEditUI::SetDigits(int ndigits)
+	{
+		m_nDigits = ndigits;
+	}
+
+	int CEditUI::GetDigits()
+	{
+		return m_nDigits;
+	}
+
+	bool CEditUI::IsTextHavePoint()
+	{
+		if (m_sText == _T("")) return false;
+		TCHAR szSrc[64] = _T("");
+		lstrcpyn(szSrc, m_sText.GetData(), 64);
+		TCHAR *nexttoken = NULL;
+		TCHAR *psz = _tcstok_s((TCHAR*)szSrc, _T("."), &nexttoken);
+		if (psz)
+			return m_sText == psz ? false : true;
+		else
+			return false;
+	}
+
+	int CEditUI::GetTextDigits(int nSelPos)
+	{
+		if (m_sText == _T("")) return 0;
+
+		nSelPos = min(nSelPos, m_sText.GetLength()-1);
+		nSelPos += 1;
+		TCHAR szSrc[64] = _T("");
+		lstrcpyn(szSrc, m_sText.GetData(), nSelPos);
+		TCHAR *nexttoken = NULL;
+		TCHAR *psz = _tcstok_s(szSrc, _T("."), &nexttoken);
+
+		///> 标明光标在小数点之前
+		if (psz == NULL) return 0;
+		if (lstrcmp(nexttoken, _T("")) == 0) return 0;
+
+		///> 否则有小数点
+		_stprintf_s(szSrc, 63, _T("%s"),m_sText.GetData());
+		_tcstok_s(szSrc, _T("."), &nexttoken);
+		return lstrlen(nexttoken);
 	}
 
 	void CEditUI::SetText(LPCTSTR pstrText)
@@ -630,6 +702,7 @@ namespace DuiLib
 		else if( _tcscmp(pstrName, _T("password")) == 0 ) SetPasswordMode(_tcscmp(pstrValue, _T("true")) == 0);
 		else if( _tcscmp(pstrName, _T("autoselall")) == 0 ) SetAutoSelAll(_tcscmp(pstrValue, _T("true")) == 0);	
 		else if( _tcscmp(pstrName, _T("maxchar")) == 0 ) SetMaxChar(_ttoi(pstrValue));
+		else if (_tcscmp(pstrName, _T("digits")) == 0) SetDigits(_ttoi(pstrValue));
 		else if( _tcscmp(pstrName, _T("normalimage")) == 0 ) SetNormalImage(pstrValue);
 		else if( _tcscmp(pstrName, _T("hotimage")) == 0 ) SetHotImage(pstrValue);
 		else if( _tcscmp(pstrName, _T("focusedimage")) == 0 ) SetFocusedImage(pstrValue);

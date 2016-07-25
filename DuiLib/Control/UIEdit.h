@@ -5,8 +5,9 @@
 
 namespace DuiLib
 {
-	class CEditWnd;
+	typedef bool(*PCONTROLINPUT)(HWND heditwnd,TCHAR c);
 
+	class CEditWnd;
 	class DUILIB_API CEditUI : public CLabelUI
 	{
 		friend class CEditWnd;
@@ -18,9 +19,13 @@ namespace DuiLib
 		UINT GetControlFlags() const;
 		HWND GetNativeWindow() const;
 
+		///> Edit的输入控制
+		void SetControlInput(PCONTROLINPUT inputcontrol);
 		void SetEnabled(bool bEnable = true);
 		void SetDecimal(bool bDecimal = false);//是否只允许输入带有小数点的数字eg:3.14
 		bool IsDecimal();
+		void SetDigits(int ndigits);//后面保留位数
+		int GetDigits();
 		void SetText(LPCTSTR pstrText);
 		void SetMaxChar(UINT uMax);
 		UINT GetMaxChar();
@@ -62,10 +67,13 @@ namespace DuiLib
 
 		void PaintStatusImage(HDC hDC);
 		void PaintText(HDC hDC);
-
+	private:
+		bool IsTextHavePoint();//当前数据是否有小数点
+		int GetTextDigits(int nSelPos);//获取当前光标之前的数据小数点个数
 	protected:
+		PCONTROLINPUT m_pInputControl;
 		CEditWnd* m_pWindow;
-
+		UINT m_nDigits;
 		UINT m_uMaxChar;
 		bool m_bDecimal;
 		bool m_bReadOnly;

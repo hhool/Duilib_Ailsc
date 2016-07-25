@@ -657,6 +657,7 @@
 		<Attribute name="password" default="false" type="BOOL" comment="是否显示密码字符,如(false)"/>
 		<Attribute name="numberonly" default="false" type="BOOL" comment="是否只允许输入数字,如(false)"/>
 		<Attribute name="decimal" default="false" type="BOOL" comment="是否只允许输入带小数点的数字,如(false)"/>
+		<Attribute name="digits" default="0" type="INT" comment="小数点的位数，如果为0表示不设置，配合decimal属性使用"/>
 		<Attribute name="maxchar" default="255" type="INT" comment="输入字符最大长度，如(100)"/>
 		<Attribute name="normalimage" default="" type="STRING" comment="普通状态图片"/>
 		<Attribute name="hotimage" default="" type="STRING" comment="鼠标悬浮状态图片"/>
