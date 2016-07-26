@@ -171,7 +171,7 @@ namespace DuiLib
 				{
 					if (c == '.' && m_pOwner->IsTextHavePoint())
 						bHandled = TRUE;
-					else if (c != '.' && c != VK_BACK &&
+					else if (m_pOwner->m_nDigits > 0 && c != '.' && c != VK_BACK &&
 						m_pOwner->GetTextDigits(nSelPos) >= m_pOwner->m_nDigits)
 						bHandled = TRUE;
 					else
