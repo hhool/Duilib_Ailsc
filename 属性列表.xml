@@ -656,14 +656,15 @@
 		<Attribute name="readonly" default="false" type="BOOL" comment="是否只读,如(false)"/>
 		<Attribute name="password" default="false" type="BOOL" comment="是否显示密码字符,如(false)"/>
 		<Attribute name="numberonly" default="false" type="BOOL" comment="是否只允许输入数字,如(false)"/>
-		<Attribute name="decimal" default="false" type="BOOL" comment="是否只允许输入带小数点的数字,如(false)"/>
-		<Attribute name="digits" default="0" type="INT" comment="小数点的位数，如果为0表示不设置，配合decimal属性使用"/>
 		<Attribute name="maxchar" default="255" type="INT" comment="输入字符最大长度，如(100)"/>
 		<Attribute name="normalimage" default="" type="STRING" comment="普通状态图片"/>
 		<Attribute name="hotimage" default="" type="STRING" comment="鼠标悬浮状态图片"/>
 		<Attribute name="focusedimage" default="" type="STRING" comment="获得焦点状态图片"/>
 		<Attribute name="disabledimage" default="" type="STRING" comment="禁用状态图片"/>
 		<Attribute name="nativebkcolor" default="0x00000000" type="DWORD" comment="windows原生edit控件的背景颜色,如(0xFFFFFFFF)"/>
+		<!--liulei 扩展属性-->
+		<Attribute name="decimal" default="false" type="BOOL" comment="是否只允许输入带小数点的数字,如(false)"/>
+		<Attribute name="digits" default="0" type="INT" comment="小数点的位数，如果为0表示不设置，配合decimal属性使用"/>
 	</Edit>
 	<ScrollBar parent="Control" notifies="timer menu scrolled windowinit(root)">
 		<Attribute name="name" default="" type="STRING" comment="控件名字，同一窗口内必须唯一，如(testbtn)"/>

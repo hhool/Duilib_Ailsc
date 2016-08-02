@@ -160,19 +160,17 @@ namespace DuiLib
 			TCHAR c = (TCHAR)wParam;
 			if (m_pOwner->IsDecimal())
 			{
-// 				int i = 0, j = 0, k = 0;
-// 				i = ::SendMessage(m_hWnd, EM_GETSEL, 0, 0);
-// 				j = HIWORD(i);
-// 				int ln = ::SendMessage(m_hWnd, EM_LINEFROMCHAR, j, 0) + 1;
-// 				k = ::SendMessage(m_hWnd, EM_LINEINDEX, -1, 0);
+				//#liulei 获取光标的起始位置
 				DWORD dwRet = Edit_GetSel(m_hWnd);
-				int nSelPos = HIWORD(dwRet);
+				int nLastPos = HIWORD(dwRet);
+				int nStartPos = LOWORD(dwRet);
 				if (c >= '0' && c <= '9' || c == '.' || c == VK_BACK)
 				{
 					if (c == '.' && m_pOwner->IsTextHavePoint())
 						bHandled = TRUE;
-					else if (m_pOwner->m_nDigits > 0 && c != '.' && c != VK_BACK &&
-						m_pOwner->GetTextDigits(nSelPos) >= m_pOwner->m_nDigits)
+					///> nLastPos == nStartPos 没有选中了多行才需要判断输入点和小数点之间的位置关系
+					else if (nLastPos == nStartPos && m_pOwner->m_nDigits > 0 && c != '.' && c != VK_BACK &&
+						m_pOwner->GetTextDigits(nLastPos) >= m_pOwner->m_nDigits)
 						bHandled = TRUE;
 					else
 						bHandled = FALSE;
@@ -481,6 +479,7 @@ namespace DuiLib
 
 	void CEditUI::SetText(LPCTSTR pstrText)
 	{
+		if (m_sText == pstrText) return;
 		m_sText = pstrText;
 		if( m_pWindow != NULL ) Edit_SetText(*m_pWindow, m_sText);
 		Invalidate();
