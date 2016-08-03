@@ -69,9 +69,9 @@ namespace DuiLib
 		::ShowWindow(m_hWnd, SW_SHOWNOACTIVATE);
 		::SetFocus(m_hWnd);
 		if (m_pOwner->IsAutoSelAll()) {
-			int nSize = GetWindowTextLength(m_hWnd);
-			if( nSize == 0 ) nSize = 1;
-			Edit_SetSel(m_hWnd, 0, nSize);
+			//int nSize = GetWindowTextLength(m_hWnd);
+			//if( nSize == 0 ) nSize = 1;
+			Edit_SetSel(m_hWnd, 0, -1);
 		}
 		else {
 			int nSize = GetWindowTextLength(m_hWnd);
@@ -458,18 +458,24 @@ namespace DuiLib
 
 	int CEditUI::GetTextDigits(int nSelPos)
 	{
-		if (m_sText == _T("")) return 0;
-
+		if (m_sText.GetLength() <= 0) return 0;
+		bool bLastPoint = false;//Src 最后一位是否为小数点
 		nSelPos = min(nSelPos, m_sText.GetLength()-1);
 		nSelPos += 1;
 		TCHAR szSrc[64] = _T("");
-		lstrcpyn(szSrc, m_sText.GetData(), nSelPos);
+		int nLen = min(nSelPos, 64);
+		lstrcpyn(szSrc, m_sText.GetData(), nLen);
+		///> 检测小数点是否在最后一位
+		nLen = lstrlen(szSrc);
+		if (nLen > 0 && szSrc[nLen - 1] == '.')
+			bLastPoint = true;
+
 		TCHAR *nexttoken = NULL;
 		TCHAR *psz = _tcstok_s(szSrc, _T("."), &nexttoken);
 
 		///> 标明光标在小数点之前
 		if (psz == NULL) return 0;
-		if (lstrcmp(nexttoken, _T("")) == 0) return 0;
+		if (lstrcmp(nexttoken, _T("")) == 0 &&(!bLastPoint)) return 0;
 
 		///> 否则有小数点
 		_stprintf_s(szSrc, 63, _T("%s"),m_sText.GetData());
