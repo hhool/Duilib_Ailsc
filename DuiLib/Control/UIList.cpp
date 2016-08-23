@@ -465,6 +465,16 @@ void CListUI::SetPos(RECT rc, bool bNeedInvalidate)
 	//#liulei 如果位置发生改变之前和之后滚动条前后位置不一样则需要刷新ListBody重新计算位置,
 	if (iOffsetNow != iResizeOffset)
 		CVerticalLayoutUI::SetPos(rc, bNeedInvalidate);
+
+	///#liulei 20160823
+	///> 矫正表头项的位置，因为表头是Contain并且不是float，表头SetPos之后会对Item重现排序，如果此时横向滚动条不在位置为0的地方
+	///> 则可能出现表头项由于没有偏移而导致表头显示不对，list的内容不受影响
+	for (int i = 0; i < m_ListInfo.nColumns; i++) {
+		CControlUI* pControl = static_cast<CControlUI*>(m_pHeader->GetItemAt(i));
+		if (!pControl->IsVisible()) continue;
+		if (pControl->IsFloat()) continue;
+		pControl->SetPos(m_ListInfo.rcColumn[i], false);
+	}
 }
 
 void CListUI::Move(SIZE szOffset, bool bNeedInvalidate)

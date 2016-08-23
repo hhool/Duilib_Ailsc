@@ -641,6 +641,20 @@ namespace DuiLib
 		return m_dwEditbkColor;
 	}
 
+	int CEditUI::GetHignSel()
+	{
+		if (m_pWindow == NULL) return -1;
+		DWORD dwRet = Edit_GetSel(*m_pWindow);
+		return HIWORD(dwRet);
+	}
+
+	int CEditUI::GetLowSel()
+	{
+		if (m_pWindow == NULL) return -1;
+		DWORD dwRet = Edit_GetSel(*m_pWindow);
+		return LOWORD(dwRet);
+	}
+
 	void CEditUI::SetSel(long nStartChar, long nEndChar)
 	{
 		if( m_pWindow != NULL ) Edit_SetSel(*m_pWindow, nStartChar,nEndChar);

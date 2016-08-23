@@ -57,6 +57,8 @@ namespace DuiLib
 		void SetSelAll();
 		void SetReplaceSel(LPCTSTR lpszReplace);
 
+		int GetLowSel();
+		int GetHignSel();
 		void SetPos(RECT rc, bool bNeedInvalidate = true);
 		void Move(SIZE szOffset, bool bNeedInvalidate = true);
 		void SetVisible(bool bVisible = true);
