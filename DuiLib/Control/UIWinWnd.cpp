@@ -14,6 +14,11 @@ namespace DuiLib
 		{
 			::SendMessage(m_hWnd,WM_CLOSE,0,0);
 		}
+		else
+		{
+			if (::IsWindow(m_hWnd))
+				::ShowWindow(m_hWnd, SW_HIDE);
+		}
 	}
 	void CWinWndUI::SetInternVisible(bool bVisible)
 	{
