@@ -1,8 +1,6 @@
 #include "StdAfx.h"
 
 namespace DuiLib {
-
-
 /////////////////////////////////////////////////////////////////////////////////////
 //
 #define VIR_ITEM_HEIGHT 30//虚表项的默认高度
@@ -31,7 +29,7 @@ protected:
 //
 //
 
-CListUI::CListUI() : m_pCallback(NULL), m_bScrollSelect(false), m_iCurSel(-1), m_iExpandedItem(-1)
+CListUI::CListUI() : m_pCallback(NULL), m_bScrollSelect(false), m_iCurSel(-1), m_iExpandedItem(-1), m_iSelectControlTag(-1)
 {
 	m_nVirtualItemHeight = VIR_ITEM_HEIGHT;
 	m_nVirtualItemCount = 0;
@@ -506,20 +504,44 @@ void CListUI::DoEvent(TEventUI& event)
     {
         if (IsKeyboardEnabled() && IsEnabled()) {
             switch( event.chKey ) {
-            case VK_UP:
-                SelectItem(FindSelectable(m_iCurSel - 1, false), true);
+			case VK_UP:
+				{
+					if (!IsUseVirtualList())
+						SelectItem(FindSelectable(m_iCurSel - 1, false), true);
+					else
+						LineUp();
+				}
+				break;
             case VK_DOWN:
-                SelectItem(FindSelectable(m_iCurSel + 1, true), true);
+				{
+					if (!IsUseVirtualList())
+						SelectItem(FindSelectable(m_iCurSel + 1, true), true);
+					else
+						LineDown();
+				}
+				break;
             case VK_PRIOR:
-                PageUp();
+				PageUp(); break;
             case VK_NEXT:
-                PageDown();
+				PageDown(); break;
             case VK_HOME:
-                SelectItem(FindSelectable(0, false), true);
+			   {
+				   if (!IsUseVirtualList())
+					   SelectItem(FindSelectable(0, false), true);
+				   else
+					   HomeUp();
+			   }
+			   break;
             case VK_END:
-				SelectItem(FindSelectable(GetItemCount() - 1, true), true);
+				{
+					if (!IsUseVirtualList())
+						SelectItem(FindSelectable(GetItemCount() - 1, true), true);
+					else
+						EndDown();
+				}
+				break;
             case VK_RETURN:
-                if( m_iCurSel != -1 ) GetItemAt(m_iCurSel)->Activate();
+				if (m_iCurSel != -1) GetItemAt(m_iCurSel)->Activate(); break;
             }
             return;
         }
@@ -530,11 +552,11 @@ void CListUI::DoEvent(TEventUI& event)
         if (IsEnabled()) {
             switch( LOWORD(event.wParam) ) {
             case SB_LINEUP:
-                if( m_bScrollSelect ) SelectItem(FindSelectable(m_iCurSel - 1, false), true);
+                if( m_bScrollSelect && !IsUseVirtualList()) SelectItem(FindSelectable(m_iCurSel - 1, false), true);
                 else LineUp();
                 return;
             case SB_LINEDOWN:
-                if( m_bScrollSelect ) SelectItem(FindSelectable(m_iCurSel + 1, true), true);
+				if (m_bScrollSelect && !IsUseVirtualList() ) SelectItem(FindSelectable(m_iCurSel + 1, true), true);
                 else LineDown();
                 return;
             }
@@ -594,6 +616,16 @@ int CListUI::GetVirtualItemHeight()
 int CListUI::GetVirtualItemCount() const
 {
 	return m_nVirtualItemCount;
+}
+
+void CListUI::SetSelectControlTag(INT64 iControlTag)
+{
+	m_iSelectControlTag = iControlTag;
+}
+
+INT64 CListUI::GetSelectControlTag()
+{
+	return m_iSelectControlTag;
 }
 
 void CListUI::ResizeVirtualItemBuffer()
@@ -661,7 +693,9 @@ bool CListUI::SelectItem(int iIndex, bool bTakeFocus, bool bTriggerEvent)
         m_iCurSel = -1;
         return false;
     }
-    EnsureVisible(m_iCurSel);
+	//#liulei 20160901 不保证选中的Item始终在窗口
+   // EnsureVisible(m_iCurSel);
+
     if( bTakeFocus ) pControl->SetFocus();
     if( m_pManager != NULL && bTriggerEvent ) {
         m_pManager->SendNotify(this, DUI_MSGTYPE_ITEMSELECT, m_iCurSel, iOldSel);
@@ -1166,6 +1200,193 @@ void CListUI::DrawVirtualItem(CControlUI *pControl,int nRow)
 		m_pManager->SendNotify(this, DUI_MSGTYPE_DRAWITEM, (WPARAM)pControl, (LPARAM)nRow);
 }
 
+CDuiString GetContainText(CControlUI *pControl)
+{
+	if (pControl == NULL) return _T("");
+
+	CDuiString strRet;
+	if (pControl->GetInterface(DUI_CTR_CONTAINER))
+	{
+		CContainerUI *pContain = static_cast<CContainerUI *>(pControl);
+		for (int i = 0; i < pContain->GetCount();++i)
+		{
+			strRet += GetContainText(pContain->GetItemAt(i));
+		}
+	}
+	else
+	{
+		strRet += pControl->GetText();
+	}
+	return strRet;
+}
+
+BOOL CListUI::Copy(int nMaxRowItemData, bool bUserDefine)
+{
+	if (nMaxRowItemData <= 1) return FALSE;
+	TCHAR *szBuffer = new TCHAR[nMaxRowItemData];
+	memset(szBuffer, 0, sizeof(TCHAR)*nMaxRowItemData);
+	int nRowCount = GetCount();
+	int nColCount = m_pHeader->IsVisible() ? m_pHeader->GetCount():0;
+	nColCount = max(nColCount, 1);
+	CDuiString strText;
+
+	if (m_pHeader->IsVisible())
+	{
+		for (int i = 0; i < nColCount; ++i)
+		{
+			CControlUI *pControl = m_pHeader->GetItemAt(i);
+			if (pControl)
+			{
+				strText += pControl->GetText();
+			}
+			else
+			{
+				strText += _T("");
+			}
+
+			strText += _T("\t");
+		}
+
+		strText += _T("\r\n");
+	}
+
+	DUICopyItem item;
+	item.szText = szBuffer;
+	item.nszText = nMaxRowItemData;
+	
+	CControlUI *pItem = NULL;
+	if (IsUseVirtualList())
+	{
+		assert(m_pVirutalItemFormat);
+		///> 准备数据格式内存，需要释放数据delete
+		pItem = m_pVirutalItemFormat();
+	}
+
+	for (int iRow = 0; iRow < nRowCount; ++iRow)
+	{
+		
+		if (IsUseVirtualList())
+		{
+			///> 填充当前数据项
+			if (m_pManager)
+				m_pManager->SendNotify(this, DUI_MSGTYPE_DRAWITEM, (WPARAM)pItem, (LPARAM)iRow);
+		}
+		else
+		{
+			pItem = GetItemAt(iRow);
+		}
+		
+		///> 断言当前项一定存在
+		ASSERT(pItem);
+		if (pItem == NULL) continue;
+
+		///> 如果使用用户自定义的CopyData数据
+		if (bUserDefine)
+		{
+			item.nRow = iRow;
+			for (int iCol = 0; iCol < nColCount; ++iCol)
+			{
+				item.nCol = iCol;
+				if (m_pManager)
+					m_pManager->SendNotify(this, DUI_MSGTYPE_COPYITEM, (LPARAM)pItem, (WPARAM)&item);
+
+				strText += szBuffer;
+				strText += _T("\t");
+			}
+		}
+		else///> 使用默认的CopyItem方式
+		{
+			if (pItem->GetInterface(DUI_CTR_LISTTEXTELEMENT))
+			{
+				CListTextElementUI *pText = static_cast<CListTextElementUI *>(pItem);
+				int nCountText = pText->GetCount();
+				for (int k = 0; k < nCountText;++k)
+				{
+					strText += pText->GetText(k);
+					strText += _T("\t");
+				}
+			}
+			else if (pItem->GetInterface(DUI_CTR_LISTLABELELEMENT))
+			{
+				strText += pItem->GetText();
+			}
+			else if (pItem->GetInterface(DUI_CTR_LISTHBOXELEMENT))
+			{
+				CListHBoxElementUI *pContain = static_cast<CListHBoxElementUI *>(pItem);
+				for (int k = 0; k < pContain->GetCount(); ++k)
+				{
+					strText += GetContainText(pContain->GetItemAt(k));
+					strText += _T("\t");
+				}
+
+			}
+			else if (pItem->GetInterface(DUI_CTR_LISTCONTAINERELEMENT))
+			{
+				CListContainerElementUI *pContain = static_cast<CListContainerElementUI *>(pItem);
+				for (int k = 0; k < pContain->GetCount();++k)
+				{
+					strText += GetContainText(pContain);
+				}
+			}
+			else
+			{
+				strText += pItem->GetText();
+			}
+		}
+		strText += _T("\r\n");
+	}
+
+	delete[]szBuffer;
+	///> 如果使用了虚表释放虚表准备的数据格式内存
+	if (IsUseVirtualList() && pItem)
+	{
+		pItem->Delete();
+		pItem = NULL;
+	}
+
+	if (strText.GetLength() > 0)
+	{
+		///> 复制表头
+		CListHeaderUI *pHeader = GetHeader();
+		///> 打开剪切板
+		if (!OpenClipboard(NULL)) return FALSE;
+		///>  清空剪切板数据
+		::EmptyClipboard();
+		///> 分配全局内存
+		int nSize = (strText.GetLength() + 1)*sizeof(TCHAR);
+		HGLOBAL clipbuffer = ::GlobalAlloc(GMEM_DDESHARE, nSize);
+		if (clipbuffer == NULL)
+		{
+			::CloseClipboard();
+			return FALSE;
+		}
+		///> 锁定资源
+		TCHAR *szlockbuf = (TCHAR *)::GlobalLock(clipbuffer);
+		if (szlockbuf == NULL)
+		{
+			::GlobalFree(clipbuffer);
+			::CloseClipboard();
+			return FALSE;
+		}
+		//memset(szlockbuf, 0, sizeof(TCHAR)*(strText.GetLength() + 1));
+		lstrcpyn(szlockbuf, strText.GetData(), strText.GetLength() + 1);
+		///> 解锁资源
+		GlobalUnlock(clipbuffer);
+
+		///> 设置剪切板数据
+#ifdef _UNICODE
+		::SetClipboardData(CF_UNICODETEXT, clipbuffer);
+#else
+		::SetClipboardData(CF_TEXT, clipbuffer);
+#endif // _UNICODE
+
+		
+		///> 关闭剪切板
+		::CloseClipboard();
+	}
+	return TRUE;
+}
+
 void CListUI::LineUp()
 {
     m_pList->LineUp();
@@ -1537,6 +1758,7 @@ bool CListBodyUI::DoPaint(HDC hDC, const RECT& rcPaint, CControlUI* pStopControl
 			int nItemSize = GetHeight() / (m_pOwner->GetVirtualItemHeight() <= 0 ? VIR_ITEM_HEIGHT : m_pOwner->GetVirtualItemHeight()) + 5;
 			if (!m_pOwner->IsUseVirtualList()) nItemSize = m_items.GetSize();
 
+			int nSelectIndex = -1;
 			for (int it = 0; it < m_items.GetSize() && it < nItemSize; it++) {
                 CControlUI* pControl = static_cast<CControlUI*>(m_items[it]);
 				//> 如果使用虚拟列表，则设置虚拟列表数据
@@ -1553,6 +1775,11 @@ bool CListBodyUI::DoPaint(HDC hDC, const RECT& rcPaint, CControlUI* pStopControl
 					{
 						pControl->SetVisible(false);
 					}
+
+					if (nSelectIndex == -1 && m_pOwner->GetSelectControlTag() != -1 && m_pOwner->GetSelectControlTag() == pControl->GetTag())
+					{
+						nSelectIndex = it;
+					}
 				}
 
                 if( pControl == pStopControl ) return false;
@@ -1563,6 +1790,11 @@ bool CListBodyUI::DoPaint(HDC hDC, const RECT& rcPaint, CControlUI* pStopControl
                     if( !pControl->Paint(hDC, rcPaint, pStopControl) ) return false;
                 }
             }
+
+			if (m_pOwner->IsUseVirtualList() && m_pOwner->GetSelectControlTag() != -1)
+			{
+				m_pOwner->SelectItem(nSelectIndex, false, false);
+			}
         }
         else {
             int iDrawIndex = 0;
@@ -1570,6 +1802,8 @@ bool CListBodyUI::DoPaint(HDC hDC, const RECT& rcPaint, CControlUI* pStopControl
             CRenderClip::GenerateClip(hDC, rcTemp, childClip);
 			int nItemSize = GetHeight() / (m_pOwner->GetVirtualItemHeight() <= 0 ? VIR_ITEM_HEIGHT : m_pOwner->GetVirtualItemHeight()) + 5;
 			if (!m_pOwner->IsUseVirtualList()) nItemSize = m_items.GetSize();
+
+			int nSelectIndex = -1;
             for( int it = 0; it < m_items.GetSize() && it < nItemSize; it++ ) {
                 CControlUI* pControl = static_cast<CControlUI*>(m_items[it]);
 				//> 如果使用虚拟列表，则设置虚拟列表数据
@@ -1585,6 +1819,11 @@ bool CListBodyUI::DoPaint(HDC hDC, const RECT& rcPaint, CControlUI* pStopControl
 					else if (m_pOwner->IsUseVirtualList())
 					{
 						pControl->SetVisible(false);
+					}
+
+					if (nSelectIndex == -1 && m_pOwner->GetSelectControlTag() != -1 && m_pOwner->GetSelectControlTag() == pControl->GetTag())
+					{
+						nSelectIndex = it;
 					}
 				}
 
@@ -1620,6 +1859,11 @@ bool CListBodyUI::DoPaint(HDC hDC, const RECT& rcPaint, CControlUI* pStopControl
                     if( !pControl->Paint(hDC, rcPaint, pStopControl) ) return false;
                 }
             }
+
+			if (m_pOwner->IsUseVirtualList() && m_pOwner->GetSelectControlTag() != -1)
+			{
+				m_pOwner->SelectItem(nSelectIndex, false, false);
+			}
         }
     }
 
@@ -2776,6 +3020,11 @@ LPVOID CListTextElementUI::GetInterface(LPCTSTR pstrName)
 UINT CListTextElementUI::GetControlFlags() const
 {
     return UIFLAG_WANTRETURN | ( (IsEnabled() && m_nLinks > 0) ? UIFLAG_SETCURSOR : 0);
+}
+
+int CListTextElementUI::GetCount() const
+{
+	return m_aTexts.GetSize();
 }
 
 LPCTSTR CListTextElementUI::GetText(int iIndex) const

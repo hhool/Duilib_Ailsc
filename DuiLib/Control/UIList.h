@@ -21,6 +21,14 @@ class CListHeaderUI;
 
 enum ESORT{ E_SORTNO, E_SORT_ASC, E_SORT_DESC, E_SORT_MAX };
 
+struct DUICopyItem
+{
+	int nRow;
+	int nCol;
+	TCHAR *szText;
+	int nszText;
+};
+
 typedef struct tagTListInfoUI
 {
     int nColumns;
@@ -99,7 +107,6 @@ public:
 
 /////////////////////////////////////////////////////////////////////////////////////
 //
-
 class CListBodyUI;
 class CListHeaderUI;
 //支持虚拟列表
@@ -124,6 +131,13 @@ public:
 	int GetVirtualItemHeight();
 	//> 获取虚表数据个数
 	int GetVirtualItemCount() const;
+	//> 复制List数据到剪切板,需要响应 DUI_MSGTYPE_COPYITEM 事件 nMaxRowItemData 标记为Item的组成的最大Text
+	//>  bUserDefine 是否为用户自定义数据，对于复杂的数据结构，copy不能盲足，需要用户自定义Copy
+	//> bUserDefine 如果为TRUE 则会触发 DUI_MSGTYPE_COPYITEM Wparam 为ListItem Lparam 为DUICopyItem需要返回数据的地址，
+	BOOL Copy(int nMaxRowItemData = 1024,bool bUserDefine = false);
+	///> 设置选中行的标记,这个标记根据Item的Tag来标记
+	void SetSelectControlTag(INT64 iControlTag);
+	INT64 GetSelectControlTag();
 	///////////////////////////////////////////////////////////////////////////////////////////////////
 
 
@@ -236,6 +250,7 @@ private:
 	void ResizeVirtualItemBuffer();//动态调整虚拟表的缓冲区
 	bool AddVirtualItem(CControlUI* pControl);
 protected:
+	INT64 m_iSelectControlTag;
 	bool m_bUseVirtualList;
     bool m_bScrollSelect;
     int m_iCurSel;
@@ -445,7 +460,7 @@ public:
     LPCTSTR GetClass() const;
     LPVOID GetInterface(LPCTSTR pstrName);
     UINT GetControlFlags() const;
-
+	int GetCount() const;
     LPCTSTR GetText(int iIndex) const;
     void SetText(int iIndex, LPCTSTR pstrText,UINT uTextStyle = 0);
 

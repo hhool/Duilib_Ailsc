@@ -309,6 +309,20 @@ namespace DuiLib
 		return NULL;
 	}
 
+	bool CEditUI::Activate()
+	{
+		::OutputDebugString(_T("Activate()\r\n"));
+		if (m_pWindow)
+		{
+			return __super::Activate();
+		}
+		m_pWindow = new CEditWnd();
+		ASSERT(m_pWindow);
+		m_pWindow->Init(this);
+		Invalidate();
+		return __super::Activate();
+	}
+
 	void CEditUI::DoEvent(TEventUI& event)
 	{
 		if( !IsMouseEnabled() && event.Type > UIEVENT__MOUSEBEGIN && event.Type < UIEVENT__MOUSEEND ) {

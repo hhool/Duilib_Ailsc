@@ -66,7 +66,7 @@ namespace DuiLib
 		SIZE EstimateSize(SIZE szAvailable);
 		void DoEvent(TEventUI& event);
 		void SetAttribute(LPCTSTR pstrName, LPCTSTR pstrValue);
-
+		bool Activate();
 		void PaintStatusImage(HDC hDC);
 		void PaintText(HDC hDC);
 	private:
