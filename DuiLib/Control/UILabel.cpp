@@ -26,6 +26,7 @@ namespace DuiLib
 		m_EnabledStroke(false),
 		m_dwStrokeColor(0),
 		m_EnabledShadow(false),
+		m_bEstimate(false),
 		m_GradientLength(0)
 	{
 		m_ShadowOffset.X		= 0.0f;
@@ -122,6 +123,11 @@ namespace DuiLib
         m_bNeedEstimateSize = true;
 	}
 
+	void CLabelUI::SetEstimate(bool bEstimate)
+	{
+		m_bEstimate = bEstimate;
+	}
+
 	void CLabelUI::SetTextColor(DWORD dwTextColor)
 	{
 		m_dwTextColor = dwTextColor;
@@ -184,6 +190,11 @@ namespace DuiLib
 
 	SIZE CLabelUI::EstimateSize(SIZE szAvailable)
 	{
+		if (m_bEstimate)
+		{
+			if (m_cxyFixed.cy == 0) return CDuiSize(m_cxyFixed.cx, m_pManager->GetFontInfo(GetFont())->tm.tmHeight + 8);
+				return CControlUI::EstimateSize(szAvailable);
+		}
         if (m_cxyFixed.cx > 0 && m_cxyFixed.cy > 0) return m_cxyFixed;
 
         if ((m_uTextStyle & DT_SINGLELINE) == 0 && 
@@ -305,6 +316,7 @@ namespace DuiLib
 			SetTextPadding(rcTextPadding);
 		}
 		else if( _tcscmp(pstrName, _T("multiline")) == 0 ) SetMultiLine(_tcscmp(pstrValue, _T("true")) == 0);
+		else if (_tcscmp(pstrName, _T("estimate")) == 0) SetEstimate(_tcscmp(pstrValue, _T("true")) == 0);
 		else if( _tcscmp(pstrName, _T("showhtml")) == 0 ) SetShowHtml(_tcscmp(pstrValue, _T("true")) == 0);
 		else if( _tcscmp(pstrName, _T("enabledeffect")) == 0 ) SetEnabledEffect(_tcscmp(pstrValue, _T("true")) == 0);
 		else if( _tcscmp(pstrName, _T("enabledluminous")) == 0 ) SetEnabledLuminous(_tcscmp(pstrValue, _T("true")) == 0);

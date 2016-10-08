@@ -26,6 +26,7 @@ namespace DuiLib
 
 		void SetAttribute(LPCTSTR pstrName, LPCTSTR pstrValue);
 		void PaintStatusImage(HDC hDC);
+		SIZE EstimateSize(SIZE szAvailable);
 
 	protected:
 		bool m_bHorizontal;

@@ -110,4 +110,10 @@ namespace DuiLib
 		m_diFore.rcDestOffset = rc;
 		if( DrawImage(hDC, m_diFore) ) return;
 	}
+
+	SIZE CProgressUI::EstimateSize(SIZE szAvailable)
+	{
+		if (m_cxyFixed.cy == 0) return CDuiSize(m_cxyFixed.cx, m_pManager->GetFontInfo(GetFont())->tm.tmHeight + 8);
+		return CControlUI::EstimateSize(szAvailable);
+	}
 }

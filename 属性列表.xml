@@ -368,6 +368,7 @@
 		<Attribute name="maxwidth" default="9999" type="INT" comment="控件的最大宽度，如(100)"/>
 		<Attribute name="maxheight" default="9999" type="INT" comment="控件的最大高度，如(30)"/>
 		<Attribute name="text" default="" type="STRING" comment="显示文本,如(测试文本)"/>
+		<Attribute name="estimate" default="false" type="BOOL" comment="label大小是否自己适应，类似于Button的自己调整大小"/>
 		<Attribute name="tooltip" default="" type="STRING" comment="鼠标悬浮提示,如(请在这里输入你的密码)"/>
 		<Attribute name="userdata" default="" type="STRING" comment="自定义标识"/>
 		<Attribute name="enabled" default="true" type="BOOL" comment="是否可以响应用户操作,如(true)"/>

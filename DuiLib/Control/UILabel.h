@@ -33,6 +33,7 @@ namespace DuiLib
 		UINT GetTextStyle() const;
 		bool IsMultiLine();
 		void SetMultiLine(bool bMultiLine = true);
+		void SetEstimate(bool bEstimate = false);
 		void SetTextColor(DWORD dwTextColor);
 		DWORD GetTextColor() const;
 		void SetDisabledTextColor(DWORD dwTextColor);
@@ -85,6 +86,7 @@ namespace DuiLib
 		UINT	m_uTextStyle;
 		RECT	m_rcTextPadding;
 		bool	m_bShowHtml;
+		bool	m_bEstimate;//是否像Contain一样自己适位置大小，而不是根据位置调整
         SIZE    m_szAvailableLast;
         SIZE    m_cxyFixedLast;
         bool    m_bNeedEstimateSize;
