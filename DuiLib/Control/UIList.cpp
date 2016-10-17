@@ -1197,7 +1197,14 @@ void CListUI::SetScrollPos(SIZE szPos)
 void CListUI::DrawVirtualItem(CControlUI *pControl,int nRow)
 {
 	if (m_pManager)
+	{
+		//#liulei  20161014在填充的过程中保持不可见，防止刷新太过频繁
+		bool bOldVisible = pControl->IsVisible();
+		pControl->SetInternVisible(false);
 		m_pManager->SendNotify(this, DUI_MSGTYPE_DRAWITEM, (WPARAM)pControl, (LPARAM)nRow);
+		pControl->SetInternVisible(bOldVisible);
+	}
+	
 }
 
 CDuiString GetContainText(CControlUI *pControl)
@@ -1269,7 +1276,13 @@ BOOL CListUI::Copy(int nMaxRowItemData, bool bUserDefine)
 		{
 			///> 填充当前数据项
 			if (m_pManager)
+			{
+				//#liulei  20161014在填充的过程中保持不可见，防止刷新太过频繁
+				bool bOldVisible = pItem->IsVisible();
+				pItem->SetInternVisible(false);
 				m_pManager->SendNotify(this, DUI_MSGTYPE_DRAWITEM, (WPARAM)pItem, (LPARAM)iRow);
+				pItem->SetInternVisible(bOldVisible);
+			}
 		}
 		else
 		{

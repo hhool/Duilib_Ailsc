@@ -164,7 +164,7 @@ namespace DuiLib
 				DWORD dwRet = Edit_GetSel(m_hWnd);
 				int nLastPos = HIWORD(dwRet);
 				int nStartPos = LOWORD(dwRet);
-				if (c >= '0' && c <= '9' || c == '.' || c == VK_BACK)
+				if (c >= '0' && c <= '9' || c == '.' || c == VK_BACK || c == 0x0003 || c == 0x0016)
 				{
 					if (c == '.' && m_pOwner->IsTextHavePoint())
 						bHandled = TRUE;
