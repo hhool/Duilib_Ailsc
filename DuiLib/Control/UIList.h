@@ -138,6 +138,9 @@ public:
 	///> 设置选中行的标记,这个标记根据Item的Tag来标记
 	void SetSelectControlTag(INT64 iControlTag);
 	INT64 GetSelectControlTag();
+	///> 是否启用虚表填充数据优化（优化：填充虚表数据的时候Item不可见，填充完毕之后恢复状态，减少刷新次数）
+	///> 默认开启, 如果含有Item 含有 combo  则必须关闭优化，否则combo显示有问题
+	void EnableVirtualOptimize(bool bEnableVirtualO = true);
 	///////////////////////////////////////////////////////////////////////////////////////////////////
 
 
@@ -253,6 +256,7 @@ protected:
 	INT64 m_iSelectControlTag;
 	bool m_bUseVirtualList;
     bool m_bScrollSelect;
+	bool m_bEnableVirtualO;//是否启用虚表优化
     int m_iCurSel;
     int m_iExpandedItem;
     IListCallbackUI* m_pCallback;

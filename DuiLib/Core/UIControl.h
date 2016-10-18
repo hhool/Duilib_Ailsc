@@ -33,7 +33,7 @@ public:
     virtual CControlUI* GetParent() const;
     virtual CControlUI* GetCover() const;
     virtual void SetCover(CControlUI *pControl);
-
+	bool IsIncludeClassControl(LPCTSTR szControlClass);
     // 文本相关
     virtual CDuiString GetText() const;
     virtual void SetText(LPCTSTR pstrText);

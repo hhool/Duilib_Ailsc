@@ -137,6 +137,24 @@ void CControlUI::SetCover(CControlUI *pControl)
     }
 }
 
+bool CControlUI::IsIncludeClassControl(LPCTSTR szControlClass)
+{
+	if (!GetInterface(DUI_CTR_CONTAINER)) return false;
+	CContainerUI *pContain = static_cast<CContainerUI *>(GetInterface(DUI_CTR_CONTAINER));
+	int nChildCount = pContain->GetCount();
+	for (int i = 0; i < nChildCount;++i)
+	{
+		CControlUI *pChildControl = pContain->GetItemAt(i);
+		if (pChildControl && pChildControl->GetInterface(szControlClass))
+			return true;
+		else if (pChildControl &&
+			pChildControl->GetInterface(DUI_CTR_CONTAINER) &&
+			pChildControl->IsIncludeClassControl(szControlClass))
+			return true;
+	}
+	return false;
+}
+
 CDuiString CControlUI::GetText() const
 {
     return m_sText;

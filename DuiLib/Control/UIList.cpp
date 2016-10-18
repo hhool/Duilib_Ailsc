@@ -37,6 +37,7 @@ CListUI::CListUI() : m_pCallback(NULL), m_bScrollSelect(false), m_iCurSel(-1), m
     m_pList = new CListBodyUI(this);
     m_pHeader = new CListHeaderUI;
 	m_bUseVirtualList = false;
+	m_bEnableVirtualO = true;
     Add(m_pHeader);
     CVerticalLayoutUI::Add(m_pList);
 
@@ -595,6 +596,17 @@ void CListUI::SetVirtualItemFormat(PULVirtualItemFormat vrtualitemfroamt)
 {
 	if (!m_pList) return;
 	m_pVirutalItemFormat = vrtualitemfroamt;
+	///> 检测是否该关闭虚表优化（是否含有combo）
+	CControlUI *pcontrol = m_pVirutalItemFormat();
+	if (pcontrol && pcontrol->GetInterface(DUI_CTR_CONTAINER))
+	{
+		CContainerUI *pContain = static_cast<CContainerUI *>(pcontrol->GetInterface(DUI_CTR_CONTAINER));
+		if (pContain && (pContain->IsIncludeClassControl(DUI_CTR_COMBO) || pContain->IsIncludeClassControl(DUI_CTR_COMBOBOX)))
+			EnableVirtualOptimize(false);
+	}
+	///> 释放资源
+	pcontrol->Delete();
+
 	ResizeVirtualItemBuffer();//调整缓冲区大小
 }
 
@@ -626,6 +638,11 @@ void CListUI::SetSelectControlTag(INT64 iControlTag)
 INT64 CListUI::GetSelectControlTag()
 {
 	return m_iSelectControlTag;
+}
+
+void CListUI::EnableVirtualOptimize(bool bEnableVirtualO)
+{
+	m_bEnableVirtualO = bEnableVirtualO;
 }
 
 void CListUI::ResizeVirtualItemBuffer()
@@ -1040,6 +1057,7 @@ void CListUI::SetAttribute(LPCTSTR pstrName, LPCTSTR pstrValue)
 {
     if( _tcscmp(pstrName, _T("header")) == 0 ) GetHeader()->SetVisible(_tcscmp(pstrValue, _T("hidden")) != 0);
 	if (_tcscmp(pstrName, _T("virtual")) == 0) SetVirtual(_tcscmp(pstrValue, _T("true")) == 0);
+	if (_tcscmp(pstrName, _T("virtualo")) == 0) EnableVirtualOptimize(_tcscmp(pstrValue, _T("true")) == 0);
     else if( _tcscmp(pstrName, _T("headerbkimage")) == 0 ) GetHeader()->SetBkImage(pstrValue);
     else if( _tcscmp(pstrName, _T("scrollselect")) == 0 ) SetScrollSelect(_tcscmp(pstrValue, _T("true")) == 0);
     else if( _tcscmp(pstrName, _T("multiexpanding")) == 0 ) SetMultiExpanding(_tcscmp(pstrValue, _T("true")) == 0);
@@ -1199,10 +1217,21 @@ void CListUI::DrawVirtualItem(CControlUI *pControl,int nRow)
 	if (m_pManager)
 	{
 		//#liulei  20161014在填充的过程中保持不可见，防止刷新太过频繁
-		bool bOldVisible = pControl->IsVisible();
-		pControl->SetInternVisible(false);
-		m_pManager->SendNotify(this, DUI_MSGTYPE_DRAWITEM, (WPARAM)pControl, (LPARAM)nRow);
-		pControl->SetInternVisible(bOldVisible);
+		///> 容器是否会导致死循环刷新（有待测试）
+		///> ListTextElement 会导致这个问题（实测）listtext-》settext-》invadate-》激发ListUi刷新-》激发ListText从而导致死循环刷新
+		///> 启用优化填充数据之后，如果Item还有combo控件，因为combo会弹出窗口激发ListUI刷新，刷新的时候如果启用优化则会填充数据的时候隐藏Item
+		///> 隐藏Item会导致Combo不可见，从而使弹出窗口消失。因此弹出窗口就一闪而过，因此如果含有Combo则不能启用刷新
+		if (m_bEnableVirtualO)
+		{
+			bool bOldVisible = pControl->IsVisible();
+			pControl->SetInternVisible(false);
+			m_pManager->SendNotify(this, DUI_MSGTYPE_DRAWITEM, (WPARAM)pControl, (LPARAM)nRow);
+			pControl->SetInternVisible(bOldVisible);
+		}
+		else
+		{
+			m_pManager->SendNotify(this, DUI_MSGTYPE_DRAWITEM, (WPARAM)pControl, (LPARAM)nRow);
+		}
 	}
 	
 }
@@ -1278,6 +1307,10 @@ BOOL CListUI::Copy(int nMaxRowItemData, bool bUserDefine)
 			if (m_pManager)
 			{
 				//#liulei  20161014在填充的过程中保持不可见，防止刷新太过频繁
+				///> 容器是否会导致死循环刷新（有待测试）
+				///> ListTextElement 会导致这个问题（实测）listtext-》settext-》invadate-》激发ListUi刷新-》激发ListText从而导致死循环刷新
+				///> 启用优化填充数据之后，如果Item还有combo控件，因为combo会弹出窗口激发ListUI刷新，刷新的时候如果启用优化则会填充数据的时候隐藏Item
+				///> 隐藏Item会导致Combo不可见，从而使弹出窗口消失。因此弹出窗口就一闪而过，因此如果含有Combo则不能启用刷新
 				bool bOldVisible = pItem->IsVisible();
 				pItem->SetInternVisible(false);
 				m_pManager->SendNotify(this, DUI_MSGTYPE_DRAWITEM, (WPARAM)pItem, (LPARAM)iRow);
