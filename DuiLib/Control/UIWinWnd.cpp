@@ -20,6 +20,18 @@ namespace DuiLib
 				::ShowWindow(m_hWnd, SW_HIDE);
 		}
 	}
+
+	LPCTSTR CWinWndUI::GetClass() const
+	{
+		return DUI_CTR_WIND;
+	}
+
+	LPVOID CWinWndUI::GetInterface(LPCTSTR pstrName)
+	{
+		if (lstrcmp(pstrName, DUI_CTR_WIND) == 0) return this;
+		return __super::GetInterface(pstrName);
+	}
+
 	void CWinWndUI::SetInternVisible(bool bVisible)
 	{
 		__super::SetInternVisible(bVisible);
