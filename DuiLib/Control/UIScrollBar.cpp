@@ -1098,4 +1098,24 @@ void CScrollBarUI::PaintRail(HDC hDC)
 	if( DrawImage(hDC, m_diRailNormal) ) return;
 }
 
+void CScrollBarUI::Move(SIZE szOffset, bool bNeedInvalidate)
+{
+	__super::Move(szOffset, bNeedInvalidate);
+
+	m_rcButton1.left += szOffset.cx;
+	m_rcButton1.top += szOffset.cy;
+	m_rcButton1.right += szOffset.cx;
+	m_rcButton1.bottom += szOffset.cy;
+
+	m_rcButton2.left += szOffset.cx;
+	m_rcButton2.top += szOffset.cy;
+	m_rcButton2.right += szOffset.cx;
+	m_rcButton2.bottom += szOffset.cy;
+
+	m_rcThumb.left += szOffset.cx;
+	m_rcThumb.top += szOffset.cy;
+	m_rcThumb.right += szOffset.cx;
+	m_rcThumb.bottom += szOffset.cy;
+}
+
 } // namespace DuiLib

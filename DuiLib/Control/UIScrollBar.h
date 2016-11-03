@@ -98,6 +98,7 @@ namespace DuiLib
 		void PaintThumb(HDC hDC);
 		void PaintRail(HDC hDC);
 
+		void Move(SIZE szOffset, bool bNeedInvalidate);
 	protected:
 
 		enum
