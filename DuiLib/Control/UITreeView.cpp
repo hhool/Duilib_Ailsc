@@ -1003,7 +1003,7 @@ namespace DuiLib
 						SetItemCheckBox(_Selected,pItem);
 				}
 			}
-
+			///> 下面部分属于树形结构定制，业务不同行为不同
 			///.#liulei 20160612 如果取消了子节点则父节点也取消选择
 			CTreeNodeUI *_ParentNode = _TreeNode->GetParentNode();
 			if (_ParentNode && !_Selected)

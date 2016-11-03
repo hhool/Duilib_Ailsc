@@ -5,7 +5,7 @@
 
 namespace DuiLib
 {
-	typedef bool(*PCONTROLINPUT)(HWND heditwnd,TCHAR c);
+	typedef bool(*PCONTROLINPUT)(TCHAR c);
 
 	class CEditWnd;
 	class DUILIB_API CEditUI : public CLabelUI

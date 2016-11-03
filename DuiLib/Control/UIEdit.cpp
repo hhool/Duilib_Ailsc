@@ -181,7 +181,7 @@ namespace DuiLib
 			///> 如果外部控制了输入则输入进行控制,如果外部处理了则不在处理
 			else if (m_pOwner->m_pInputControl)
 			{
-				if (m_pOwner->m_pInputControl(m_hWnd,c))
+				if (m_pOwner->m_pInputControl(c))
 					bHandled = TRUE;
 				else
 					bHandled = FALSE;

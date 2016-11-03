@@ -2069,6 +2069,7 @@ void CListHeaderItemUI::SetEnabled(bool bEnable)
 ///> #liulei 修复表头动态显示，界面刷新问题
 void CListHeaderItemUI::SetVisible(bool bVisible)
 {
+	if (m_bVisible == bVisible) return;
 	__super::SetVisible(bVisible);
 	if (GetParent())
 		GetParent()->NeedParentUpdate();
