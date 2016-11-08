@@ -651,18 +651,11 @@ void CListUI::SetSort(int nIndex, ESORT esort, bool bTriggerEvent)
 		m_pHeader->SetSort(nIndex, esort, bTriggerEvent);
 }
 
-int	 CListUI::GetSortIndex()
+CListHeaderItemUI*	 CListUI::GetSortHeaderItem()
 {
 	if (m_pHeader)
-		return m_pHeader->GetSortIndex();
-	return -1;
-}
-
-ESORT CListUI::GetSortType()
-{
-	if (m_pHeader)
-		return m_pHeader->GetSortType();
-	return E_SORTNO;
+		return m_pHeader->GetSortHeaderItem();
+	return NULL;
 }
 
 void CListUI::ResizeVirtualItemBuffer()
@@ -1959,7 +1952,6 @@ bool CListBodyUI::DoPaint(HDC hDC, const RECT& rcPaint, CControlUI* pStopControl
 
 CListHeaderUI::CListHeaderUI()
 {
-	m_esrot = E_SORTNO;
 	m_nsrot_index = -1;
 }
 
@@ -1984,15 +1976,14 @@ void CListHeaderUI::SetSort(int nIndex, ESORT esort, bool bTriggerEvent)
 	}
 }
 
-int	 CListHeaderUI::GetSortIndex()
+CListHeaderItemUI *CListHeaderUI::GetSortHeaderItem()
 {
-	return m_nsrot_index;
+	CControlUI *pHeaderItem = GetItemAt(m_nsrot_index);
+	if (pHeaderItem && pHeaderItem->GetInterface(DUI_CTR_LISTHEADERITEM))
+		return static_cast<CListHeaderItemUI*>(pHeaderItem);
+	return NULL;
 }
 
-ESORT CListHeaderUI::GetSortType()
-{
-	return m_esrot;
-}
 ///> #liulei 修复表头删除所有的时候，ListBody位置没有重计算的问题
 bool CListHeaderUI::Add(CControlUI* pControl)
 {
@@ -2291,7 +2282,6 @@ void CListHeaderItemUI::SetSort(ESORT esort, bool bTriggerEvent)
 				else
 				{
 					pHeader->m_nsrot_index = i;
-					pHeader->m_esrot = esort;
 				}
 			}
 		}

@@ -109,6 +109,7 @@ public:
 //
 class CListBodyUI;
 class CListHeaderUI;
+class CListHeaderItemUI;
 //支持虚拟列表
 class DUILIB_API CListUI : public CVerticalLayoutUI, public IListUI
 {
@@ -143,8 +144,7 @@ public:
 	void EnableVirtualOptimize(bool bEnableVirtualO = true);
 	/////////////////////////////////////////////排序标记接口 #liulei 20161107//////////////////////////////////////////////////////
 	void SetSort(int nIndex, ESORT esort, bool bTriggerEvent = false);
-	int	 GetSortIndex();
-	ESORT GetSortType();
+	CListHeaderItemUI*GetSortHeaderItem();
 	///////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
@@ -294,12 +294,10 @@ public:
 	void SetVisible(bool bVisible = true);
 	void SetItemVisible(int nIndex, bool bVisible = true, bool bInvalidate = true);
 	void SetSort(int nIndex, ESORT esort, bool bTriggerEvent = false);
-	int	 GetSortIndex();
-	ESORT GetSortType();
+	CListHeaderItemUI *GetSortHeaderItem();
     SIZE EstimateSize(SIZE szAvailable);
 
 private:
-	ESORT m_esrot;//排序类型
 	int	  m_nsrot_index;//排序下标
 };
 
