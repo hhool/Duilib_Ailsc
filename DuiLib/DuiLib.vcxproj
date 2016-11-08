@@ -280,6 +280,9 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Control\UIGifAnim.cpp" />
+    <ClCompile Include="Control\UIIPAddress.cpp" />
+    <ClCompile Include="Layout\UICompositeLayout.cpp" />
+    <ClCompile Include="Layout\UISliderTabLayout.cpp" />
     <ClCompile Include="StdAfx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeaderOutputFile Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">.\Build\Debug/DuiLib.pch</PrecompiledHeaderOutputFile>
@@ -347,6 +350,9 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Control\UIGifAnim.h" />
+    <ClInclude Include="Control\UIIPAddress.h" />
+    <ClInclude Include="Layout\UICompositeLayout.h" />
+    <ClInclude Include="Layout\UISliderTabLayout.h" />
     <ClInclude Include="StdAfx.h" />
     <ClInclude Include="UIlib.h" />
     <ClInclude Include="Utils\downloadmgr.h" />

@@ -754,7 +754,7 @@ void CMenuElementUI::DoEvent(TEventUI& event)
 		}
 	}
 
-	if( event.Type == UIEVENT_BUTTONDOWN )
+	if( event.Type == UIEVENT_LBUTTONDOWN )
 	{
 		if( IsEnabled() )
 		{

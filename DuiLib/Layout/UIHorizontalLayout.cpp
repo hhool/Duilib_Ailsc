@@ -225,7 +225,7 @@ namespace DuiLib
 	void CHorizontalLayoutUI::DoEvent(TEventUI& event)
 	{
 		if( m_iSepWidth != 0 ) {
-			if( event.Type == UIEVENT_BUTTONDOWN && IsEnabled() )
+			if (event.Type == UIEVENT_LBUTTONDOWN && IsEnabled())
 			{
 				RECT rcSeparator = GetThumbRect(false);
 				if( ::PtInRect(&rcSeparator, event.ptMouse) ) {

@@ -2439,7 +2439,7 @@ void CListHeaderItemUI::DoEvent(TEventUI& event)
     {
         Invalidate();
     }
-    if( event.Type == UIEVENT_BUTTONDOWN || event.Type == UIEVENT_DBLCLICK )
+	if (event.Type == UIEVENT_LBUTTONDOWN || event.Type == UIEVENT_LDBLCLICK)
     {
         if( !IsEnabled() ) return;
         RECT rcSeparator = GetThumbRect();
@@ -2797,7 +2797,7 @@ void CListElementUI::DoEvent(TEventUI& event)
         return;
     }
 
-    if( event.Type == UIEVENT_DBLCLICK )
+	if (event.Type == UIEVENT_LDBLCLICK)
     {
         if( IsEnabled() )
 		{
@@ -2924,7 +2924,7 @@ void CListLabelElementUI::DoEvent(TEventUI& event)
         return;
     }
 
-    if( event.Type == UIEVENT_BUTTONDOWN || event.Type == UIEVENT_RBUTTONDOWN )
+	if (event.Type == UIEVENT_LBUTTONDOWN || event.Type == UIEVENT_RBUTTONDOWN)
     {
         if( IsEnabled() ) {
             m_pManager->SendNotify(this, DUI_MSGTYPE_ITEMCLICK);
@@ -3581,7 +3581,7 @@ void CListContainerElementUI::DoEvent(TEventUI& event)
         return;
     }
 
-    if( event.Type == UIEVENT_DBLCLICK )
+	if (event.Type == UIEVENT_LDBLCLICK)
     {
         if( IsEnabled() )
 		{
@@ -3602,7 +3602,7 @@ void CListContainerElementUI::DoEvent(TEventUI& event)
             }
         }
     }
-    if( event.Type == UIEVENT_BUTTONDOWN || event.Type == UIEVENT_RBUTTONDOWN )
+	if (event.Type == UIEVENT_LBUTTONDOWN || event.Type == UIEVENT_RBUTTONDOWN)
     {
         if( IsEnabled() ) {
             m_pManager->SendNotify(this, DUI_MSGTYPE_ITEMCLICK);

@@ -56,7 +56,7 @@ namespace DuiLib
 				}
 			}
 		}
-		if( event.Type == UIEVENT_BUTTONDOWN || event.Type == UIEVENT_DBLCLICK )
+		if (event.Type == UIEVENT_LBUTTONDOWN || event.Type == UIEVENT_LDBLCLICK)
 		{
 			if( ::PtInRect(&m_rcItem, event.ptMouse) && IsEnabled() ) {
 				m_uButtonState |= UISTATE_PUSHED | UISTATE_CAPTURED;

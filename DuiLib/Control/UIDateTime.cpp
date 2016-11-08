@@ -357,7 +357,7 @@ namespace DuiLib
 		{
 			Invalidate();
 		}
-		if( event.Type == UIEVENT_BUTTONDOWN || event.Type == UIEVENT_DBLCLICK || event.Type == UIEVENT_RBUTTONDOWN) 
+		if (event.Type == UIEVENT_LBUTTONDOWN || event.Type == UIEVENT_LDBLCLICK || event.Type == UIEVENT_RBUTTONDOWN)
 		{
 			if( IsEnabled() ) {
 				GetManager()->ReleaseCapture();

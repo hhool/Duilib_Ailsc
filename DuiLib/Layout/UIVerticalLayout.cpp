@@ -225,8 +225,8 @@ namespace DuiLib
 
 	void CVerticalLayoutUI::DoEvent(TEventUI& event)
 	{
-		if( m_iSepHeight != 0 ) {
-			if( event.Type == UIEVENT_BUTTONDOWN && IsEnabled() )
+		if (m_iSepHeight != 0) {
+			if (event.Type == UIEVENT_LBUTTONDOWN && IsEnabled())
 			{
 				RECT rcSeparator = GetThumbRect(false);
 				if( ::PtInRect(&rcSeparator, event.ptMouse) ) {

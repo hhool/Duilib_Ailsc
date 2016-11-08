@@ -68,7 +68,7 @@ union DuiMessageMapFunctions
 
 #define DUI_MSGTYPE_ITEMSELECT 		   	   (_T("itemselect"))
 #define DUI_MSGTYPE_ITEMEXPAND             (_T("itemexpand"))
-
+#define DUI_MSGTYPE_EDITRETURN			   (_T("editreturn"))
 
 #define DUI_MSGTYPE_WINDOWINIT             (_T("windowinit"))
 #define DUI_MSGTYPE_BUTTONDOWN 		   	   (_T("buttondown"))
@@ -79,12 +79,16 @@ union DuiMessageMapFunctions
 #define DUI_MSGTYPE_HEADERCLICK            (_T("headerclick"))
 #define DUI_MSGTYPE_ITEMDBCLICK            (_T("itemdbclick"))
 #define DUI_MSGTYPE_SHOWACTIVEX            (_T("showactivex"))
+#define DUI_MSGTYPE_TABSELECTED		       (_T("tabselected"))
 
 #define DUI_MSGTYPE_ITEMCOLLAPSE           (_T("itemcollapse"))
 #define DUI_MSGTYPE_ITEMACTIVATE           (_T("itemactivate"))
 #define DUI_MSGTYPE_VALUECHANGED           (_T("valuechanged"))
 
 #define DUI_MSGTYPE_SELECTCHANGED 		   (_T("selectchanged"))
+
+#define DUI_MSGTYPE_IPFIELDCHANGED		   (_T("ipfiledchanged"))
+
 
 //////////////////////////////////////////////////////////////////////////
 
@@ -259,6 +263,7 @@ protected:                                                                \
 #define  DUI_CTR_TREEVIEW                        (_T("TreeView"))
 #define  DUI_CTR_TREENODE                        (_T("TreeNode"))
 
+#define  DUI_CTR_IPADDRESS						 (_T("IpAddress"))
 #define  DUI_CTR_ILISTITEM                       (_T("IListItem"))
 #define  DUI_CTR_CONTAINER                       (_T("Container"))
 #define  DUI_CTR_TABLAYOUT                       (_T("TabLayout"))
@@ -280,6 +285,8 @@ protected:                                                                \
 
 #define  DUI_CTR_LISTHBOXELEMENT                 (_T("ListHBoxElement"))
 #define  DUI_CTR_LISTTEXTELEMENT                 (_T("ListTextElement"))
+#define  DUI_CTR_SLIDERTABLAYOUT				 (_T("SliderTabLayout"))
+#define  DUI_CTR_COMPOSITELAYOUT				 (_T("CompositeLayout"))//#liulei 进行功能性封装这个需要CreateControl动态创建
 
 #define  DUI_CTR_HORIZONTALLAYOUT                (_T("HorizontalLayout"))
 #define  DUI_CTR_LISTLABELELEMENT                (_T("ListLabelElement"))

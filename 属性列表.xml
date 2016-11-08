@@ -245,6 +245,11 @@
 		<Attribute name="childpadding" default="0" type="DWORD" comment="子控件之间的额外距离,如(4)"/>
 		<Attribute name="selectedid" default="0" type="INT" comment="默认选中的页面id,如(0)"/>
 	</TabLayout>
+	<SliderTabLayout parent="TabLayout">
+		<direction name="direction" default="horizontal" type="STRING" comment="vertical or horizontal 布局方式水平or垂直"/>
+	</SliderTabLayout>
+		<CompositeLayout parent="ChildLayout" comment="没有特殊属性，需要派生来封装功能性控件配合CreateControl接口">
+	</CompositeLayout>
 	<ActiveX parent="Control" notifies="setfocus killfocus timer menu showactivex windowinit(root)">
 		<Attribute name="name" default="" type="STRING" comment="控件名字，同一窗口内必须唯一，如(testbtn)"/>
 		<Attribute name="pos" default="0,0,0,0" type="RECT" comment="位置，如果为float控件则指定位置和大小，否则只指定大小,如(0,0,100,100)"/>
@@ -282,6 +287,13 @@
 		<Attribute name="homepage" default="" type="STRING" comment="默认首页" />
 		<Attribute name="autonavi" default="false" type="BOOL" comment="是否打开默认首页" />
 	</WebBrowser>
+	<IpAddress parent="Label">
+		<Attribute name="text"  default="0.0.0.0" type="STRING" comment="ip地址例如:192.168.1.1"/>
+		<Attribute name="field0" default="0,255" type="BYTE" comment="filed0的范围如(0,100)"/>
+		<Attribute name="field1" default="0,255" type="BYTE" comment="filed1的范围如(0,100)"/>
+		<Attribute name="field2" default="0,255" type="BYTE" comment="filed2的范围如(0,100)"/>
+		<Attribute name="field3" default="0,255" type="BYTE" comment="filed3的范围如(0,100)"/>
+	</IpAddress>
 	<Combo parent="Container" notifies="setfocus killfocus timer menu dropdown itemselect windowinit(root)">
 		<Attribute name="name" default="" type="STRING" comment="控件名字，同一窗口内必须唯一，如(testbtn)"/>
 		<Attribute name="pos" default="0,0,0,0" type="RECT" comment="位置，如果为float控件则指定位置和大小，否则只指定大小,如(0,0,100,100)"/>

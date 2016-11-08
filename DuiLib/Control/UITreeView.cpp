@@ -105,7 +105,7 @@ namespace DuiLib
 
 		CListContainerElementUI::DoEvent(event);
 
-		if( event.Type == UIEVENT_DBLCLICK )
+		if (event.Type == UIEVENT_LDBLCLICK)
 		{
 			if( IsEnabled() ) {
 				m_pManager->SendNotify(this, DUI_MSGTYPE_ITEMDBCLICK);

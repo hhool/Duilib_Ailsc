@@ -661,7 +661,7 @@ void CComboUI::DoEvent(TEventUI& event)
     {
         Invalidate();
     }
-    if( event.Type == UIEVENT_BUTTONDOWN )
+	if (event.Type == UIEVENT_LBUTTONDOWN)
     {
         if( IsEnabled() ) {
             Activate();

@@ -1324,7 +1324,7 @@ bool CPaintManagerUI::MessageHandler(UINT uMsg, WPARAM wParam, LPARAM lParam, LR
             pControl->SetFocus();
             SetCapture();
             TEventUI event = { 0 };
-            event.Type = UIEVENT_BUTTONDOWN;
+            event.Type = UIEVENT_LBUTTONDOWN;
             event.pSender = pControl;
             event.wParam = wParam;
             event.lParam = lParam;
@@ -1344,7 +1344,7 @@ bool CPaintManagerUI::MessageHandler(UINT uMsg, WPARAM wParam, LPARAM lParam, LR
             if( pControl->GetManager() != this ) break;
             SetCapture();
             TEventUI event = { 0 };
-            event.Type = UIEVENT_DBLCLICK;
+			event.Type = UIEVENT_LDBLCLICK;
             event.pSender = pControl;
             event.ptMouse = pt;
             event.wKeyState = (WORD)wParam;
