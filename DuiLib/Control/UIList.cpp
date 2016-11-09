@@ -34,12 +34,21 @@ CListUI::CListUI() : m_pCallback(NULL), m_bScrollSelect(false), m_iCurSel(-1), m
 	m_nVirtualItemHeight = VIR_ITEM_HEIGHT;
 	m_nVirtualItemCount = 0;
 	m_pVirutalItemFormat = NULL;
+	m_ePanelPos = E_PANELBOTTOM;//Panel的位置，目前仅仅支持上下
+	m_nPanelHeight = 20;//Panel高度
+	m_nPanelOffset =  0;//默认偏移10
     m_pList = new CListBodyUI(this);
     m_pHeader = new CListHeaderUI;
+	m_pFloatPanel = new CChildLayoutUI;
+	m_pFloatPanel->SetVisible(false);
+	m_pFloatPanel->SetFloat(true);
+	m_pFloatPanel->SetFixedHeight(m_nPanelHeight);
+	m_pFloatPanel->SetMouseEnabled(false);
 	m_bUseVirtualList = false;
 	m_bEnableVirtualO = true;
     Add(m_pHeader);
     CVerticalLayoutUI::Add(m_pList);
+	CVerticalLayoutUI::Add(m_pFloatPanel);
 
     m_ListInfo.nColumns = 0;
     m_ListInfo.uFixedHeight = 0;
@@ -474,6 +483,10 @@ void CListUI::SetPos(RECT rc, bool bNeedInvalidate)
 		if (pControl->IsFloat()) continue;
 		pControl->SetPos(m_ListInfo.rcColumn[i], false);
 	}
+
+	///#liulei 20161109
+	///#计算浮动Panel的位置
+	CalcPanelPos();
 }
 
 void CListUI::Move(SIZE szOffset, bool bNeedInvalidate)
@@ -692,6 +705,77 @@ void CListUI::SetVirtualItemCount(int nCountItem)
 {
 	m_nVirtualItemCount = nCountItem;
 	NeedUpdate();
+}
+
+void CListUI::SetPanelHeight(int nHeight)
+{
+	if (m_nPanelHeight == nHeight) return;
+	m_nPanelHeight = nHeight;
+	m_pFloatPanel->SetFixedHeight(m_nPanelHeight);
+	CalcPanelPos();
+}
+
+void CListUI::SetPanelOffset(int nPanelOffset)
+{
+	if (m_nPanelOffset == nPanelOffset)return;
+	m_nPanelOffset = nPanelOffset;
+	CalcPanelPos();
+}
+
+void CListUI::SetPanelPos(EPANELPOS ePanelPos)
+{
+	if (m_ePanelPos == ePanelPos) return;
+	m_ePanelPos = ePanelPos;
+	CalcPanelPos();
+}
+
+void CListUI::SetPanelXml(LPCTSTR szXml)
+{
+	m_pFloatPanel->SetChildLayoutXML(szXml);
+}
+
+void CListUI::SetPanelAttributeList(LPCTSTR pstrList)
+{
+	m_pFloatPanel->SetAttributeList(pstrList);
+}
+
+void CListUI::SetPanelVisible(bool bVisible)
+{
+	m_pFloatPanel->SetVisible(bVisible);
+}
+
+CChildLayoutUI *CListUI::GetFloatPanel()
+{
+	return m_pFloatPanel;
+}
+
+void CListUI::CalcPanelPos()
+{
+	RECT rtPanel = m_rcItem;
+	int nwOffset = 0;
+	if (m_pList && m_pList->GetVerticalScrollBar() && m_pList->GetVerticalScrollBar()->IsVisible())
+	{
+		nwOffset = m_pList->GetVerticalScrollBar()->GetFixedWidth();
+		rtPanel.right -= nwOffset;
+	}
+
+	if (m_ePanelPos == E_PANELTOP)
+	{
+		int nHeightOffset = 0;
+		if (m_pHeader->IsVisible())
+			nHeightOffset = m_pHeader->GetHeight();
+		///> 相对容器的绝对位置
+		::OffsetRect(&rtPanel, -m_rcItem.left, -m_rcItem.top + nHeightOffset);
+		rtPanel.top += m_nPanelOffset;
+		rtPanel.bottom = rtPanel.top + m_nPanelHeight;
+	}
+	else if (m_ePanelPos == E_PANELBOTTOM)
+	{
+		::OffsetRect(&rtPanel, -m_rcItem.left, -m_rcItem.top);
+		rtPanel.bottom -= m_nPanelOffset;
+		rtPanel.top = rtPanel.bottom - m_nPanelHeight;
+	}
+	m_pFloatPanel->SetPos(rtPanel);
 }
 
 bool CListUI::SelectItem(int iIndex, bool bTakeFocus, bool bTriggerEvent)
@@ -1069,8 +1153,14 @@ void CListUI::Scroll(int dx, int dy)
 void CListUI::SetAttribute(LPCTSTR pstrName, LPCTSTR pstrValue)
 {
     if( _tcscmp(pstrName, _T("header")) == 0 ) GetHeader()->SetVisible(_tcscmp(pstrValue, _T("hidden")) != 0);
-	if (_tcscmp(pstrName, _T("virtual")) == 0) SetVirtual(_tcscmp(pstrValue, _T("true")) == 0);
-	if (_tcscmp(pstrName, _T("virtualo")) == 0) EnableVirtualOptimize(_tcscmp(pstrValue, _T("true")) == 0);
+	else if (_tcscmp(pstrName, _T("virtual")) == 0) SetVirtual(_tcscmp(pstrValue, _T("true")) == 0);
+	else if (_tcscmp(pstrName, _T("virtualo")) == 0) EnableVirtualOptimize(_tcscmp(pstrValue, _T("true")) == 0);
+	else if (_tcscmp(pstrName, _T("panelvisible")) == 0) SetPanelVisible(_tcscmp(pstrValue, _T("true")) == 0);
+	else if (_tcscmp(pstrName, _T("panelheight")) == 0) SetPanelHeight(_ttoi(pstrValue));
+	else if (_tcscmp(pstrName, _T("paneloffset")) == 0) SetPanelOffset(_ttoi(pstrValue));
+	else if (_tcscmp(pstrName, _T("panelpos")) == 0) SetPanelPos((_tcscmp(pstrValue, _T("top")) == 0) ? E_PANELTOP:E_PANELBOTTOM);
+	else if (_tcscmp(pstrName, _T("panelxml")) == 0) SetPanelXml(pstrValue);
+	else if (_tcscmp(pstrName, _T("panelattr")) == 0) SetPanelAttributeList(pstrValue);
     else if( _tcscmp(pstrName, _T("headerbkimage")) == 0 ) GetHeader()->SetBkImage(pstrValue);
     else if( _tcscmp(pstrName, _T("scrollselect")) == 0 ) SetScrollSelect(_tcscmp(pstrValue, _T("true")) == 0);
     else if( _tcscmp(pstrName, _T("multiexpanding")) == 0 ) SetMultiExpanding(_tcscmp(pstrValue, _T("true")) == 0);

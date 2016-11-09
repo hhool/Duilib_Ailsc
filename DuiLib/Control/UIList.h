@@ -20,6 +20,7 @@ class CListHeaderUI;
 #define UILIST_MAX_COLUMNS 64
 
 enum ESORT{ E_SORTNO, E_SORT_ASC, E_SORT_DESC, E_SORT_MAX };
+enum EPANELPOS{E_PANELTOP, E_PANELBOTTOM };
 
 struct DUICopyItem
 {
@@ -145,8 +146,15 @@ public:
 	/////////////////////////////////////////////排序标记接口 #liulei 20161107//////////////////////////////////////////////////////
 	void SetSort(int nIndex, ESORT esort, bool bTriggerEvent = false);
 	CListHeaderItemUI*GetSortHeaderItem();
-	///////////////////////////////////////////////////////////////////////////////////////////////////////
-
+	////////////////////////////////////////////////浮动窗口的属性接口 #liulei 20161109///////////////////////////////////////////////////////
+	void SetPanelHeight(int nHeight);
+	void SetPanelPos(EPANELPOS ePanelPos);
+	void SetPanelOffset(int nPanelOffset);
+	void SetPanelXml(LPCTSTR szXml);
+	void SetPanelAttributeList(LPCTSTR pstrList);
+	void SetPanelVisible(bool bVisible = true);
+	CChildLayoutUI *GetFloatPanel();
+	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
 
@@ -258,6 +266,7 @@ public:
 private:
 	void ResizeVirtualItemBuffer();//动态调整虚拟表的缓冲区
 	bool AddVirtualItem(CControlUI* pControl);
+	void CalcPanelPos();
 protected:
 	INT64 m_iSelectControlTag;
 	bool m_bUseVirtualList;
@@ -268,6 +277,11 @@ protected:
     IListCallbackUI* m_pCallback;
     CListBodyUI* m_pList;
     CListHeaderUI* m_pHeader;
+	//#liulei 20161109 增加list中的浮动Panel，类似于酷狗的搜索
+	CChildLayoutUI *m_pFloatPanel;//list中浮动的Panel
+	EPANELPOS		m_ePanelPos;//Panel的位置，目前仅仅支持上下
+	int				m_nPanelHeight;//Panel高度
+	int				m_nPanelOffset;//panel的位置便宜量
     TListInfoUI m_ListInfo;
 	PULVirtualItemFormat  m_pVirutalItemFormat;//虚拟数据格式指针
 	int m_nVirtualItemHeight;
