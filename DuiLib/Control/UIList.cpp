@@ -679,12 +679,15 @@ void CListUI::ResizeVirtualItemBuffer()
 	{
 		if (GetItemCount() == 0)
 		{
+			///> 准备资源
 			CControlUI *pControl = m_pVirutalItemFormat();
 			if (pControl)
 			{
 				m_nVirtualItemHeight = max(pControl->GetFixedHeight(), pControl->GetHeight());
 				m_nVirtualItemHeight <= 0 ? m_nVirtualItemHeight = VIR_ITEM_HEIGHT : 0;
 			}
+			///> 释放资源
+			pControl->Delete();
 		}
 
 		int nItemCount = GetItemCount();
