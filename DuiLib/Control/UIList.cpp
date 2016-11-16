@@ -1947,7 +1947,8 @@ bool CListBodyUI::DoPaint(HDC hDC, const RECT& rcPaint, CControlUI* pStopControl
 		if (m_pOwner->IsUseVirtualList() && m_items.GetSize() > 0 && m_pVerticalScrollBar && m_pVerticalScrollBar->IsVisible())
 		{
 			CControlUI* pControl = static_cast<CControlUI*>(m_items[0]);
-			nVirtualStartIndex = m_pVerticalScrollBar->GetScrollPos() / pControl->GetHeight();
+			assert(pControl && pControl->GetFixedHeight() > 0);
+			nVirtualStartIndex = m_pVerticalScrollBar->GetScrollPos() / pControl->GetFixedHeight();
 		}
 
         if( !::IntersectRect(&rcTemp, &rcPaint, &rc) ) 
