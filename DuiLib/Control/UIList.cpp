@@ -31,6 +31,9 @@ protected:
 
 CListUI::CListUI() : m_pCallback(NULL), m_bScrollSelect(false), m_iCurSel(-1), m_iExpandedItem(-1), m_iSelectControlTag(-1)
 {
+	m_nDrawStartIndex = 0;
+	m_nMaxShowCount = 0;
+	m_bEnableMouseWhell = false;
 	m_nVirtualItemHeight = VIR_ITEM_HEIGHT;
 	m_nVirtualItemCount = 0;
 	m_pVirutalItemFormat = NULL;
@@ -513,7 +516,19 @@ void CListUI::DoEvent(TEventUI& event)
         m_bFocused = false;
         return;
     }
-
+	//#liulei 20161115 控制鼠标是否响应鼠标滚动
+	if (event.Type == UIEVENT_LBUTTONDOWN ||
+		event.Type == UIEVENT_RBUTTONDOWN ||
+		event.Type == UIEVENT_LDBLCLICK)
+	{
+		if (!m_bEnableMouseWhell && ::PtInRect(&m_rcItem, event.ptMouse))
+			m_bEnableMouseWhell = true;
+	}
+	if (event.Type == UIEVENT_MOUSELEAVE)
+	{
+		if (m_bEnableMouseWhell && !::PtInRect(&m_rcItem, event.ptMouse))
+			m_bEnableMouseWhell = false;
+	}
     if( event.Type == UIEVENT_KEYDOWN )
     {
         if (IsKeyboardEnabled() && IsEnabled()) {
@@ -561,7 +576,7 @@ void CListUI::DoEvent(TEventUI& event)
         }
     }
 
-    if( event.Type == UIEVENT_SCROLLWHEEL )
+	if (event.Type == UIEVENT_SCROLLWHEEL && m_bEnableMouseWhell)
     {
         if (IsEnabled()) {
             switch( LOWORD(event.wParam) ) {
@@ -643,6 +658,24 @@ int CListUI::GetVirtualItemCount() const
 	return m_nVirtualItemCount;
 }
 
+int CListUI::GetShowMaxItemCount() const
+{
+	return m_nMaxShowCount;
+}
+
+int CListUI::GetDrawStartIndex() const
+{
+	return m_nDrawStartIndex;
+}
+
+int CListUI::GetDrawLastIndex() const
+{
+	int nLastDrawIndex = min(m_nDrawStartIndex + m_nMaxShowCount, m_nVirtualItemCount);
+	//下标从0开始所以需要减去1
+	nLastDrawIndex -= 1;
+	return nLastDrawIndex;
+}
+
 void CListUI::SetSelectControlTag(INT64 iControlTag)
 {
 	m_iSelectControlTag = iControlTag;
@@ -690,8 +723,14 @@ void CListUI::ResizeVirtualItemBuffer()
 			pControl->Delete();
 		}
 
-		int nItemCount = GetItemCount();
-		int nItemSize = GetHeight() / m_nVirtualItemHeight + 5;
+		int nItemCount = m_pList->GetCount();
+		///> 采取七舍八入的原则
+		int nReverse = 0;
+		if ( m_pList->GetHeight() % m_nVirtualItemHeight > m_nVirtualItemHeight*0.8)
+			nReverse = 1;
+
+		int nItemSize = m_pList->GetHeight()/ m_nVirtualItemHeight + nReverse;
+		m_nMaxShowCount = nItemSize;
 
 		for (int i = nItemCount; i < nItemSize; ++i)
 		{
@@ -750,6 +789,11 @@ void CListUI::SetPanelVisible(bool bVisible)
 CChildLayoutUI *CListUI::GetFloatPanel()
 {
 	return m_pFloatPanel;
+}
+
+bool CListUI::IsEnableMouseWhell()
+{
+	return m_bEnableMouseWhell;
 }
 
 void CListUI::CalcPanelPos()
@@ -1318,7 +1362,7 @@ void CListUI::SetScrollPos(SIZE szPos)
     m_pList->SetScrollPos(szPos);
 }
 
-void CListUI::DrawVirtualItem(CControlUI *pControl,int nRow)
+void CListUI::DrawVirtualItem(CControlUI *pControl, int nDrawRow, int nStartDrwRow)
 {
 	if (m_pManager)
 	{
@@ -1327,16 +1371,17 @@ void CListUI::DrawVirtualItem(CControlUI *pControl,int nRow)
 		///> ListTextElement 会导致这个问题（实测）listtext-》settext-》invadate-》激发ListUi刷新-》激发ListText从而导致死循环刷新
 		///> 启用优化填充数据之后，如果Item还有combo控件，因为combo会弹出窗口激发ListUI刷新，刷新的时候如果启用优化则会填充数据的时候隐藏Item
 		///> 隐藏Item会导致Combo不可见，从而使弹出窗口消失。因此弹出窗口就一闪而过，因此如果含有Combo则不能启用刷新
+		m_nDrawStartIndex = nStartDrwRow;
 		if (m_bEnableVirtualO)
 		{
 			bool bOldVisible = pControl->IsVisible();
 			pControl->SetInternVisible(false);
-			m_pManager->SendNotify(this, DUI_MSGTYPE_DRAWITEM, (WPARAM)pControl, (LPARAM)nRow);
+			m_pManager->SendNotify(this, DUI_MSGTYPE_DRAWITEM, (WPARAM)pControl, (LPARAM)nDrawRow);
 			pControl->SetInternVisible(bOldVisible);
 		}
 		else
 		{
-			m_pManager->SendNotify(this, DUI_MSGTYPE_DRAWITEM, (WPARAM)pControl, (LPARAM)nRow);
+			m_pManager->SendNotify(this, DUI_MSGTYPE_DRAWITEM, (WPARAM)pControl, (LPARAM)nDrawRow);
 		}
 	}
 	
@@ -1853,9 +1898,9 @@ void CListBodyUI::DoEvent(TEventUI& event)
         return;
     }
 
-    if( m_pOwner != NULL ) {
+	if (m_pOwner != NULL ) {
 		if (event.Type == UIEVENT_SCROLLWHEEL) {
-			if (m_pHorizontalScrollBar != NULL && m_pHorizontalScrollBar->IsVisible() && m_pHorizontalScrollBar->IsEnabled()) {
+			if (m_pOwner->IsEnableMouseWhell() && m_pHorizontalScrollBar != NULL && m_pHorizontalScrollBar->IsVisible() && m_pHorizontalScrollBar->IsEnabled()) {
 				RECT rcHorizontalScrollBar = m_pHorizontalScrollBar->GetPos();
 				if( ::PtInRect(&rcHorizontalScrollBar, event.ptMouse) ) 
 				{
@@ -1921,7 +1966,7 @@ bool CListBodyUI::DoPaint(HDC hDC, const RECT& rcPaint, CControlUI* pStopControl
 					{
 						pControl->SetVisible(true);
 						//m_pVirtualData(pControl, nVirtualStartIndex + it, m_pContext);
-						m_pOwner->DrawVirtualItem(pControl, nVirtualStartIndex + it);
+						m_pOwner->DrawVirtualItem(pControl, nVirtualStartIndex + it, nVirtualStartIndex);
 					}
 					else if (m_pOwner->IsUseVirtualList())
 					{
@@ -1966,7 +2011,7 @@ bool CListBodyUI::DoPaint(HDC hDC, const RECT& rcPaint, CControlUI* pStopControl
 					{
 						pControl->SetVisible(true);
 						//m_pVirtualData(pControl, nVirtualStartIndex + it, m_pContext);
-						m_pOwner->DrawVirtualItem(pControl, nVirtualStartIndex + it);
+						m_pOwner->DrawVirtualItem(pControl, nVirtualStartIndex + it, nVirtualStartIndex);
 					}
 					else if (m_pOwner->IsUseVirtualList())
 					{
@@ -3014,6 +3059,7 @@ void CListLabelElementUI::DoEvent(TEventUI& event)
             Select();
             Invalidate();
         }
+		if (m_pOwner != NULL) m_pOwner->DoEvent(event);
         return;
     }
     if( event.Type == UIEVENT_MOUSEMOVE ) 
@@ -3692,6 +3738,7 @@ void CListContainerElementUI::DoEvent(TEventUI& event)
             Select();
             Invalidate();
         }
+		if (m_pOwner != NULL) m_pOwner->DoEvent(event);
         return;
     }
     if( event.Type == UIEVENT_BUTTONUP ) 

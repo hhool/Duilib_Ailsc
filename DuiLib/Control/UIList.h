@@ -133,6 +133,12 @@ public:
 	int GetVirtualItemHeight();
 	//> 获取虚表数据个数
 	int GetVirtualItemCount() const;
+	//> 获取容器可以显示的最大个数,采取的7舍8入原则
+	int GetShowMaxItemCount() const;
+	//> 获去从哪一行开始绘画的
+	int GetDrawStartIndex() const;
+	//> 获去最后绘画的控件行下标，用于绘画汇总最后一行
+	int GetDrawLastIndex() const;
 	//> 复制List数据到剪切板,需要响应 DUI_MSGTYPE_COPYITEM 事件 nMaxRowItemData 标记为Item的组成的最大Text
 	//>  bUserDefine 是否为用户自定义数据，对于复杂的数据结构，copy不能盲足，需要用户自定义Copy
 	//> bUserDefine 如果为TRUE 则会触发 DUI_MSGTYPE_COPYITEM Wparam 为ListItem Lparam 为DUICopyItem需要返回数据的地址，
@@ -154,6 +160,8 @@ public:
 	void SetPanelAttributeList(LPCTSTR pstrList);
 	void SetPanelVisible(bool bVisible = true);
 	CChildLayoutUI *GetFloatPanel();
+	///> 只有鼠标单击之后才能响应MouseWhell消息
+	bool IsEnableMouseWhell();
 	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
@@ -245,7 +253,10 @@ public:
     SIZE GetScrollPos() const;
     SIZE GetScrollRange() const;
     void SetScrollPos(SIZE szPos);
-	void DrawVirtualItem(CControlUI *pControl, int nRow);
+	///>@param pControl		需要绘画的当前控件
+	///>@param nDrawRow		当前控件所在的行
+	///>@param nStartDrwRow 从哪一行开始绘画的
+	void DrawVirtualItem(CControlUI *pControl, int nDrawRow,int nStartDrwRow);
     void LineUp();
     void LineDown();
     void PageUp();
@@ -277,6 +288,9 @@ protected:
     IListCallbackUI* m_pCallback;
     CListBodyUI* m_pList;
     CListHeaderUI* m_pHeader;
+	//#liulei 是否允许使用鼠标滚动，
+	//只有在鼠标点击之后才可以使用
+	bool m_bEnableMouseWhell;
 	//#liulei 20161109 增加list中的浮动Panel，类似于酷狗的搜索
 	CChildLayoutUI *m_pFloatPanel;//list中浮动的Panel
 	EPANELPOS		m_ePanelPos;//Panel的位置，目前仅仅支持上下
@@ -286,6 +300,8 @@ protected:
 	PULVirtualItemFormat  m_pVirutalItemFormat;//虚拟数据格式指针
 	int m_nVirtualItemHeight;
 	int m_nVirtualItemCount;
+	int	m_nMaxShowCount;
+	int	m_nDrawStartIndex;//从哪一行开始绘画的，从0开始
 };
 
 /////////////////////////////////////////////////////////////////////////////////////
