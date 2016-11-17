@@ -355,17 +355,6 @@ namespace DuiLib
 					return;
 				}
 			}
-			if (m_pHorizontalScrollBar != NULL && m_pHorizontalScrollBar->IsVisible() && m_pHorizontalScrollBar->IsEnabled())
-			{
-				switch( LOWORD(event.wParam) ) {
-				case SB_LINEUP:
-					LineLeft();
-					return;
-				case SB_LINEDOWN:
-					LineRight();
-					return;
-				}
-			}
 		}
 		CControlUI::DoEvent(event);
 	}

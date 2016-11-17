@@ -1272,7 +1272,6 @@ bool CPaintManagerUI::MessageHandler(UINT uMsg, WPARAM wParam, LPARAM lParam, LR
             event.dwTimestamp = ::GetTickCount();
             event.wKeyState = MapKeyState();
             if( !IsCaptured() ) {
-                pNewHover = FindControl(pt);
                 if( pNewHover != NULL && pNewHover->GetManager() != this ) break;
                 if( pNewHover != m_pEventHover && m_pEventHover != NULL ) {
                     event.Type = UIEVENT_MOUSELEAVE;
