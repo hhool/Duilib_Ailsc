@@ -74,6 +74,7 @@ CListUI::CListUI() : m_pCallback(NULL), m_bScrollSelect(false), m_iCurSel(-1), m
     m_ListInfo.bMultiExpandable = false;
     ::ZeroMemory(&m_ListInfo.rcTextPadding, sizeof(m_ListInfo.rcTextPadding));
     ::ZeroMemory(&m_ListInfo.rcColumn, sizeof(m_ListInfo.rcColumn));
+	::ZeroMemory(&m_ListInfo.bUsedHeaderContain, sizeof(m_ListInfo.bUsedHeaderContain));
 }
 
 LPCTSTR CListUI::GetClass() const
@@ -179,21 +180,27 @@ int CListUI::GetItemCount() const
 
 bool CListUI::Add(CControlUI* pControl)
 {
-    // Override the Add() method so we can add items specifically to
-    // the intended widgets. Headers are assumed to be
-    // answer the correct interface so we can add multiple list headers.
+	// no support multiple list headers.
     if( pControl->GetInterface(DUI_CTR_LISTHEADER) != NULL ) {
-        if( m_pHeader != pControl && m_pHeader->GetCount() == 0 ) {
+        if( m_pHeader != pControl /*&& m_pHeader->GetCount() == 0 */) {
             CVerticalLayoutUI::Remove(m_pHeader);
             m_pHeader = static_cast<CListHeaderUI*>(pControl);
         }
-        m_ListInfo.nColumns = MIN(m_pHeader->GetCount(), UILIST_MAX_COLUMNS);
+		//计算复合表头实际表头项的数量
+		CDuiPtrArray ptrAry;
+		GetInsideControl(ptrAry, m_pHeader, DUI_CTR_LISTHEADERITEM);
+        //m_ListInfo.nColumns = MIN(m_pHeader->GetCount(), UILIST_MAX_COLUMNS);
+		m_ListInfo.nColumns = MIN(ptrAry.GetSize(), UILIST_MAX_COLUMNS);
         return CVerticalLayoutUI::AddAt(pControl, 0);
     }
     // We also need to recognize header sub-items
     if( _tcsstr(pControl->GetClass(), DUI_CTR_LISTHEADERITEM) != NULL ) {
         bool ret = m_pHeader->Add(pControl);
-        m_ListInfo.nColumns = MIN(m_pHeader->GetCount(), UILIST_MAX_COLUMNS);
+		//计算复合表头实际表头项的数量
+		CDuiPtrArray ptrAry;
+		GetInsideControl(ptrAry, m_pHeader, DUI_CTR_LISTHEADERITEM);
+		//m_ListInfo.nColumns = MIN(m_pHeader->GetCount(), UILIST_MAX_COLUMNS);
+		m_ListInfo.nColumns = MIN(ptrAry.GetSize(), UILIST_MAX_COLUMNS);
         return ret;
     }
 	//如果是虚拟列表则不允许操作,表头除外
@@ -213,21 +220,27 @@ bool CListUI::Add(CControlUI* pControl)
 
 bool CListUI::AddVirtualItem(CControlUI* pControl)
 {
-	// Override the Add() method so we can add items specifically to
-	// the intended widgets. Headers are assumed to be
-	// answer the correct interface so we can add multiple list headers.
+	// no support multiple list headers.
 	if (pControl->GetInterface(DUI_CTR_LISTHEADER) != NULL) {
-		if (m_pHeader != pControl && m_pHeader->GetCount() == 0) {
+		if (m_pHeader != pControl /*&& m_pHeader->GetCount() == 0*/) {
 			CVerticalLayoutUI::Remove(m_pHeader);
 			m_pHeader = static_cast<CListHeaderUI*>(pControl);
 		}
-		m_ListInfo.nColumns = MIN(m_pHeader->GetCount(), UILIST_MAX_COLUMNS);
+		//计算复合表头实际表头项的数量
+		CDuiPtrArray ptrAry;
+		GetInsideControl(ptrAry, m_pHeader, DUI_CTR_LISTHEADERITEM);
+		//m_ListInfo.nColumns = MIN(m_pHeader->GetCount(), UILIST_MAX_COLUMNS);
+		m_ListInfo.nColumns = MIN(ptrAry.GetSize(), UILIST_MAX_COLUMNS);
 		return CVerticalLayoutUI::AddAt(pControl, 0);
 	}
 	// We also need to recognize header sub-items
 	if (_tcsstr(pControl->GetClass(), DUI_CTR_LISTHEADERITEM) != NULL) {
 		bool ret = m_pHeader->Add(pControl);
-		m_ListInfo.nColumns = MIN(m_pHeader->GetCount(), UILIST_MAX_COLUMNS);
+		//计算复合表头实际表头项的数量
+		CDuiPtrArray ptrAry;
+		GetInsideControl(ptrAry, m_pHeader, DUI_CTR_LISTHEADERITEM);
+		//m_ListInfo.nColumns = MIN(m_pHeader->GetCount(), UILIST_MAX_COLUMNS);
+		m_ListInfo.nColumns = MIN(ptrAry.GetSize(), UILIST_MAX_COLUMNS);
 		return ret;
 	}
 
@@ -242,21 +255,27 @@ bool CListUI::AddVirtualItem(CControlUI* pControl)
 
 bool CListUI::AddAt(CControlUI* pControl, int iIndex)
 {
-    // Override the AddAt() method so we can add items specifically to
-    // the intended widgets. Headers and are assumed to be
-    // answer the correct interface so we can add multiple list headers.
+	// no support multiple list headers.
     if( pControl->GetInterface(DUI_CTR_LISTHEADER) != NULL ) {
-        if( m_pHeader != pControl && m_pHeader->GetCount() == 0 ) {
+        if( m_pHeader != pControl/* && m_pHeader->GetCount() == 0*/ ) {
             CVerticalLayoutUI::Remove(m_pHeader);
             m_pHeader = static_cast<CListHeaderUI*>(pControl);
         }
-        m_ListInfo.nColumns = MIN(m_pHeader->GetCount(), UILIST_MAX_COLUMNS);
+		//计算复合表头实际表头项的数量
+		CDuiPtrArray ptrAry;
+		GetInsideControl(ptrAry, m_pHeader, DUI_CTR_LISTHEADERITEM);
+		//m_ListInfo.nColumns = MIN(m_pHeader->GetCount(), UILIST_MAX_COLUMNS);
+		m_ListInfo.nColumns = MIN(ptrAry.GetSize(), UILIST_MAX_COLUMNS);
         return CVerticalLayoutUI::AddAt(pControl, 0);
     }
     // We also need to recognize header sub-items
     if( _tcsstr(pControl->GetClass(), DUI_CTR_LISTHEADERITEM) != NULL ) {
         bool ret = m_pHeader->AddAt(pControl, iIndex);
-        m_ListInfo.nColumns = MIN(m_pHeader->GetCount(), UILIST_MAX_COLUMNS);
+		//计算复合表头实际表头项的数量
+		CDuiPtrArray ptrAry;
+		GetInsideControl(ptrAry, m_pHeader, DUI_CTR_LISTHEADERITEM);
+		//m_ListInfo.nColumns = MIN(m_pHeader->GetCount(), UILIST_MAX_COLUMNS);
+		m_ListInfo.nColumns = MIN(ptrAry.GetSize(), UILIST_MAX_COLUMNS);
         return ret;
     }
     if (!m_pList->AddAt(pControl, iIndex)) return false;
@@ -371,12 +390,15 @@ void CListUI::SetPos(RECT rc, bool bNeedInvalidate)
 	//位置发生改变的时候当前滚动条位置iOffsetNow
 	//位置发生改变之后动条重新计算位置iResizeOffset
 	int iOffsetNow = 0, iResizeOffset = 0;
-	if( m_pHeader != NULL ) { // 设置header各子元素x坐标,因为有些listitem的setpos需要用到(临时修复)
+	//计算复合表头实际表头项的数量
+	CDuiPtrArray ptrAry;
+	GetInsideControl(ptrAry, m_pHeader, DUI_CTR_LISTHEADERITEM);
+	m_ListInfo.nColumns = MIN(ptrAry.GetSize(), UILIST_MAX_COLUMNS);
+
+	if( m_pHeader != NULL ) 
+	{ // 设置header各子元素x坐标,因为有些listitem的setpos需要用到(临时修复)
 		int iLeft = rc.left + m_rcInset.left;
 		int iRight = rc.right - m_rcInset.right;
-
-		m_ListInfo.nColumns = MIN(m_pHeader->GetCount(), UILIST_MAX_COLUMNS);
-
 		if( !m_pHeader->IsVisible() ) {
 			for( int it = m_pHeader->GetCount() - 1; it >= 0; it-- ) {
 				static_cast<CControlUI*>(m_pHeader->GetItemAt(it))->SetInternVisible(true);
@@ -384,14 +406,19 @@ void CListUI::SetPos(RECT rc, bool bNeedInvalidate)
 		}
 		m_pHeader->SetPos(CDuiRect(iLeft, 0, iRight, 0), false);
 		iOffsetNow = m_pList->GetScrollPos().cx;
-		for( int i = 0; i < m_ListInfo.nColumns; i++ ) {
-			CControlUI* pControl = static_cast<CControlUI*>(m_pHeader->GetItemAt(i));
+
+		for( int i = 0; i < m_ListInfo.nColumns; i++ )
+		{
+			CControlUI* pControl = static_cast<CControlUI*>(ptrAry[i]);
+
+			m_ListInfo.bUsedHeaderContain[i] = pControl->IsIncludeClassControl(DUI_CTR_LISTHEADERITEM);
+
 			if (!pControl->IsVisible())
 			{
 				//#liulei 修复由于隐藏最后一列的时候，由于宽度 = m_ListInfo.rcColumn[lastcol].right - m_ListInfo.rcColumn[i].left
 				//所以这里需要修复列宽的计算方法 20160616
-				i == 0 ? m_ListInfo.rcColumn[i].left = m_ListInfo.rcColumn[i].right = 0:
-				m_ListInfo.rcColumn[i].right = m_ListInfo.rcColumn[i].left = m_ListInfo.rcColumn[i - 1].right;
+				i == 0 ? m_ListInfo.rcColumn[i].left = m_ListInfo.rcColumn[i].right = 0 :
+					m_ListInfo.rcColumn[i].right = m_ListInfo.rcColumn[i].left = m_ListInfo.rcColumn[i - 1].right;
 				continue;
 			}
 			if (pControl->IsFloat())
@@ -399,20 +426,23 @@ void CListUI::SetPos(RECT rc, bool bNeedInvalidate)
 				//#liulei 修复由于隐藏最后一列的时候，由于宽度 = m_ListInfo.rcColumn[lastcol].right - m_ListInfo.rcColumn[i].left
 				//所以这里需要修复列宽的计算方法 20160616
 				i == 0 ? m_ListInfo.rcColumn[i].left = m_ListInfo.rcColumn[i].right = 0 :
-				m_ListInfo.rcColumn[i].right = m_ListInfo.rcColumn[i].left = m_ListInfo.rcColumn[i - 1].right;
+					m_ListInfo.rcColumn[i].right = m_ListInfo.rcColumn[i].left = m_ListInfo.rcColumn[i - 1].right;
 				continue;
 			}
 
 			RECT rcPos = pControl->GetPos();
-			if (iOffsetNow > 0) {
+			if (iOffsetNow > 0 && pControl->GetParent() == m_pHeader) {
 				rcPos.left -= iOffsetNow;
 				rcPos.right -= iOffsetNow;
 				pControl->SetPos(rcPos, false);
 			}
 			m_ListInfo.rcColumn[i] = pControl->GetPos();
 		}
-		if( !m_pHeader->IsVisible() ) {
-			for( int it = m_pHeader->GetCount() - 1; it >= 0; it-- ) {
+
+		if( !m_pHeader->IsVisible() ) 
+		{
+			for( int it = m_pHeader->GetCount() - 1; it >= 0; it-- ) 
+			{
 				static_cast<CControlUI*>(m_pHeader->GetItemAt(it))->SetInternVisible(false);
 			}
 			m_pHeader->SetInternVisible(false);
@@ -443,19 +473,20 @@ void CListUI::SetPos(RECT rc, bool bNeedInvalidate)
 		rc.bottom -= m_pHorizontalScrollBar->GetFixedHeight();
 	}
 
-	m_ListInfo.nColumns = MIN(m_pHeader->GetCount(), UILIST_MAX_COLUMNS);
-
-	if( !m_pHeader->IsVisible() ) {
+	if (m_pHeader && !m_pHeader->IsVisible()) {
 		for( int it = m_pHeader->GetCount() - 1; it >= 0; it-- ) {
 			static_cast<CControlUI*>(m_pHeader->GetItemAt(it))->SetInternVisible(true);
 		}
 		m_pHeader->SetPos(CDuiRect(rc.left, 0, rc.right, 0), false);
 	}
 	iResizeOffset = m_pList->GetScrollPos().cx;
-	for( int i = 0; i < m_ListInfo.nColumns; i++ ) {
+
+	///> 矫正表头项的位置，因为表头是Contain并且不是float，表头SetPos之后会对Item重现排序，如果此时横向滚动条不在位置为0的地方
+	///> 则可能出现表头项由于没有偏移而导致表头显示不对，list的内容不受影响，重新调整listHeader包含项的位置
+	for (int i = 0; i < m_pHeader->GetCount(); i++) {
 		CControlUI* pControl = static_cast<CControlUI*>(m_pHeader->GetItemAt(i));
-		if( !pControl->IsVisible() ) continue;
-		if( pControl->IsFloat() ) continue;
+		if (!pControl->IsVisible()) continue;
+		if (pControl->IsFloat()) continue;
 
 		RECT rcPos = pControl->GetPos();
 		if (iResizeOffset > 0) {
@@ -463,8 +494,16 @@ void CListUI::SetPos(RECT rc, bool bNeedInvalidate)
 			rcPos.right -= iResizeOffset;
 			pControl->SetPos(rcPos, false);
 		}
+	}
+
+	///> 复合容器的原因，在这里调整list表头项的对应的区域位置
+	for( int i = 0; i < m_ListInfo.nColumns; i++ ) {
+		CControlUI* pControl = static_cast<CControlUI*>(ptrAry[i]);
+		if( !pControl->IsVisible() ) continue;
+		if( pControl->IsFloat() ) continue;
 		m_ListInfo.rcColumn[i] = pControl->GetPos();
 	}
+
 	if( !m_pHeader->IsVisible() ) {
 		for( int it = m_pHeader->GetCount() - 1; it >= 0; it-- ) {
 			static_cast<CControlUI*>(m_pHeader->GetItemAt(it))->SetInternVisible(false);
@@ -481,7 +520,7 @@ void CListUI::SetPos(RECT rc, bool bNeedInvalidate)
 	///> 矫正表头项的位置，因为表头是Contain并且不是float，表头SetPos之后会对Item重现排序，如果此时横向滚动条不在位置为0的地方
 	///> 则可能出现表头项由于没有偏移而导致表头显示不对，list的内容不受影响
 	for (int i = 0; i < m_ListInfo.nColumns; i++) {
-		CControlUI* pControl = static_cast<CControlUI*>(m_pHeader->GetItemAt(i));
+		CControlUI* pControl = static_cast<CControlUI*>(ptrAry[i]);
 		if (!pControl->IsVisible()) continue;
 		if (pControl->IsFloat()) continue;
 		pControl->SetPos(m_ListInfo.rcColumn[i], false);
@@ -1749,13 +1788,21 @@ void CListBodyUI::SetScrollPos(SIZE szPos)
     if( cx != 0 && m_pOwner ) {
         CListHeaderUI* pHeader = m_pOwner->GetHeader();
         if( pHeader == NULL ) return;
-        TListInfoUI* pInfo = m_pOwner->GetListInfo();
-        pInfo->nColumns = MIN(pHeader->GetCount(), UILIST_MAX_COLUMNS);
-        for( int i = 0; i < pInfo->nColumns; i++ ) {
-            CControlUI* pControl = static_cast<CControlUI*>(pHeader->GetItemAt(i));
-            if( !pControl->IsVisible() ) continue;
-            if( pControl->IsFloat() ) continue;
+		//#liulei 20161118 移动表头内所有的控件,复合控件使用
+		for (int i = 0; i < pHeader->GetCount(); i++) {
+			CControlUI* pControl = static_cast<CControlUI*>(pHeader->GetItemAt(i));
+			if (!pControl->IsVisible()) continue;
+			if (pControl->IsFloat()) continue;
 			pControl->Move(CDuiSize(-cx, -cy), false);
+		}
+
+		//#liulei 调整复合表头的listheaderItem对应的区域关系
+        TListInfoUI* pInfo = m_pOwner->GetListInfo();
+		CDuiPtrArray ptrAry;
+		GetInsideControl(ptrAry, pHeader, DUI_CTR_LISTHEADERITEM);
+		pInfo->nColumns = MIN(ptrAry.GetSize(), UILIST_MAX_COLUMNS);
+        for( int i = 0; i < pInfo->nColumns; i++ ) {
+			CControlUI* pControl = static_cast<CControlUI*>(ptrAry[i]);
 			pInfo->rcColumn[i] = pControl->GetPos();
         }
 		pHeader->Invalidate();
@@ -2091,7 +2138,7 @@ bool CListBodyUI::DoPaint(HDC hDC, const RECT& rcPaint, CControlUI* pStopControl
 
 CListHeaderUI::CListHeaderUI()
 {
-	m_nsrot_index = -1;
+	m_pSortHeaderItem = NULL;
 }
 
 LPCTSTR CListHeaderUI::GetClass() const
@@ -2117,9 +2164,15 @@ void CListHeaderUI::SetSort(int nIndex, ESORT esort, bool bTriggerEvent)
 
 CListHeaderItemUI *CListHeaderUI::GetSortHeaderItem()
 {
-	CControlUI *pHeaderItem = GetItemAt(m_nsrot_index);
-	if (pHeaderItem && pHeaderItem->GetInterface(DUI_CTR_LISTHEADERITEM))
-		return static_cast<CListHeaderItemUI*>(pHeaderItem);
+	CDuiPtrArray ptrary;
+	GetInsideControl(ptrary,this,DUI_CTR_LISTHEADERITEM);
+	for (int i = 0; i < ptrary.GetSize();++i)
+	{
+		if (m_pSortHeaderItem == static_cast<CListHeaderItemUI *>(ptrary[i]))
+		{
+			return m_pSortHeaderItem;
+		}
+	}
 	return NULL;
 }
 
@@ -2405,29 +2458,36 @@ void CListHeaderItemUI::SetEnabledSort(bool bEnableSort)
 
 void CListHeaderItemUI::SetSort(ESORT esort, bool bTriggerEvent)
 {
-	//> 重置其他Item的状态
-	if (GetParent() && GetParent()->GetInterface(DUI_CTR_LISTHEADER))
+	//> 查找父级Item，重置其他Item的状态
+	CControlUI *pParent = GetParent();
+	while (pParent && (pParent->GetInterface(DUI_CTR_LISTHEADER) == NULL))
 	{
-		CListHeaderUI *pHeader = static_cast<CListHeaderUI *>(GetParent());
+		pParent = pParent->GetParent();
+	}
+
+	if (pParent)
+	{
+		CListHeaderUI *pHeader = static_cast<CListHeaderUI *>(pParent);
 		for (int i = 0; i < pHeader->GetCount(); ++i)
 		{
-			if (pHeader->GetItemAt(i)->GetInterface(DUI_CTR_LISTHEADERITEM))
+			CDuiPtrArray pary;
+			GetInsideControl(pary, pHeader->GetItemAt(i), DUI_CTR_LISTHEADERITEM);
+			for (int k = 0; k < pary.GetSize();++k)
 			{
-				CListHeaderItemUI *pHederItem = static_cast<CListHeaderItemUI*>(pHeader->GetItemAt(i)->GetInterface(DUI_CTR_LISTHEADERITEM));
+				CListHeaderItemUI *pHederItem = static_cast<CListHeaderItemUI*>(pary[k]);
 				if (pHederItem != this)
 				{
 					pHederItem->SetSortStatus(E_SORTNO);
 				}
-				else
-				{
-					pHeader->m_nsrot_index = i;
-				}
 			}
 		}
+		pHeader->m_pSortHeaderItem = this;
 	}
 
 	SetSortStatus(esort, bTriggerEvent);
 }
+
+
 
 void CListHeaderItemUI::SetSortStatus(ESORT esort, bool bTriggerEvent)
 {
@@ -2552,6 +2612,59 @@ void CListHeaderItemUI::SetAttribute(LPCTSTR pstrName, LPCTSTR pstrValue)
 	else __super::SetAttribute(pstrName, pstrValue);
 }
 
+void CListHeaderItemUI::SetPos(RECT rc, bool bNeedInvalidate)
+{
+	{
+		//#liulei 20161127 calc self min width for composite header
+		int nSelfMinWidth = 0;
+		CDuiPtrArray prtArySelf;
+		GetInsideControl(prtArySelf, this, DUI_CTR_LISTHEADERITEM);
+		for (int i = 0; i < prtArySelf.GetSize(); ++i)
+		{
+			CControlUI *pChild = static_cast<CControlUI *>(prtArySelf[i]);
+			nSelfMinWidth += pChild->GetMinWidth();
+		}
+		nSelfMinWidth = max(nSelfMinWidth, GetMinWidth());
+		rc.right = max(rc.right, rc.left + nSelfMinWidth);
+	}
+
+	CControlUI *pParent = GetParent();
+	while (pParent)
+	{
+		if (pParent->GetInterface(DUI_CTR_LISTHEADERITEM))
+		{
+			//#liulei 20161127 calc the min item need width
+			CDuiPtrArray prtAry;
+			GetInsideControl(prtAry, GetParent(), DUI_CTR_LISTHEADERITEM);
+			//> 计算剩剩余项的最小宽度
+			int nMinWidth = 0;
+			bool bAfterSelf = false;
+			for (int i = 0; i < prtAry.GetSize();++i)
+			{
+				CControlUI *pChild = static_cast<CControlUI *>(prtAry[i]);
+				if (pChild == this)
+				{
+					bAfterSelf = true;
+					continue;
+				}
+
+				if (!bAfterSelf) continue;
+
+				nMinWidth += pChild->GetMinWidth();
+			}
+
+			RECT rtParent = pParent->GetPos();
+			rc.right = min(rc.right, rtParent.right - nMinWidth);
+			rc.left = min(rc.left, rc.right - GetMinWidth());
+			rc.left = max(rc.left, rtParent.left);
+			break;
+		}
+		pParent = pParent->GetParent();
+	}
+
+	__super::SetPos(rc, bNeedInvalidate);
+}
+
 void CListHeaderItemUI::DoEvent(TEventUI& event)
 {
     if( !IsMouseEnabled() && event.Type > UIEVENT__MOUSEBEGIN && event.Type < UIEVENT__MOUSEEND ) {
@@ -2617,8 +2730,19 @@ void CListHeaderItemUI::DoEvent(TEventUI& event)
             if( rc.right - rc.left > GetMinWidth() ) {
                 m_cxyFixed.cx = rc.right - rc.left;
                 ptLastMouse = event.ptMouse;
-                if( GetParent() ) 
-                    GetParent()->NeedParentUpdate();
+				///> #liulei 为了实现多表头优化一下 20161117
+				CControlUI *pParent = GetParent();
+				///> 刷新listHeader的父容器
+				if (pParent)
+					pParent->NeedParentUpdate();
+
+				///> 检测Panret是否为ListHeaderUI，如果是则刷新Header
+				while (pParent && (pParent->GetInterface(DUI_CTR_LISTHEADER) == NULL))
+				{
+					pParent = pParent->GetParent();
+				}
+				if (pParent != NULL && pParent != GetParent())
+					pParent->NeedParentUpdate();
             }
         }
         return;
@@ -3892,6 +4016,11 @@ void CListHBoxElementUI::SetPos(RECT rc, bool bNeedInvalidate)
                 SetFloatPos(it2);
                 continue;
             }
+
+			//>#调整复合表头对应的listbody的区域
+			while (iColumnIndex < pInfo->nColumns && pInfo->bUsedHeaderContain[iColumnIndex])
+				++iColumnIndex;
+
             if( iColumnIndex >= pInfo->nColumns ) continue;
 
             RECT rcPadding = pControl->GetPadding();

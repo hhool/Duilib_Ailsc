@@ -33,6 +33,7 @@ struct DUICopyItem
 typedef struct tagTListInfoUI
 {
     int nColumns;
+	BOOL bUsedHeaderContain[UILIST_MAX_COLUMNS];//用于复合表头标记该表头项是否作为表头项的容器使用
     RECT rcColumn[UILIST_MAX_COLUMNS];
     UINT uFixedHeight; 
     int nFont;
@@ -111,12 +112,12 @@ public:
 class CListBodyUI;
 class CListHeaderUI;
 class CListHeaderItemUI;
-//支持虚拟列表
+//support virtual list
+//support composite header，example see listHeaderui decalre
 class DUILIB_API CListUI : public CVerticalLayoutUI, public IListUI
 {
 public:
     CListUI();
-
     LPCTSTR GetClass() const;
     UINT GetControlFlags() const;
     LPVOID GetInterface(LPCTSTR pstrName);
@@ -307,7 +308,24 @@ protected:
 /////////////////////////////////////////////////////////////////////////////////////
 //
 class CListHeaderItemUI;
+/* suport composite header add by liulei 20161122
+example:
+<ListHeader height="40">
+	<ListHeaderItem text="" name="10" sort="false" sortwidth="9" sortheight="8" width="120" inset="2,2,2,2" >
+		<VerticalLayout>
+			<HorizontalLayout bkcolor="#ffffff00">
+				<Label text="parent" estimate="true" align="center" />
+			</HorizontalLayout>
 
+			<HorizontalLayout bkcolor="#ffff00ff">
+				<ListHeaderItem text="child1" name="18" sort="true" sortwidth="9" sortheight="8" />
+				<ListHeaderItem text="child2" name="19" sort="true" sortwidth="9" sortheight="8" />
+				<ListHeaderItem text="child3" name="110" sort="true" sortwidth="9" sortheight="8" sepwidth="0" />
+			</HorizontalLayout>
+		</VerticalLayout>
+	</ListHeaderItem>
+</ListHeader>
+*/
 class DUILIB_API CListHeaderUI : public CHorizontalLayoutUI
 {
 public:
@@ -328,7 +346,7 @@ public:
     SIZE EstimateSize(SIZE szAvailable);
 
 private:
-	int	  m_nsrot_index;//排序下标
+	CListHeaderItemUI	  *m_pSortHeaderItem;//排序Item
 };
 
 
@@ -382,6 +400,7 @@ public:
 	//////////////////////////////////////////////////////////////
 
     void DoEvent(TEventUI& event);
+	void SetPos(RECT rc, bool bNeedInvalidate);
     SIZE EstimateSize(SIZE szAvailable);
     void SetAttribute(LPCTSTR pstrName, LPCTSTR pstrValue);
     RECT GetThumbRect() const;

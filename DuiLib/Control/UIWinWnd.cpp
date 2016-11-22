@@ -12,7 +12,7 @@ namespace DuiLib
 	{
 		if(m_hWnd && m_bDieWithControl && IsWindow(m_hWnd))
 		{
-			::SendMessage(m_hWnd,WM_CLOSE,0,0);
+			::PostMessage(m_hWnd,WM_CLOSE,0,0);
 		}
 		else
 		{

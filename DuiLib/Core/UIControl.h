@@ -33,7 +33,6 @@ public:
     virtual CControlUI* GetParent() const;
     virtual CControlUI* GetCover() const;
     virtual void SetCover(CControlUI *pControl);
-	bool IsIncludeClassControl(LPCTSTR szControlClass);
     // 文本相关
     virtual CDuiString GetText() const;
     virtual void SetText(LPCTSTR pstrText);
@@ -172,6 +171,10 @@ public:
 	void SetVirtualWnd(LPCTSTR pstrValue);
 	CDuiString GetVirtualWnd() const;
 
+	//辅助接口
+	// 获取控件pControl内属于szControlClass的控件集合
+	int GetInsideControl(CDuiPtrArray &ptrAry,CControlUI *pControl,LPCTSTR szControlClass);
+	bool IsIncludeClassControl(LPCTSTR szControlClass);
 public:
     CEventSource OnInit;
     CEventSource OnDestroy;

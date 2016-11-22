@@ -913,6 +913,21 @@ CDuiString CControlUI::GetVirtualWnd() const
 	return str;
 }
 
+int CControlUI::GetInsideControl(CDuiPtrArray &ptrAry, CControlUI *pControl, LPCTSTR szControlClass)
+{
+	if (pControl == NULL) return 0;
+	if (pControl->GetInterface(szControlClass)) ptrAry.Add(pControl);
+	if (pControl->GetInterface(DUI_CTR_CONTAINER))
+	{
+		CContainerUI *pContain = static_cast<CContainerUI *>(pControl);
+		for (int i = 0; i < pContain->GetCount();++i)
+		{
+			GetInsideControl(ptrAry, pContain->GetItemAt(i), szControlClass);
+		}
+	}
+	return ptrAry.GetSize();
+}
+
 CDuiString CControlUI::GetAttribute(LPCTSTR pstrName)
 {
     return _T("");
