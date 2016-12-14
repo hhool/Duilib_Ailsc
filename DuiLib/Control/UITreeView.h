@@ -15,6 +15,7 @@ namespace DuiLib
 
 	class DUILIB_API CTreeNodeUI : public CListContainerElementUI
 	{
+		friend class CTreeViewUI;
 	public:
 		CTreeNodeUI(CTreeNodeUI* _ParentNode = NULL);
 		~CTreeNodeUI(void);
@@ -25,12 +26,11 @@ namespace DuiLib
 		void	DoEvent(TEventUI& event);
 		void	Invalidate();
 		bool	Select(bool bSelect = true, bool bTriggerEvent=true);
-
+		void	SetVisible(bool bVisible = true);
+		void	SetUserVisible(bool _IsVisible);
+		bool	GetUserVisible();
 		bool	Add(CControlUI* _pTreeNodeUI);
 		bool	AddAt(CControlUI* pControl, int iIndex);
-
-		void	SetVisibleTag(bool _IsVisible);
-		bool	GetVisibleTag();
 		void	SetItemFont(int index, bool always);
 		void	SetItemText(LPCTSTR pstrValue);
 		CDuiString	GetItemText();
@@ -68,6 +68,8 @@ namespace DuiLib
 		int			 GetNodeIndex();
 
 	private:
+		void	SetVisibleTag(bool _IsVisible);
+		bool	GetVisibleTag();
 		CTreeNodeUI* GetLastNode();
 		CTreeNodeUI* CalLocation(CTreeNodeUI* _pTreeNodeUI);
 	public:
@@ -79,7 +81,8 @@ namespace DuiLib
 
 	private:
 		long	m_iTreeLavel;
-		bool	m_bIsVisable;
+		bool	m_bUserVisible;
+		bool	m_bVisableTag;
 		bool	m_bIsCheckBox;
 		DWORD	m_dwItemTextColor;
 		DWORD	m_dwItemHotTextColor;

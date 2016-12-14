@@ -1137,7 +1137,9 @@
 		<Attribute name="font" default="-1" type="INT" comment="字体id,如(0),优先级高于itemfont"/>
 		<Attribute name="mouse" default="true" type="BOOL" comment="本控件是否可以响应鼠标操作,如(true)"/>
 		<Attribute name="mousechild" default="true" type="BOOL" comment="本控件的子控件是否可以响应用户操作,如(true)"/>
+		<!--visible 和 uservisible 共同决定是否可见，因为visible内部会重置，外部控制uservisible-->
 		<Attribute name="visible" default="true" type="BOOL" comment="是否可见,如(true)"/>
+		<Attribute name="uservisible" default="true" type="BOOL" comment="是否可见,如(true)"/>
 		<Attribute name="float" default="false" type="BOOL" comment="是否使用绝对定位,如(true)"/>
 		<Attribute name="shortcut" default="" type="CHAR" comment="对应的快捷键,如(P)"/>
 		<Attribute name="menu" default="false" type="BOOL" comment="是否需要右键菜单,如(true)"/>

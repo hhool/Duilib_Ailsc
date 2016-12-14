@@ -16,9 +16,9 @@ namespace DuiLib
 		m_dwItemHotTextColor	= 0;
 		m_dwSelItemTextColor	= 0;
 		m_dwSelItemHotTextColor	= 0;
-
+		m_bUserVisible = true;
 		pTreeView		= NULL;
-		m_bIsVisable	= true;
+		m_bVisableTag = true;
 		m_bIsCheckBox	= false;
 		pParentTreeNode	= NULL;
 
@@ -191,6 +191,24 @@ namespace DuiLib
 		}
 	}
 	
+	/*
+	用户状态下设置是否可见
+	*/
+	void CTreeNodeUI::SetUserVisible(bool _IsVisible)
+	{
+		m_bUserVisible = _IsVisible;
+		SetVisible(m_bVisible);
+	}
+
+	bool CTreeNodeUI::GetUserVisible()
+	{
+		return m_bUserVisible;
+	}
+
+	void CTreeNodeUI::SetVisible(bool bVisible)
+	{
+		__super::SetVisible(bVisible && m_bUserVisible);
+	}
 	//************************************
 	// 函数名称: Select
 	// 返回类型: bool
@@ -263,7 +281,7 @@ namespace DuiLib
 	//************************************
 	void CTreeNodeUI::SetVisibleTag( bool _IsVisible )
 	{
-		m_bIsVisable = _IsVisible;
+		m_bVisableTag = _IsVisible;
 	}
 
 	//************************************
@@ -273,7 +291,7 @@ namespace DuiLib
 	//************************************
 	bool CTreeNodeUI::GetVisibleTag()
 	{
-		return m_bIsVisable;
+		return m_bVisableTag;
 	}
 
 	//************************************
@@ -499,6 +517,10 @@ namespace DuiLib
 		else if (_tcscmp(pstrName, _T("font")) == 0)
 		{
 			SetItemFont(_ttoi(pstrValue),true);
+		}
+		else if (_tcscmp(pstrName, _T("uservisible")) == 0)
+		{
+			SetUserVisible(_tcscmp(pstrValue,_T("true")) == 0);
 		}
 		else CListContainerElementUI::SetAttribute(pstrName,pstrValue);
 	}
