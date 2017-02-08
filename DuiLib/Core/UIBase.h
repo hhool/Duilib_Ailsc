@@ -87,6 +87,7 @@ public:
 protected:
     virtual LPCTSTR GetWindowClassName() const = 0;
     virtual LPCTSTR GetSuperClassName() const;
+	virtual HICON GetWindowIcon() const;
     virtual UINT GetClassStyle() const;
 
     virtual LRESULT HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam);

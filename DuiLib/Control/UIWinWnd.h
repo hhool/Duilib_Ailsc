@@ -11,7 +11,7 @@ namespace DuiLib
 
 		virtual LPCTSTR GetClass() const;
 		virtual LPVOID GetInterface(LPCTSTR pstrName);
-
+		virtual void Move(SIZE szOffset, bool bNeedInvalidate = true);
 		virtual void SetInternVisible(bool bVisible = true);
 		virtual void SetPos(RECT rc, bool bNeedInvalidate = true);
 		BOOL Attach(HWND hWndNew);

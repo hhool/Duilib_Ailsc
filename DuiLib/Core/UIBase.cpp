@@ -229,6 +229,10 @@ LPCTSTR CWindowWnd::GetSuperClassName() const
     return NULL;
 }
 
+HICON CWindowWnd::GetWindowIcon() const
+{
+	return NULL;
+}
 CWindowWnd::operator HWND() const
 {
     return m_hWnd;
@@ -371,7 +375,7 @@ bool CWindowWnd::RegisterWindowClass()
     wc.style = GetClassStyle();
     wc.cbClsExtra = 0;
     wc.cbWndExtra = 0;
-    wc.hIcon = NULL;
+	wc.hIcon = GetWindowIcon();
     wc.lpfnWndProc = CWindowWnd::__WndProc;
     wc.hInstance = CPaintManagerUI::GetInstance();
     wc.hCursor = ::LoadCursor(NULL, IDC_ARROW);

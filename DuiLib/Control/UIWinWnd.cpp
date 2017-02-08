@@ -38,6 +38,13 @@ namespace DuiLib
 		::ShowWindow(m_hWnd, bVisible);
 	}
 
+	void CWinWndUI::Move(SIZE szOffset, bool bNeedInvalidate)
+	{
+		__super::Move(szOffset, bNeedInvalidate);
+		RECT rc = GetPos();
+		::SetWindowPos(m_hWnd, NULL, rc.left, rc.top, rc.right - rc.left, rc.bottom - rc.top, SWP_NOZORDER | SWP_NOACTIVATE);
+	}
+
 	void CWinWndUI::SetPos(RECT rc, bool bNeedInvalidate)
 	{
 		__super::SetPos(rc);

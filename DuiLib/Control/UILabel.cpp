@@ -169,6 +169,11 @@ namespace DuiLib
 
 	void CLabelUI::SetTextPadding(RECT rc)
 	{
+		//#liulei 如果没有改变则不需要赋值
+		if (m_rcTextPadding.left == rc.left &&
+			m_rcTextPadding.top == rc.top &&
+			m_rcTextPadding.right == rc.right &&
+			m_rcTextPadding.bottom == rc.bottom) return;
 		m_rcTextPadding = rc;
         m_bNeedEstimateSize = true;
 		Invalidate();
