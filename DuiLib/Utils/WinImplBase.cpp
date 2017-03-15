@@ -527,6 +527,7 @@ BOOL WindowImplBase::IsInStaticControl(CControlUI *pControl)
 		map<CDuiString, int>::value_type(DUI_CTR_HBOX, 2),
 		map<CDuiString, int>::value_type(DUI_CTR_VBOX, 2),
 		map<CDuiString, int>::value_type(DUI_CTR_COMBO, 2),
+		map<CDuiString, int>::value_type(DUI_CTR_POPUP, 2),
 		//map<CDuiString, int>::value_type(DUI_CTR_LABEL, 2),
 		map<CDuiString, int>::value_type(DUI_CTR_FLASH, 2),
 		map<CDuiString, int>::value_type(DUI_CTR_BUTTON, 2),

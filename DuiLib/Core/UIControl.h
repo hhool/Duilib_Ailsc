@@ -128,8 +128,8 @@ public:
     virtual void SetFocus();
     virtual bool IsFloat() const;
     virtual void SetFloat(bool bFloat = true);
-	virtual bool IsKillCombo();//如果控件属于Combo，那么点击之后Combo是否消失
-	virtual void SetKillCombo(bool bkillcombo = true);
+	virtual bool IsKillPopup();//如果控件属于Combo，那么点击之后Combo是否消失
+	virtual void SetKillPupup(bool bkillcombo = true);
 	// 自定义(未处理的)属性
 	void AddCustomAttribute(LPCTSTR pstrName, LPCTSTR pstrAttr);
 	LPCTSTR GetCustomAttribute(LPCTSTR pstrName) const;

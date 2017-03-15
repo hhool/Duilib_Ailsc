@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Window size="177,166"> <!-- 窗口的初始尺寸 -->
+<Default name="Button" value="normalimage=&quot;file='skin/popup/DateUI/date_nor.png' &quot; hotimage=&quot;file='skin/popup/DateUI/date_hot.png' &quot; pushedimage=&quot;file='skin/popup/DateUI/date_hot.png' &quot; disabledimage=&quot;file='skin/popup/DateUI/date_disable.png' &quot; " />
+<Font id="0" name="幼圆" size="12" default="true" />
+<Font id="1" name="微软雅黑" bold="true" size="12" />
+	<VerticalLayout  bkcolor="0xfffefefe" killpopup="false" >
+		<HorizontalLayout bkcolor="0xffc0e1fd" height="3" killpopup="false" />
+		<!--年月+操作-->
+		<HorizontalLayout bkcolor="0xffc0e1fd" height="20" killpopup="false">
+			<Button name="year_1" padding="4,0,0,0" width="21" height="21" normalimage="file='skin/popup/DateUI/year_1.png' source='0,0,21,21'" hotimage="file='skin/popup/DateUI/year_1.png' source='21,0,42,21'" pushedimage="file='skin/popup/DateUI/year_1.png' source='21,0,42,21' " disabledimage="file='skin/popup/DateUI/year_1.png' source='21,0,42,21' " killpopup="false" />
+
+			<Button name="mouth_1" padding="4,0,0,0" width="21" height="21" normalimage="file='skin/popup/DateUI/mounth_1.png' source='0,0,21,21'" hotimage="file='skin/popup/DateUI/mounth_1.png' source='21,0,42,21'" pushedimage="file='skin/popup/DateUI/mounth_1.png' source='21,0,42,21' " disabledimage="file='skin/popup/DateUI/mounth_1.png' source='21,0,42,21' " killpopup="false" />
+			
+			<Label name="date" text="三月 2017" align="center" valign="vcenter" estimate="true" textcolor="0xff000000" killpopup="false" font="1" />
+
+			<Button name="mouth_2" padding="4,0,0,0" width="21" height="21" normalimage="file='skin/popup/DateUI/mounth_2.png' source='0,0,21,21'" hotimage="file='skin/popup/DateUI/mounth_2.png' source='21,0,42,21'" pushedimage="file='skin/popup/DateUI/mounth_2.png' source='21,0,42,21' " disabledimage="file='skin/popup/DateUI/mounth_2.png' source='21,0,42,21' " killpopup="false" />
+
+			<Button name="year_2" padding="4,0,0,0" width="21" height="21" normalimage="file='skin/popup/DateUI/year_2.png' source='0,0,21,21'" hotimage="file='skin/popup/DateUI/year_2.png' source='21,0,42,21'" pushedimage="file='skin/popup/DateUI/year_2.png' source='21,0,42,21' " disabledimage="file='skin/popup/DateUI/year_2.png' source='21,0,42,21' " killpopup="false" />
+
+		</HorizontalLayout>
+		<!--星期-->
+		<HorizontalLayout bkcolor="0xffc0e1fd" height="20" padding="1,0,1,2" killpopup="false">
+			<Label name="week0" text="日" align="center" estimate="true" textcolor="0xffea5c95" killpopup="false"/>
+			<Label name="week1" text="一" align="center" estimate="true" killpopup="false"/>
+			<Label name="week2" text="二" align="center" estimate="true" killpopup="false"/>
+			<Label name="week3" text="三" align="center" estimate="true" killpopup="false"/>
+			<Label name="week4" text="四" align="center" estimate="true" killpopup="false"/>
+			<Label name="week5" text="五" align="center" estimate="true" killpopup="false"/>
+			<Label name="week6" text="六" align="center" estimate="true" textcolor="0xffea5c95" killpopup="false"/>
+		</HorizontalLayout>
+		
+		<!--日第一行-->
+		<HorizontalLayout height="24" killpopup="false">
+			<Button name="day0" disabledtextcolor="0xff000000" text="" estimate="true" padding="1,1,1,1" textcolor="0xffea5c95" killpopup="false"/>
+			<Button name="day1" disabledtextcolor="0xff000000" text="" estimate="true" padding="1,1,1,1" killpopup="false"/>
+			<Button name="day2" disabledtextcolor="0xff000000" text="" estimate="true" padding="1,1,1,1" killpopup="false"/>
+			<Button name="day3" disabledtextcolor="0xff000000" text="" estimate="true" padding="1,1,1,1" killpopup="false"/>
+			<Button name="day4" disabledtextcolor="0xff000000" text="" estimate="true" padding="1,1,1,1" killpopup="false"/>
+			<Button name="day5" disabledtextcolor="0xff000000" text="" estimate="true" padding="1,1,1,1" killpopup="false"/>
+			<Button name="day6" disabledtextcolor="0xff000000"  text="" estimate="true" padding="1,1,1,1" textcolor="0xffea5c95" killpopup="false"/>
+		</HorizontalLayout>
+
+		<!--日第二行-->
+		<HorizontalLayout height="24" killpopup="false">
+			<Button name="day7" disabledtextcolor="0xff000000" text="" estimate="true" padding="1,1,1,1" textcolor="0xffea5c95" killpopup="false"/>
+			<Button name="day8" disabledtextcolor="0xff000000" text="" estimate="true" padding="1,1,1,1" killpopup="false"/>
+			<Button name="day9" disabledtextcolor="0xff000000" text="" estimate="true" padding="1,1,1,1" killpopup="false"/>
+			<Button name="day10" disabledtextcolor="0xff000000" text="" estimate="true" padding="1,1,1,1" killpopup="false"/>
+			<Button name="day11" disabledtextcolor="0xff000000" text="" estimate="true" padding="1,1,1,1" killpopup="false"/>
+			<Button name="day12" disabledtextcolor="0xff000000" text="" estimate="true" padding="1,1,1,1" killpopup="false"/>
+			<Button name="day13" disabledtextcolor="0xff000000" text="" estimate="true" padding="1,1,1,1" textcolor="0xffea5c95" killpopup="false"/>
+		</HorizontalLayout>
+		
+		<!--日第三行-->
+		<HorizontalLayout height="24" killpopup="false">
+			<Button name="day14" disabledtextcolor="0xff000000" text="" estimate="true" padding="1,1,1,1" textcolor="0xffea5c95" killpopup="false"/>
+			<Button name="day15" disabledtextcolor="0xff000000" text="" estimate="true" padding="1,1,1,1" killpopup="false"/>
+			<Button name="day16" disabledtextcolor="0xff000000" text="" estimate="true" padding="1,1,1,1" killpopup="false"/>
+			<Button name="day17" disabledtextcolor="0xff000000" text="" estimate="true" padding="1,1,1,1" killpopup="false"/>
+			<Button name="day18" disabledtextcolor="0xff000000" text="" estimate="true" padding="1,1,1,1" killpopup="false"/>
+			<Button name="day19" disabledtextcolor="0xff000000" text="" estimate="true" padding="1,1,1,1" killpopup="false"/>
+			<Button name="day20" disabledtextcolor="0xff000000" text="" estimate="true" padding="1,1,1,1" textcolor="0xffea5c95" killpopup="false"/>
+		</HorizontalLayout>
+
+		<!--日第四行-->
+		<HorizontalLayout height="24" killpopup="false">
+			<Button name="day21" disabledtextcolor="0xff000000" text="" estimate="true" padding="1,1,1,1" textcolor="0xffea5c95" killpopup="false"/>
+			<Button name="day22" disabledtextcolor="0xff000000" text="" estimate="true" padding="1,1,1,1" killpopup="false"/>
+			<Button name="day23" disabledtextcolor="0xff000000" text="" estimate="true" padding="1,1,1,1" killpopup="false"/>
+			<Button name="day24" disabledtextcolor="0xff000000" text="" estimate="true" padding="1,1,1,1" killpopup="false"/>
+			<Button name="day25" disabledtextcolor="0xff000000" text="" estimate="true" padding="1,1,1,1" killpopup="false"/>
+			<Button name="day26" disabledtextcolor="0xff000000" text="" estimate="true" padding="1,1,1,1" killpopup="false"/>
+			<Button name="day27" disabledtextcolor="0xff000000" text="" estimate="true" padding="1,1,1,1" textcolor="0xffea5c95" killpopup="false"/>
+		</HorizontalLayout>
+
+		<!--日第五行-->
+		<HorizontalLayout height="24" killpopup="false">
+			<Button name="day28" disabledtextcolor="0xff000000" text="" estimate="true" padding="1,1,1,1" textcolor="0xffea5c95" killpopup="false"/>
+			<Button name="day29" disabledtextcolor="0xff000000" text="" estimate="true" padding="1,1,1,1" killpopup="false"/>
+			<Button name="day30" disabledtextcolor="0xff000000" text="" estimate="true" padding="1,1,1,1" killpopup="false"/>
+			<Button name="day31" disabledtextcolor="0xff000000" text="" estimate="true" padding="1,1,1,1" killpopup="false"/>
+			<Button name="day32" disabledtextcolor="0xff000000" text="" estimate="true" padding="1,1,1,1" killpopup="false"/>
+			<Button name="day33" disabledtextcolor="0xff000000" text="" estimate="true" padding="1,1,1,1" killpopup="false"/>
+			<Button name="day34" disabledtextcolor="0xff000000" text="" estimate="true" padding="1,1,1,1" textcolor="0xffea5c95" killpopup="false"/>
+		</HorizontalLayout>
+
+		<!--日第六行-->
+		<HorizontalLayout height="24" killpopup="false">
+			<Button name="day35" disabledtextcolor="0xff000000" text="" estimate="true" padding="1,1,1,1" textcolor="0xffea5c95" killpopup="false"/>
+			<Button name="day36" disabledtextcolor="0xff000000" text="" estimate="true" padding="1,1,1,1" killpopup="false"/>
+			<Button name="day37" disabledtextcolor="0xff000000" text="" estimate="true" padding="1,1,1,1" killpopup="false"/>
+			<Button name="day38" disabledtextcolor="0xff000000" text="" estimate="true" padding="1,1,1,1" killpopup="false"/>
+			<Button name="day39" disabledtextcolor="0xff000000" text="" estimate="true" padding="1,1,1,1" killpopup="false"/>
+			<Button name="day40" disabledtextcolor="0xff000000" text="" estimate="true" padding="1,1,1,1" killpopup="false"/>
+			<Button name="day41" disabledtextcolor="0xff000000" text="" estimate="true" padding="1,1,1,1" textcolor="0xffea5c95" killpopup="false"/>
+		</HorizontalLayout>
+
+	</VerticalLayout>
+</Window>

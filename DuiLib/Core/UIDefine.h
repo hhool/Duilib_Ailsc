@@ -62,6 +62,7 @@ union DuiMessageMapFunctions
 #define DUI_MSGTYPE_DRAWITEM				(_T("drawitem"))
 #define DUI_MSGTYPE_COPYITEM 			    (_T("copyitem"))
 
+#define DUI_MSGTYPE_DROPCLOSE               (_T("dropclose"))
 #define DUI_MSGTYPE_KILLFOCUS              (_T("killfocus"))
 #define DUI_MSGTYPE_ITEMCLICK 		   	   (_T("itemclick"))
 #define DUI_MSGTYPE_TABSELECT              (_T("tabselect"))
@@ -246,6 +247,8 @@ protected:                                                                \
 #define  DUI_CTR_COMBO                           (_T("Combo"))
 #define  DUI_CTR_LABEL                           (_T("Label"))
 #define  DUI_CTR_FLASH							 (_T("Flash"))
+#define  DUI_CTR_POPUP							 (_T("Popup"))
+
 
 #define  DUI_CTR_BUTTON                          (_T("Button"))
 #define  DUI_CTR_OPTION                          (_T("Option"))

@@ -710,12 +710,12 @@ void CControlUI::SetFloat(bool bFloat)
     NeedParentUpdate();
 }
 
-bool CControlUI::IsKillCombo()
+bool CControlUI::IsKillPopup()
 {
 	return m_bKillCombo;
 }
 
-void CControlUI::SetKillCombo(bool bkillcombo)
+void CControlUI::SetKillPupup(bool bkillcombo)
 {
 	m_bKillCombo = bkillcombo;
 }
@@ -1033,7 +1033,7 @@ void CControlUI::SetAttribute(LPCTSTR pstrName, LPCTSTR pstrValue)
     else if( _tcscmp(pstrName, _T("mouse")) == 0 ) SetMouseEnabled(_tcscmp(pstrValue, _T("true")) == 0);
 	else if( _tcscmp(pstrName, _T("keyboard")) == 0 ) SetKeyboardEnabled(_tcscmp(pstrValue, _T("true")) == 0);
     else if( _tcscmp(pstrName, _T("visible")) == 0 ) SetVisible(_tcscmp(pstrValue, _T("true")) == 0);
-	else if (_tcscmp(pstrName, _T("killcombo")) == 0) SetKillCombo(_tcscmp(pstrValue, _T("true")) == 0);
+	else if (_tcscmp(pstrName, _T("killpopup")) == 0) SetKillPupup(_tcscmp(pstrValue, _T("true")) == 0);
     else if( _tcscmp(pstrName, _T("float")) == 0 ) {
 		CDuiString nValue = pstrValue;
 		if(nValue.Find(',') < 0) {

@@ -5,6 +5,7 @@
 
 namespace DuiLib
 {
+	class CPopupUI;
 	class DUILIB_API CChildLayoutUI : public CContainerUI
 	{
 	public:
@@ -17,6 +18,8 @@ namespace DuiLib
 		virtual LPVOID GetInterface(LPCTSTR pstrName);
 		virtual LPCTSTR GetClass() const;
 
+		///;just for PopupUI使用
+		virtual void initUIData(CPopupUI *m_pOowner);//使用PopupUI的字符串初始化CChildLayoutUI
 	private:
 		CDuiString m_pstrXMLFile;
 	};

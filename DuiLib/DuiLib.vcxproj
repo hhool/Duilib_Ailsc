@@ -281,6 +281,7 @@
   <ItemGroup>
     <ClCompile Include="Control\UIGifAnim.cpp" />
     <ClCompile Include="Control\UIIPAddress.cpp" />
+    <ClCompile Include="Control\UIPopup.cpp" />
     <ClCompile Include="Layout\UICompositeLayout.cpp" />
     <ClCompile Include="Layout\UISliderTabLayout.cpp" />
     <ClCompile Include="StdAfx.cpp">
@@ -351,6 +352,7 @@
   <ItemGroup>
     <ClInclude Include="Control\UIGifAnim.h" />
     <ClInclude Include="Control\UIIPAddress.h" />
+    <ClInclude Include="Control\UIPopup.h" />
     <ClInclude Include="Layout\UICompositeLayout.h" />
     <ClInclude Include="Layout\UISliderTabLayout.h" />
     <ClInclude Include="StdAfx.h" />

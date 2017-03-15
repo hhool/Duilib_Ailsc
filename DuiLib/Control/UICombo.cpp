@@ -138,7 +138,7 @@ public:
     CComboUI* m_pOwner;
     CVerticalLayoutUI* m_pLayout;
     int m_iOldSel;
-    bool m_bScrollbarClicked;
+	bool m_bNotKillWnd;
 };
 
 
@@ -147,7 +147,7 @@ void CComboWnd::Init(CComboUI* pOwner)
     m_pOwner = pOwner;
     m_pLayout = NULL;
     m_iOldSel = m_pOwner->GetCurSel();
-    m_bScrollbarClicked = false;
+	m_bNotKillWnd = false;
 
     // Position the popup window in absolute space
     SIZE szDrop = m_pOwner->GetDropBoxSize();
@@ -274,20 +274,21 @@ LRESULT CComboWnd::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
         ::GetCursorPos(&pt);
         ::ScreenToClient(m_pm.GetPaintWindow(), &pt);
         CControlUI* pControl = m_pm.FindControl(pt);
-        if( pControl && _tcscmp(pControl->GetClass(), DUI_CTR_SCROLLBAR) == 0 ) {
-            m_bScrollbarClicked = true;
+        if( pControl && _tcscmp(pControl->GetClass(), DUI_CTR_SCROLLBAR) == 0 ||
+			pControl && !pControl->IsKillPopup()) {
+			m_bNotKillWnd = true;
         }
     }
     else if( uMsg == WM_LBUTTONUP ) {
-        if (m_bScrollbarClicked) {
-            m_bScrollbarClicked = false;
+		if (m_bNotKillWnd) {
+			m_bNotKillWnd = false;
         }
         else {
             POINT pt = { 0 };
             ::GetCursorPos(&pt);
             ::ScreenToClient(m_pm.GetPaintWindow(), &pt);
             CControlUI* pControl = m_pm.FindControl(pt);
-            if( pControl && pControl->IsKillCombo() &&_tcscmp(pControl->GetClass(), DUI_CTR_SCROLLBAR) != 0 ) PostMessage(WM_KILLFOCUS);
+			if (pControl && _tcscmp(pControl->GetClass(), DUI_CTR_SCROLLBAR) != 0) PostMessage(WM_KILLFOCUS);
         }
     }
     else if( uMsg == WM_KEYDOWN ) {
@@ -392,7 +393,10 @@ CComboUI::CComboUI() : m_pWindow(NULL), m_iCurSel(-1), m_uButtonState(0), m_uTex
 	m_iFont = -1;
     m_szDropBox = CDuiSize(0, 150);
    // ::ZeroMemory(&m_rcTextPadding, sizeof(m_rcTextPadding));
-	m_rcTextPadding = {1,1,20,1};
+	m_rcTextPadding.left = 1;
+	m_rcTextPadding.top = 1;
+	m_rcTextPadding.right = 20;
+	m_rcTextPadding.bottom = 1;
 
     m_ListInfo.nColumns = 0;
     m_ListInfo.uFixedHeight = 0;

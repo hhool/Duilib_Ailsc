@@ -181,7 +181,7 @@ const TCHAR* const kDescriptionControlName = _T("description");
 const TCHAR* const kOperatorPannelControlName = _T("operation");
 
 static bool OnLogoButtonEvent(void* event) {
-    if( ((TEventUI*)event)->Type == UIEVENT_BUTTONDOWN ) {
+    if( ((TEventUI*)event)->Type == UIEVENT_LBUTTONDOWN ) {
         CControlUI* pButton = ((TEventUI*)event)->pSender;
         if( pButton != NULL ) {
             CListContainerElementUI* pListElement = (CListContainerElementUI*)(pButton->GetTag());

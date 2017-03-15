@@ -1,0 +1,41 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Window size="800,600" caption ="0,0,0,28" roundcorner="2,2">
+  <Font id="0" name="微软雅黑" size="12" bold="false" default="true" />
+  <Font id="1" name="微软雅黑" size="12" bold="true"/>
+  <Font id="2" name="微软雅黑" size="12"/>
+  <Include source="skin/Default/Button.xml" />
+  <Include source="skin/Default/Combo.xml" />
+  <Include source="skin/Default/scrollbar.xml" />
+  <Include source="skin/Default/CheckBox.xml" />
+  <Include source="skin/Default/Edit.xml" />
+     <VerticalLayout bkcolor="#FFefefef"> <!-- 整个窗口的背景 -->
+		<!--标题栏-->
+		<HorizontalLayout  height="30" bkimage="file='skin\res\header.png'">
+			<!--标题了logo-->
+			<VerticalLayout width="230" >
+			<Label text="   PopupUI使用--实现DateTime控件" textcolor="#ffffffff"/>
+			</VerticalLayout>
+			<VerticalLayout />
+			<!--系统Menu-->
+			<VerticalLayout>
+				<HorizontalLayout height="28">
+					<VerticalLayout />
+					<VerticalLayout width="97">
+						 <Button name="minbtn"   tooltip="最小化" float="true" pos="0,5,28,24"  width="28" normalimage=" file='skin\res\btn_mini_normal.png' " hotimage=" file='skin\res\btn_mini_highlight.png' " pushedimage=" file='skin\res\btn_mini_down.png' "/>
+						 <Button name="maxbtn"   tooltip="最大化" float="true" pos="29,5,22,25"  width="28" normalimage=" file='skin\res\btn_max_normal.png' " hotimage=" file='skin\res\btn_max_highlight.png' " pushedimage=" file='skin\res\btn_max_down.png' "/>
+						 <Button name="restorebtn"   tooltip="还原" float="true" pos="29,5,22,25"  width="28" normalimage=" file='skin\res\btn_restore_normal.png' " hotimage=" file='skin\res\btn_restore_highlight.png' " pushedimage=" file='skin\res\btn_restore_down.png' " visible="false" />
+						 <Button name="closebtn"   tooltip="关闭" float="true" pos="57,5,22,24"  width="39" normalimage=" file='skin\res\btn_close_normal.png' " hotimage=" file='skin\res\btn_close_highlight.png' " pushedimage=" file='skin\res\btn_close_down.png' "/>
+					</VerticalLayout>
+				</HorizontalLayout>
+
+				<HorizontalLayout>
+				</HorizontalLayout>
+			</VerticalLayout>
+		</HorizontalLayout>
+
+		<!--客户区-->
+		<VerticalLayout name="client" bordersize="4" bordercolor="#ff2656a3" >
+			<Popup name="DateTime" float="true" pos="20,10,0,0" width="100" height="22" bkcolor="#FFff00ff" padding="0,5,0,0"  popboxsize="177,192"  popxml="skin/popup/DateUI/DateTime.xml" direct="bottom" />
+		</VerticalLayout>
+    </VerticalLayout>
+</Window>  

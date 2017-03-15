@@ -87,7 +87,7 @@
 #include "Layout/UITabLayout.h"
 #include "Layout/UIChildLayout.h"
 #include "Layout/UISliderTabLayout.h"
-
+#include "Layout/UICompositeLayout.h"
 #include "Control/UIList.h"
 #include "Control/UICombo.h"
 #include "Control/UIScrollBar.h"
@@ -114,3 +114,4 @@
 #include "Control/UIMenu.h"
 #include "Control/UIGifAnim.h"
 #include "Control/UIIPAddress.h"
+#include "Control/UIPopup.h"

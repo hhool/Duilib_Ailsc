@@ -63,7 +63,7 @@
 		<Attribute name="float" default="false" type="BOOL" comment="是否使用绝对定位,如(true)"/>
 		<Attribute name="shortcut" default="" type="CHAR" comment="对应的快捷键,如(P)"/>
 		<Attribute name="menu" default="false" type="BOOL" comment="是否需要右键菜单,如(true)"/>
-		<Attribute name="killcombo" default="true" type="BOOL" comment="如果Control是ComboItem的时候，那么点击之后是否关闭Combo下拉窗口,如(true)"/>
+		<Attribute name="killpopup" default="true" type="BOOL" comment="如果是弹出式窗口，点击是否应该关闭弹出式窗口，eg:combo"/>
 		<Attribute name="keyboard" default="true" type="BOOL" comment="非CButtonUI类忽略该值，为false时不支持TAB_STOP,且该对象不处理键盘信息"/>
 	</Control>
 	<Container parent="Control" notifies="setfocus killfocus timer menu windowinit(root)">
@@ -360,6 +360,11 @@
 		<Attribute name="edit" default="false" type="BOOL" comment="Combo 是否可以进行编辑"/>
 		<Attribute name="editattr" default="" type="STRING" comment="Combo Edit的属性设置"/>
 	</Combo>
+	<Popup parent="Container" >
+		<Attribute name="popboxsize" default="200,100" type="SIZE" comment="弹出式窗口的大小"/>
+		<Attribute name="popxml" default="" type="STRING" comment="弹出式窗口对应的xml"/>
+		<Attribute name="direct" default="" type="STRING" comment="弹出式窗口的首要位置,top,bottom"/>
+	</Popup>
 	<Label parent="Control" notifies="setfocus killfocus timer menu windowinit(root)">
 		<Attribute name="name" default="" type="STRING" comment="控件名字，同一窗口内必须唯一，如(testbtn)"/>
 		<Attribute name="pos" default="0,0,0,0" type="RECT" comment="位置，如果为float控件则指定位置和大小，否则只指定大小,如(0,0,100,100)"/>

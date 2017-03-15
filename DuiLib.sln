@@ -15,6 +15,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "VirtualListDemo", "VirtualL
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "MenuDemo", "MenuDemo\MenuDemo.vcxproj", "{361D9252-BC97-4DF6-8797-86BC2CCE2094}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "PopupUIDemo", "PopupUIDemo\PopupUIDemo.vcxproj", "{9597B5B0-D916-4E8F-8242-4E591F3CFA2A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -79,6 +81,14 @@ Global
 		{361D9252-BC97-4DF6-8797-86BC2CCE2094}.UnicodeDebug|Win32.Build.0 = UnicodeDebug|Win32
 		{361D9252-BC97-4DF6-8797-86BC2CCE2094}.UnicodeRelease|Win32.ActiveCfg = UnicodeRelease|Win32
 		{361D9252-BC97-4DF6-8797-86BC2CCE2094}.UnicodeRelease|Win32.Build.0 = UnicodeRelease|Win32
+		{9597B5B0-D916-4E8F-8242-4E591F3CFA2A}.Debug|Win32.ActiveCfg = Debug|Win32
+		{9597B5B0-D916-4E8F-8242-4E591F3CFA2A}.Debug|Win32.Build.0 = Debug|Win32
+		{9597B5B0-D916-4E8F-8242-4E591F3CFA2A}.Release|Win32.ActiveCfg = Release|Win32
+		{9597B5B0-D916-4E8F-8242-4E591F3CFA2A}.Release|Win32.Build.0 = Release|Win32
+		{9597B5B0-D916-4E8F-8242-4E591F3CFA2A}.UnicodeDebug|Win32.ActiveCfg = UnicodeDebug|Win32
+		{9597B5B0-D916-4E8F-8242-4E591F3CFA2A}.UnicodeDebug|Win32.Build.0 = UnicodeDebug|Win32
+		{9597B5B0-D916-4E8F-8242-4E591F3CFA2A}.UnicodeRelease|Win32.ActiveCfg = UnicodeRelease|Win32
+		{9597B5B0-D916-4E8F-8242-4E591F3CFA2A}.UnicodeRelease|Win32.Build.0 = UnicodeRelease|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
