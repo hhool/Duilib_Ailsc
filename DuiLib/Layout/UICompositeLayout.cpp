@@ -50,4 +50,7 @@ void CCompositeLayoutUI::DoInit()
 	m_pManager->AddNotifier(this);
 }
 
+void CCompositeLayoutUI::Notify(TNotifyUI& msg){}
+void CCompositeLayoutUI::initUIData(CPopupUI *m_pOowner){}
+
 }

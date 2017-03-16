@@ -7,7 +7,7 @@
 实现DateUI控件思想
 
 */
-CChildLayoutUI *CreatePopupUI()
+CCompositeLayoutUI *CreatePopupUI()
 {
 	return new CDateUI;
 }

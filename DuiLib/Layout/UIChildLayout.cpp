@@ -53,6 +53,4 @@ namespace DuiLib
 	{
 		return DUI_CTR_CHILDLAYOUT;
 	}
-
-	void CChildLayoutUI::initUIData(CPopupUI *m_pOowner){}
 } // namespace DuiLib
