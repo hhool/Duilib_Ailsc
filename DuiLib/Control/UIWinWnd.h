@@ -14,6 +14,7 @@ namespace DuiLib
 		virtual void Move(SIZE szOffset, bool bNeedInvalidate = true);
 		virtual void SetInternVisible(bool bVisible = true);
 		virtual void SetPos(RECT rc, bool bNeedInvalidate = true);
+		virtual bool DoPaint(HDC hDC, const RECT& rcPaint, CControlUI* pStopControl);
 		BOOL Attach(HWND hWndNew);
 		HWND Detach();
 		void DieWithControl(BOOL bDieWithControl);

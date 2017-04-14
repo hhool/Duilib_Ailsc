@@ -212,7 +212,8 @@ namespace DuiLib
 		m_nDTUpdateFlag=DT_UPDATE;
 		UpdateText();		// add by:daviyang35 初始化界面时显示时间
 		m_nDTUpdateFlag = DT_NONE;
-		memset(&m_sysTimeRange,0,sizeof(m_sysTimeRange));
+		m_sysTimeRange[0] = { 0 };
+		m_sysTimeRange[1] = { 0 };
 		m_bUserTimeRange[0] = false;
 		m_bUserTimeRange[1] = false;
 	}

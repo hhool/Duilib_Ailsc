@@ -130,8 +130,11 @@ namespace DuiLib
 
 	void CLabelUI::SetTextColor(DWORD dwTextColor)
 	{
-		m_dwTextColor = dwTextColor;
-		Invalidate();
+		if (m_dwTextColor != dwTextColor)
+		{
+			m_dwTextColor = dwTextColor;
+			Invalidate();
+		}
 	}
 
 	DWORD CLabelUI::GetTextColor() const

@@ -51,6 +51,16 @@ namespace DuiLib
 		::SetWindowPos(m_hWnd, NULL, rc.left, rc.top, rc.right - rc.left, rc.bottom - rc.top, SWP_NOZORDER | SWP_NOACTIVATE);
 	}
 
+	bool CWinWndUI::DoPaint(HDC hDC, const RECT& rcPaint, CControlUI* pStopControl)
+	{
+		bool bRet = __super::DoPaint(hDC, rcPaint, pStopControl);
+		if (m_hWnd &&::IsWindow(m_hWnd))
+		{
+			::InvalidateRect(m_hWnd, NULL, FALSE);
+		}
+		return bRet;
+	}
+
 	BOOL CWinWndUI::Attach(HWND hWndNew)
 	{
 		if (! ::IsWindow(hWndNew))

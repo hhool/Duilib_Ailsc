@@ -393,10 +393,7 @@ CComboUI::CComboUI() : m_pWindow(NULL), m_iCurSel(-1), m_uButtonState(0), m_uTex
 	m_iFont = -1;
     m_szDropBox = CDuiSize(0, 150);
    // ::ZeroMemory(&m_rcTextPadding, sizeof(m_rcTextPadding));
-	m_rcTextPadding.left = 1;
-	m_rcTextPadding.top = 1;
-	m_rcTextPadding.right = 20;
-	m_rcTextPadding.bottom = 1;
+	m_rcTextPadding = {1,1,20,1};
 
     m_ListInfo.nColumns = 0;
     m_ListInfo.uFixedHeight = 0;
