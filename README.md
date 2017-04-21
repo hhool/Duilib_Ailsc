@@ -4,12 +4,23 @@ Duilib是一个Windows下免费开源的DirectUI界面库，由于简约易扩�
 
 欢迎为Duilib提供功能改进、代码修补、bug反馈、使用文档和献计献策，让我们一起把Duilib做的更好！当然也欢迎你对duilib项目进行捐助（可以使用支付宝或微信扫码）。
 
+# liulei Note：
+1.使用虚表的时候，可能会导致滚动条无法推动，这是因为大量刷新消息导致的，因为内部会不停的set并且invalidate，此时优化一下Duilib的Set接口，没有改变就不用刷新
+2.Duilib容器只对可见控件布局，如果控件不可见，则不调整该控件位置。此时如果容器位置改变，然后显示该控件，则会导致该控件位置不对。应尽量避免动态SetVisible，使用
+showbkimg和showstatusimg两个属性来代替SetVisible
 # Todo：
 1、完善属性设置和保存
 
 2、重写Tree
 
 3、支持dpi
+
+4、支持虚表
+
+5、支持浮动窗口
+
+6、支持功能性UI
+
 
 ### 支付宝扫码
 ![支付宝扫码](https://github.com/wangchyz/privatedata/blob/master/alipay.png)
