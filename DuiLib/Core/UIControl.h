@@ -52,6 +52,10 @@ public:
     void SetColorHSL(bool bColorHSL);
     SIZE GetBorderRound() const;
     void SetBorderRound(SIZE cxyRound);
+	// 是否显示背景图
+	void SetShowBkImg(bool bShowImg);
+	void SetShowStatusImg(bool bShowImg);
+
     bool DrawImage(HDC hDC, TDrawInfo& drawInfo);
 
 	//边框相关
@@ -230,6 +234,8 @@ protected:
     RECT m_rcPaint;
 	RECT m_rcBorderSize;
 	CDuiStringPtrMap m_mCustomAttrHash;
+	bool	m_bShowStatusImg;//是否显示Status图片
+	bool	m_bShowBkImg;//是否显示BkImg
 };
 
 } // namespace DuiLib

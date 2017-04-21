@@ -18,6 +18,8 @@ m_bKeyboardEnabled(true),
 m_bFloat(false),
 m_bSetPos(false),
 m_bKillCombo(true),
+m_bShowStatusImg(true),
+m_bShowBkImg(true),
 m_chShortcut('\0'),
 m_pTag(NULL),
 m_dwBackColor(0),
@@ -290,6 +292,25 @@ void CControlUI::SetBorderRound(SIZE cxyRound)
 {
     m_cxyBorderRound = cxyRound;
     Invalidate();
+}
+
+// 是否显示背景图
+void CControlUI::SetShowBkImg(bool bShowImg)
+{
+	if (m_bShowBkImg != bShowImg)
+	{
+		m_bShowBkImg = bShowImg;
+		Invalidate();
+	}
+}
+
+void CControlUI::SetShowStatusImg(bool bShowImg)
+{
+	if (m_bShowStatusImg != bShowImg)
+	{
+		m_bShowStatusImg = bShowImg;
+		Invalidate();
+	}
 }
 
 bool CControlUI::DrawImage(HDC hDC, TDrawInfo& drawInfo)
@@ -1034,6 +1055,8 @@ void CControlUI::SetAttribute(LPCTSTR pstrName, LPCTSTR pstrValue)
 	else if( _tcscmp(pstrName, _T("keyboard")) == 0 ) SetKeyboardEnabled(_tcscmp(pstrValue, _T("true")) == 0);
     else if( _tcscmp(pstrName, _T("visible")) == 0 ) SetVisible(_tcscmp(pstrValue, _T("true")) == 0);
 	else if (_tcscmp(pstrName, _T("killpopup")) == 0) SetKillPupup(_tcscmp(pstrValue, _T("true")) == 0);
+	else if (_tcscmp(pstrName, _T("showbkimg")) == 0) SetShowBkImg(_tcscmp(pstrValue, _T("true")) == 0);
+	else if (_tcscmp(pstrName, _T("showstatusimg")) == 0) SetShowStatusImg(_tcscmp(pstrValue, _T("true")) == 0);
     else if( _tcscmp(pstrName, _T("float")) == 0 ) {
 		CDuiString nValue = pstrValue;
 		if(nValue.Find(',') < 0) {
@@ -1117,15 +1140,19 @@ bool CControlUI::DoPaint(HDC hDC, const RECT& rcPaint, CControlUI* pStopControl)
         CRenderClip roundClip;
         CRenderClip::GenerateRoundClip(hDC, m_rcPaint,  m_rcItem, m_cxyBorderRound.cx, m_cxyBorderRound.cy, roundClip);
         PaintBkColor(hDC);
-        PaintBkImage(hDC);
-        PaintStatusImage(hDC);
+		if (m_bShowBkImg)
+			PaintBkImage(hDC);
+		if (m_bShowStatusImg)
+		    PaintStatusImage(hDC);
         PaintText(hDC);
         PaintBorder(hDC);
     }
     else {
         PaintBkColor(hDC);
-        PaintBkImage(hDC);
-        PaintStatusImage(hDC);
+		if (m_bShowBkImg)
+		    PaintBkImage(hDC);
+		if (m_bShowStatusImg)
+		   PaintStatusImage(hDC);
         PaintText(hDC);
         PaintBorder(hDC);
     }

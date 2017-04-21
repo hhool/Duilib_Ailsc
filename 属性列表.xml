@@ -66,6 +66,10 @@
 		<Attribute name="tag" default="0" type="int64" comment="控件的tag标记"/>
 		<Attribute name="killpopup" default="true" type="BOOL" comment="如果是弹出式窗口，点击是否应该关闭弹出式窗口，eg:combo"/>
 		<Attribute name="keyboard" default="true" type="BOOL" comment="非CButtonUI类忽略该值，为false时不支持TAB_STOP,且该对象不处理键盘信息"/>
+		<!--liulei 避免动态设置SetVisible ，因为当Control不可见的时候，Contain是不会对不可见容器Pos进行调整的，如果父容器位置改变之后再动态SetVisible
+		此时可能导致Control位置不对-->
+		<Attribute name="showbkimg" default="true" type="BOOL" comment="是否显示背景图片,如(true)"/>
+		<Attribute name="showstatusimg" default="true" type="BOOL" comment="是否显示状态背景图片,如(true)"/>
 	</Control>
 	<Container parent="Control" notifies="setfocus killfocus timer menu windowinit(root)">
 		<Attribute name="name" default="" type="STRING" comment="控件名字，同一窗口内必须唯一，如(testbtn)"/>
