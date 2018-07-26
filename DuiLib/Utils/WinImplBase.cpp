@@ -87,6 +87,16 @@ LRESULT WindowImplBase::OnDestroy(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lPa
 	return 0;
 }
 
+//20180608LP: zip资源只加载一次只释放一次
+void WindowImplBase::Cleanup()
+{
+	if (m_lpResourceZIPBuffer)
+	{
+		delete[] m_lpResourceZIPBuffer;
+		m_lpResourceZIPBuffer = nullptr;
+	}
+}
+
 #if defined(WIN32) && !defined(UNDER_CE)
 LRESULT WindowImplBase::OnNcActivate(UINT /*uMsg*/, WPARAM wParam, LPARAM /*lParam*/, BOOL& bHandled)
 {
@@ -339,12 +349,16 @@ LRESULT WindowImplBase::OnCreate(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& 
 				return 0L;
 			}
 			dwSize = ::SizeofResource(m_PaintManager.GetResourceDll(), hResource);
-			if( dwSize == 0 )
+			if (dwSize == 0)
 				return 0L;
-			m_lpResourceZIPBuffer = new BYTE[ dwSize ];
-			if (m_lpResourceZIPBuffer != NULL)
+			//20180608LP：Release下只分配一次内存否则会内存泄漏
+			if (NULL == m_lpResourceZIPBuffer)
 			{
-				::CopyMemory(m_lpResourceZIPBuffer, (LPBYTE)::LockResource(hGlobal), dwSize);
+				m_lpResourceZIPBuffer = new BYTE[dwSize];
+				if (m_lpResourceZIPBuffer != NULL)
+				{
+					::CopyMemory(m_lpResourceZIPBuffer, (LPBYTE)::LockResource(hGlobal), dwSize);
+				}
 			}
 #if defined(WIN32) && !defined(UNDER_CE)
 			::FreeResource(hResource);

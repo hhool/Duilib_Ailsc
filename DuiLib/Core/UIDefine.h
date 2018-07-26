@@ -52,6 +52,7 @@ union DuiMessageMapFunctions
 
 #define DUI_MSGTYPE_TIMER                  (_T("timer"))
 #define DUI_MSGTYPE_CLICK                  (_T("click"))
+#define DUI_MSGTYPE_DBCLICK                (_T("doubleclick"))
 
 #define DUI_MSGTYPE_RETURN                 (_T("return"))
 #define DUI_MSGTYPE_SCROLL                 (_T("scroll"))

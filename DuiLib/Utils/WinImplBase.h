@@ -30,7 +30,7 @@ namespace DuiLib
 
 		DUI_DECLARE_MESSAGE_MAP()
 		virtual void OnClick(TNotifyUI& msg);
-
+		static void Cleanup();
 	protected:
 		virtual CDuiString GetSkinFolder() = 0;
 		virtual CDuiString GetSkinFile() = 0;
