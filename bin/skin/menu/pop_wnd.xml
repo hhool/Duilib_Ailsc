@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Window >
+	<HorizontalLayout >
+		<AlignLayout align="left" width="30">
+			<Button name="left_arrow" height="22" width="28" text="<<"/>
+		</AlignLayout>
+		<Edit name="edit" text="0" numberonly="true"/>
+		<AlignLayout align="right" width="30">
+			<Button name="right_arrow" height="22" width="28" text=">>"/>
+		</AlignLayout>
+	</HorizontalLayout>
+</Window>

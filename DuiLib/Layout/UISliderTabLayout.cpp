@@ -252,7 +252,6 @@ void CSliderTabLayoutUI::SetAttribute(LPCTSTR pstrName, LPCTSTR pstrValue)
     {
         m_bIsVertical = true;
     }
-
-    return __super::SetAttribute(pstrName, pstrValue);
+	else __super::SetAttribute(pstrName, pstrValue);
 }
 } // namespace DuiLib

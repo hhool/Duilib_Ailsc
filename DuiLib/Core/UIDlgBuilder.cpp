@@ -328,12 +328,13 @@ CControlUI* CDialogBuilder::_Parse(CMarkupNode* pRoot, CControlUI* pParent, CPai
                 break;
             case 10:
                 if( _tcsicmp(pstrClass, DUI_CTR_LISTHEADER) == 0 )            pControl = new CListHeaderUI;
-                else if( _tcsicmp(pstrClass, DUI_CTR_TILELAYOUT) == 0 )       pControl = new CTileLayoutUI;
+                else if( _tcsicmp(pstrClass, DUI_CTR_GRIDLAYOUT) == 0 )       pControl = new CGridLayoutUI;
 				else if( _tcsicmp(pstrClass, DUI_CTR_WEBBROWSER) == 0 )       pControl = new CWebBrowserUI;
                 break;
 			case 11:
 				if (_tcsicmp(pstrClass, DUI_CTR_CHILDLAYOUT) == 0)			  pControl = new CChildLayoutUI;
 				else if (_tcsicmp(pstrClass, DUI_CTR_MENUELEMENT) == 0)		  pControl = new CMenuElementUI;
+				else if (_tcsicmp(pstrClass, DUI_CTR_ALIGNLAYOUT) == 0)		  pControl = new CAlignLayoutUI;
 				break;
             case 14:
                 if( _tcsicmp(pstrClass, DUI_CTR_VERTICALLAYOUT) == 0 )        pControl = new CVerticalLayoutUI;
@@ -402,7 +403,11 @@ CControlUI* CDialogBuilder::_Parse(CMarkupNode* pRoot, CControlUI* pParent, CPai
                 {
                     if( pContainer == NULL ) pContainer = static_cast<IContainerUI*>(pParent->GetInterface(DUI_CTR_ICONTAINER));
                     ASSERT(pContainer);
-                    if( pContainer == NULL ) return NULL;
+					if (pContainer == NULL)
+					{
+						pControl->Delete();
+						return NULL;
+					}
                     if( !pContainer->Add(pControl) ) {
                         pControl->Delete();
                         continue;

@@ -2,7 +2,6 @@
 #define __UIDATETIME_H__
 
 #pragma once
-
 namespace DuiLib
 {
 	class CDateTimeWnd;

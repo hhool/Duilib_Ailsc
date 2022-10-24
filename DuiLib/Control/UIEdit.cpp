@@ -155,6 +155,20 @@ namespace DuiLib
 		else if( uMsg == WM_KEYDOWN && TCHAR(wParam) == VK_RETURN ) {
 			m_pOwner->GetManager()->SendNotify(m_pOwner, DUI_MSGTYPE_RETURN);
 		}
+		else if( (uMsg == WM_SYSKEYDOWN || uMsg == WM_KEYDOWN) && TCHAR(wParam) != VK_RETURN)
+		{
+			///> 如果外部控制了输入则输入进行控制,如果外部处理了则不在处理
+			TCHAR c = (TCHAR)wParam;
+			if (m_pOwner->m_pInputControl)
+			{
+				if (m_pOwner->m_pInputControl(m_pOwner,c,m_pOwner->m_pInputControlParam))
+					bHandled = TRUE;
+				else
+					bHandled = FALSE;
+			}
+			else
+				bHandled = FALSE;
+		}
 		else if (uMsg == WM_CHAR)
 		{
 			TCHAR c = (TCHAR)wParam;
@@ -177,14 +191,6 @@ namespace DuiLib
 				}
 				else
 					bHandled = TRUE;
-			}
-			///> 如果外部控制了输入则输入进行控制,如果外部处理了则不在处理
-			else if (m_pOwner->m_pInputControl)
-			{
-				if (m_pOwner->m_pInputControl(c))
-					bHandled = TRUE;
-				else
-					bHandled = FALSE;
 			}
 			else
 				bHandled = FALSE;
@@ -278,9 +284,10 @@ namespace DuiLib
 	//
 
 	CEditUI::CEditUI() : m_pWindow(NULL), m_uMaxChar(255), m_bReadOnly(false), m_bDecimal(false),
-		m_bPasswordMode(false), m_cPasswordChar(_T('*')), m_bAutoSelAll(false), m_uButtonState(0), 
-		m_dwEditbkColor(0xFFFFFFFF), m_iWindowStyls(0), m_nDigits(0), m_pInputControl(NULL)
+		m_bPasswordMode(false), m_cPasswordChar(_T('*')), m_bAutoSelAll(false), m_uButtonState(0), m_dwPlaceholderTexeColor(0xff000000),
+		m_dwEditbkColor(0xFFFFFFFF), m_iWindowStyls(0), m_nDigits(0), m_pInputControl(NULL),m_pInputControlParam(NULL)
 	{
+
 		SetTextPadding(CDuiRect(4, 3, 4, 3));
 		SetBkColor(0xFFFFFFFF);
 	}
@@ -421,9 +428,10 @@ namespace DuiLib
 		CLabelUI::DoEvent(event);
 	}
 
-	void CEditUI::SetControlInput(PCONTROLINPUT inputcontrol)
+	void CEditUI::SetControlInput(PCONTROLINPUT inputcontrol,LPVOID param)
 	{
 		m_pInputControl = inputcontrol;
+		m_pInputControlParam = param;
 	}
 
 	void CEditUI::SetEnabled(bool bEnable)
@@ -503,6 +511,26 @@ namespace DuiLib
 		m_sText = pstrText;
 		if( m_pWindow != NULL ) Edit_SetText(*m_pWindow, m_sText);
 		Invalidate();
+	}
+
+	void CEditUI::SetPlaceholderText(LPCTSTR pstrText)
+	{
+		if (m_sPlaceholderText == pstrText) return;
+		m_sPlaceholderText = pstrText;
+		if (m_sText.IsEmpty())
+		{
+			Invalidate();
+		}
+	}
+
+	void CEditUI::SetPlaceholderTextColor(DWORD dwColor)
+	{
+		if (m_dwPlaceholderTexeColor == dwColor) return;
+		m_dwPlaceholderTexeColor = dwColor;
+		if (m_sText.IsEmpty())
+		{
+			Invalidate();
+		}
 	}
 
 	void CEditUI::SetMaxChar(UINT uMax)
@@ -746,6 +774,13 @@ namespace DuiLib
 			DWORD clrColor = _tcstoul(pstrValue, &pstr, 16);
 			SetNativeEditBkColor(clrColor);
 		}
+		else if (_tcscmp(pstrName, _T("placeholdertext")) == 0) SetPlaceholderText(pstrValue);
+		else if (_tcscmp(pstrName, _T("placeholdertextcolor")) == 0) {
+			if (*pstrValue == _T('#')) pstrValue = ::CharNext(pstrValue);
+			LPTSTR pstr = NULL;
+			DWORD clrColor = _tcstoul(pstrValue, &pstr, 16);
+			SetPlaceholderTextColor(clrColor);
+		}
 		else CLabelUI::SetAttribute(pstrName, pstrValue);
 	}
 
@@ -774,12 +809,14 @@ namespace DuiLib
 		if( m_dwTextColor == 0 ) m_dwTextColor = m_pManager->GetDefaultFontColor();
 		if( m_dwDisabledTextColor == 0 ) m_dwDisabledTextColor = m_pManager->GetDefaultDisabledColor();
 
-		if( m_sText.IsEmpty() ) return;
-
-		CDuiString sText = m_sText;
-		if( m_bPasswordMode ) {
+		if (m_sText.IsEmpty() && m_sPlaceholderText.IsEmpty()) return;
+		
+		DWORD dwTextColor = m_sText.IsEmpty() ? m_dwDisabledTextColor : m_dwTextColor;
+		CDuiString drawText = m_sText.IsEmpty() ? m_sPlaceholderText : m_sText;
+		CDuiString sText = drawText;
+		if (m_bPasswordMode && !m_sText.IsEmpty()) {
 			sText.Empty();
-			LPCTSTR p = m_sText.GetData();
+			LPCTSTR p = drawText.GetData();
 			while( *p != _T('\0') ) {
 				sText += m_cPasswordChar;
 				p = ::CharNext(p);
@@ -792,7 +829,7 @@ namespace DuiLib
 		rc.top += m_rcTextPadding.top;
 		rc.bottom -= m_rcTextPadding.bottom;
 		if( IsEnabled() ) {
-			CRenderEngine::DrawText(hDC, m_pManager, rc, sText, m_dwTextColor, \
+			CRenderEngine::DrawText(hDC, m_pManager, rc, sText, dwTextColor, \
 				m_iFont, DT_SINGLELINE | m_uTextStyle);
 		}
 		else {

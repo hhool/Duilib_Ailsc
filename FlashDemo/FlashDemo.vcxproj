@@ -74,16 +74,19 @@
     <OutDir>$(SolutionDir)\bin\</OutDir>
     <IntDir>.\Debug\</IntDir>
     <LinkIncremental>false</LinkIncremental>
+    <TargetName>$(ProjectName)_d</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='UnicodeDebug|Win32'">
     <OutDir>$(SolutionDir)\bin\</OutDir>
     <IntDir>.\Debug_u\</IntDir>
     <LinkIncremental>false</LinkIncremental>
+    <TargetName>$(ProjectName)_ud</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='UnicodeRelease|Win32'">
     <OutDir>$(SolutionDir)\bin\</OutDir>
     <IntDir>.\Release_u\</IntDir>
     <LinkIncremental>false</LinkIncremental>
+    <TargetName>$(ProjectName)_u</TargetName>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <Midl>
@@ -116,7 +119,7 @@
     </ResourceCompile>
     <Link>
       <AdditionalDependencies>duilib.lib;comsuppw.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <OutputFile>../bin/FlashDemo.exe</OutputFile>
+      <OutputFile>$(OutDir)$(TargetName)$(TargetExt)</OutputFile>
       <SuppressStartupBanner>true</SuppressStartupBanner>
       <ProgramDatabaseFile>.\Release/FlashDemo.pdb</ProgramDatabaseFile>
       <SubSystem>Windows</SubSystem>
@@ -160,7 +163,7 @@
     </ResourceCompile>
     <Link>
       <AdditionalDependencies>duilib_d.lib;comsuppwd.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <OutputFile>../bin/FlashDemo_d.exe</OutputFile>
+      <OutputFile>$(OutDir)$(TargetName)$(TargetExt)</OutputFile>
       <SuppressStartupBanner>true</SuppressStartupBanner>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <ProgramDatabaseFile>.\Debug/FlashDemo.pdb</ProgramDatabaseFile>
@@ -207,7 +210,7 @@
     </ResourceCompile>
     <Link>
       <AdditionalDependencies>duilib_ud.lib;comsuppwd.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <OutputFile>../bin/FlashDemo_ud.exe</OutputFile>
+      <OutputFile>$(OutDir)$(TargetName)$(TargetExt)</OutputFile>
       <SuppressStartupBanner>true</SuppressStartupBanner>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <ProgramDatabaseFile>.\Debug_u/FlashDemo.pdb</ProgramDatabaseFile>
@@ -253,7 +256,7 @@
     </ResourceCompile>
     <Link>
       <AdditionalDependencies>duilib_u.lib;comsuppw.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <OutputFile>../bin/FlashDemo_u.exe</OutputFile>
+      <OutputFile>$(OutDir)$(TargetName)$(TargetExt)</OutputFile>
       <SuppressStartupBanner>true</SuppressStartupBanner>
       <ProgramDatabaseFile>.\Release_u/FlashDemo.pdb</ProgramDatabaseFile>
       <SubSystem>Windows</SubSystem>

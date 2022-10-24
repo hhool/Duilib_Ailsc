@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Window size="800,600" caption ="0,0,0,28" roundcorner="2,2">
+	<VerticalLayout bkcolor="0xffff0000">
+		<Button name="btn" text="default" visible="true"/>
+		<Label text="label val"/>
+	</VerticalLayout>
+</Window>

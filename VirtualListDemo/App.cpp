@@ -63,15 +63,27 @@ public:
 	{
 		__super::InitWindow();
 		m_plist = static_cast<CListUI*>(m_PaintManager.FindControl(_T("list")));
-		///> 设置数据行为格式
-		m_plist->SetVirtualItemFormat(CreateVirtualItem);
+		m_plist1 = static_cast<CListUI*>(m_PaintManager.FindControl(_T("list1")));
+		///> 设置数据行为格式,这里使用模板数据，所以不需要设置CreateVirtualItem
+		//m_plist->SetVirtualItemFormat(CreateVirtualItem);
 		TCHAR szBuf[10] = _T("");
 		for (int i = 1;i <= ITEMCOUNT;++i)
 		{
-			sprintf_s(szBuf,_T("%06d"),i);
+			_stprintf_s<10>(szBuf,_T("%06d"),i);
 			m_vdata.push_back(szBuf);
 		}
 		m_plist->SetVirtualItemCount(ITEMCOUNT);
+
+		//非虚表设置数据
+		CDuiString strFormat;
+		for (int i = 0; i < 50;++i)
+		{
+			CListHBoxElementUI *pHBox = dynamic_cast<CListHBoxElementUI *>(m_plist1->AddTemplate());
+			strFormat.Format(_T("%d"), i + 1);
+			pHBox->GetItemAt(0)->SetText(strFormat);
+			strFormat.Format(_T("%06d"), i + 1);
+			pHBox->GetItemAt(1)->SetText(strFormat);
+		}
 	}
 
 	virtual void Notify(TNotifyUI& msg)
@@ -118,6 +130,7 @@ public:
 
 private:
 	CListUI *m_plist;
+	CListUI *m_plist1;
 	std::vector<CDuiString> m_vdata;
 };
 

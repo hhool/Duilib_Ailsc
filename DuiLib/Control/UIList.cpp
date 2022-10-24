@@ -181,7 +181,7 @@ int CListUI::GetItemCount() const
 bool CListUI::Add(CControlUI* pControl)
 {
 	// no support multiple list headers.
-    if( pControl->GetInterface(DUI_CTR_LISTHEADER) != NULL ) {
+	if (pControl && pControl->GetInterface(DUI_CTR_LISTHEADER) != NULL) {
         if( m_pHeader != pControl /*&& m_pHeader->GetCount() == 0 */) {
             CVerticalLayoutUI::Remove(m_pHeader);
             m_pHeader = static_cast<CListHeaderUI*>(pControl);
@@ -194,7 +194,7 @@ bool CListUI::Add(CControlUI* pControl)
         return CVerticalLayoutUI::AddAt(pControl, 0);
     }
     // We also need to recognize header sub-items
-    if( _tcsstr(pControl->GetClass(), DUI_CTR_LISTHEADERITEM) != NULL ) {
+	if (pControl && _tcsstr(pControl->GetClass(), DUI_CTR_LISTHEADERITEM) != NULL) {
         bool ret = m_pHeader->Add(pControl);
 		//计算复合表头实际表头项的数量
 		CDuiPtrArray ptrAry;
@@ -209,13 +209,183 @@ bool CListUI::Add(CControlUI* pControl)
 		return false;
 	}
 
-    // The list items should know about us
-    IListItemUI* pListItem = static_cast<IListItemUI*>(pControl->GetInterface(DUI_CTR_ILISTITEM));
-    if( pListItem != NULL ) {
-        pListItem->SetOwner(this);
+	if (!m_ItemtemplateXml.IsEmpty())
+	{
+		CDialogBuilder builder;
+		pControl = static_cast<CControlUI*>(builder.Create(m_ItemtemplateXml.GetData(), (UINT)0, NULL, m_pManager, NULL));
+	}
+
+	if (!pControl)
+	{
+		return false;
+	}
+	// The list items should know about us
+	IListItemUI* pListItem = static_cast<IListItemUI*>(pControl->GetInterface(DUI_CTR_ILISTITEM));
+	if (pListItem != NULL) {
+		pListItem->SetOwner(this);
 		pListItem->SetIndex(GetItemCount());
+	}
+
+	bool bret = m_pList->Add(pControl);
+
+	if (m_ItemtemplateXml.IsEmpty())
+	{
+		return bret;
+	}
+	else
+	{
+		if (!bret)
+		{
+			pControl->Delete();
+		}
+		return false;
+	}
+}
+
+bool CListUI::AddAt(CControlUI* pControl, int iIndex)
+{
+	// no support multiple list headers.
+	if (pControl&& pControl->GetInterface(DUI_CTR_LISTHEADER) != NULL) {
+        if( m_pHeader != pControl/* && m_pHeader->GetCount() == 0*/ ) {
+            CVerticalLayoutUI::Remove(m_pHeader);
+            m_pHeader = static_cast<CListHeaderUI*>(pControl);
+        }
+		//计算复合表头实际表头项的数量
+		CDuiPtrArray ptrAry;
+		GetInsideControl(ptrAry, m_pHeader, DUI_CTR_LISTHEADERITEM);
+		//m_ListInfo.nColumns = MIN(m_pHeader->GetCount(), UILIST_MAX_COLUMNS);
+		m_ListInfo.nColumns = MIN(ptrAry.GetSize(), UILIST_MAX_COLUMNS);
+        return CVerticalLayoutUI::AddAt(pControl, 0);
     }
-    return m_pList->Add(pControl);
+    // We also need to recognize header sub-items
+	if (pControl&&_tcsstr(pControl->GetClass(), DUI_CTR_LISTHEADERITEM) != NULL) {
+        bool ret = m_pHeader->AddAt(pControl, iIndex);
+		//计算复合表头实际表头项的数量
+		CDuiPtrArray ptrAry;
+		GetInsideControl(ptrAry, m_pHeader, DUI_CTR_LISTHEADERITEM);
+		//m_ListInfo.nColumns = MIN(m_pHeader->GetCount(), UILIST_MAX_COLUMNS);
+		m_ListInfo.nColumns = MIN(ptrAry.GetSize(), UILIST_MAX_COLUMNS);
+        return ret;
+    }
+
+	//如果是虚拟列表则不允许操作,表头除外
+	if (IsUseVirtualList())
+	{
+		return false;
+	}
+
+	if (!m_ItemtemplateXml.IsEmpty())
+	{
+		CDialogBuilder builder;
+		pControl = static_cast<CControlUI*>(builder.Create(m_ItemtemplateXml.GetData(), (UINT)0, NULL, m_pManager, NULL));
+	}
+
+	if (!pControl)
+	{
+		return false;
+	}
+
+	if (!m_pList->AddAt(pControl, iIndex))
+	{
+		if (!m_ItemtemplateXml.IsEmpty())
+		{
+			pControl->Delete();
+		}
+		return false;
+	}
+
+	// The list items should know about us
+	IListItemUI* pListItem = static_cast<IListItemUI*>(pControl->GetInterface(DUI_CTR_ILISTITEM));
+	if (pListItem != NULL) {
+		pListItem->SetOwner(this);
+		pListItem->SetIndex(iIndex);
+	}
+
+	for (int i = iIndex + 1; i < m_pList->GetCount(); ++i) {
+		CControlUI* p = m_pList->GetItemAt(i);
+		pListItem = static_cast<IListItemUI*>(p->GetInterface(DUI_CTR_ILISTITEM));
+		if (pListItem != NULL) {
+			pListItem->SetIndex(i);
+		}
+	}
+	if (m_iCurSel >= iIndex) m_iCurSel += 1;
+   
+	return m_ItemtemplateXml.IsEmpty();
+}
+
+CControlUI* CListUI::AddTemplate()
+{
+	CControlUI *pControl = NULL;
+	//如果是虚拟列表则不允许操作,表头除外
+	if (IsUseVirtualList() || m_ItemtemplateXml.IsEmpty())
+	{
+		return pControl;
+	}
+
+	CDialogBuilder builder;
+	pControl = static_cast<CControlUI*>(builder.Create(m_ItemtemplateXml.GetData(), (UINT)0, NULL, m_pManager, NULL));
+
+	if (!pControl)
+	{
+		return pControl;
+	}
+	// The list items should know about us
+	IListItemUI* pListItem = static_cast<IListItemUI*>(pControl->GetInterface(DUI_CTR_ILISTITEM));
+	if (pListItem != NULL) {
+		pListItem->SetOwner(this);
+		pListItem->SetIndex(GetItemCount());
+	}
+
+	if (!m_pList->Add(pControl))
+	{
+		pControl->Delete();
+	}
+	return pControl;
+}
+
+CControlUI* CListUI::AddTemplateAt(int iIndex)
+{
+	CControlUI *pControl = NULL;
+	//如果是虚拟列表则不允许操作,表头除外
+	if (IsUseVirtualList() || m_ItemtemplateXml.IsEmpty())
+	{
+		return pControl;
+	}
+
+	CDialogBuilder builder;
+	pControl = static_cast<CControlUI*>(builder.Create(m_ItemtemplateXml.GetData(), (UINT)0, NULL, m_pManager, NULL));
+
+	if (!pControl)
+	{
+		return pControl;
+	}
+
+	if (!m_pList->AddAt(pControl, iIndex))
+	{
+		if (!m_ItemtemplateXml.IsEmpty())
+		{
+			pControl->Delete();
+		}
+		return pControl;
+	}
+
+	// The list items should know about us
+	IListItemUI* pListItem = static_cast<IListItemUI*>(pControl->GetInterface(DUI_CTR_ILISTITEM));
+	if (pListItem != NULL) {
+		pListItem->SetOwner(this);
+		pListItem->SetIndex(iIndex);
+	}
+
+	for (int i = iIndex + 1; i < m_pList->GetCount(); ++i) {
+		CControlUI* p = m_pList->GetItemAt(i);
+		pListItem = static_cast<IListItemUI*>(p->GetInterface(DUI_CTR_ILISTITEM));
+		if (pListItem != NULL) {
+			pListItem->SetIndex(i);
+		}
+	}
+	if (m_iCurSel >= iIndex) m_iCurSel += 1;
+
+	return pControl;
 }
 
 bool CListUI::AddVirtualItem(CControlUI* pControl)
@@ -252,58 +422,6 @@ bool CListUI::AddVirtualItem(CControlUI* pControl)
 	}
 	return m_pList->Add(pControl);
 }
-
-bool CListUI::AddAt(CControlUI* pControl, int iIndex)
-{
-	// no support multiple list headers.
-    if( pControl->GetInterface(DUI_CTR_LISTHEADER) != NULL ) {
-        if( m_pHeader != pControl/* && m_pHeader->GetCount() == 0*/ ) {
-            CVerticalLayoutUI::Remove(m_pHeader);
-            m_pHeader = static_cast<CListHeaderUI*>(pControl);
-        }
-		//计算复合表头实际表头项的数量
-		CDuiPtrArray ptrAry;
-		GetInsideControl(ptrAry, m_pHeader, DUI_CTR_LISTHEADERITEM);
-		//m_ListInfo.nColumns = MIN(m_pHeader->GetCount(), UILIST_MAX_COLUMNS);
-		m_ListInfo.nColumns = MIN(ptrAry.GetSize(), UILIST_MAX_COLUMNS);
-        return CVerticalLayoutUI::AddAt(pControl, 0);
-    }
-    // We also need to recognize header sub-items
-    if( _tcsstr(pControl->GetClass(), DUI_CTR_LISTHEADERITEM) != NULL ) {
-        bool ret = m_pHeader->AddAt(pControl, iIndex);
-		//计算复合表头实际表头项的数量
-		CDuiPtrArray ptrAry;
-		GetInsideControl(ptrAry, m_pHeader, DUI_CTR_LISTHEADERITEM);
-		//m_ListInfo.nColumns = MIN(m_pHeader->GetCount(), UILIST_MAX_COLUMNS);
-		m_ListInfo.nColumns = MIN(ptrAry.GetSize(), UILIST_MAX_COLUMNS);
-        return ret;
-    }
-    if (!m_pList->AddAt(pControl, iIndex)) return false;
-
-	//如果是虚拟列表则不允许操作,表头除外
-	if (IsUseVirtualList())
-	{
-		return false;
-	}
-
-    // The list items should know about us
-    IListItemUI* pListItem = static_cast<IListItemUI*>(pControl->GetInterface(DUI_CTR_ILISTITEM));
-    if( pListItem != NULL ) {
-        pListItem->SetOwner(this);
-        pListItem->SetIndex(iIndex);
-    }
-
-    for(int i = iIndex + 1; i < m_pList->GetCount(); ++i) {
-        CControlUI* p = m_pList->GetItemAt(i);
-        pListItem = static_cast<IListItemUI*>(p->GetInterface(DUI_CTR_ILISTITEM));
-        if( pListItem != NULL ) {
-            pListItem->SetIndex(i);
-        }
-    }
-    if( m_iCurSel >= iIndex ) m_iCurSel += 1;
-    return true;
-}
-
 bool CListUI::Remove(CControlUI* pControl, bool bDoNotDestroy)
 {
 	//如果是虚拟列表则不允许操作
@@ -644,6 +762,18 @@ CContainerUI* CListUI::GetList() const
     return m_pList;
 }
 
+void CListUI::SetItemTemplateXml(CDuiString xml)
+{
+	if (m_ItemtemplateXml != xml)
+	{
+		m_ItemtemplateXml = xml;
+		if (!m_ItemtemplateXml.IsEmpty() && m_pList)
+		{
+			m_pList->RemoveAll();
+		}
+	}
+}
+
 bool CListUI::GetScrollSelect()
 {
     return m_bScrollSelect;
@@ -664,7 +794,7 @@ void CListUI::SetVirtualItemFormat(PULVirtualItemFormat vrtualitemfroamt)
 	if (!m_pList) return;
 	m_pVirutalItemFormat = vrtualitemfroamt;
 	///> 检测是否该关闭虚表优化（是否含有combo）
-	CControlUI *pcontrol = m_pVirutalItemFormat();
+	CControlUI *pcontrol = m_pVirutalItemFormat ? m_pVirutalItemFormat():CreateTemplateControl();
 	if (pcontrol && pcontrol->GetInterface(DUI_CTR_CONTAINER))
 	{
 		CContainerUI *pContain = static_cast<CContainerUI *>(pcontrol->GetInterface(DUI_CTR_CONTAINER));
@@ -747,12 +877,12 @@ void CListUI::ResizeVirtualItemBuffer()
 {
 	if (!IsUseVirtualList()) return;
 
- 	if (m_pVirutalItemFormat)
+ 	//if (m_pVirutalItemFormat)
 	{
 		if (GetItemCount() == 0)
 		{
 			///> 准备资源
-			CControlUI *pControl = m_pVirutalItemFormat();
+			CControlUI *pControl = m_pVirutalItemFormat ? m_pVirutalItemFormat() : CreateTemplateControl();
 			if (pControl)
 			{
 				m_nVirtualItemHeight = max(pControl->GetFixedHeight(), pControl->GetHeight());
@@ -773,7 +903,7 @@ void CListUI::ResizeVirtualItemBuffer()
 
 		for (int i = nItemCount; i < nItemSize; ++i)
 		{
-			CControlUI *pControl = m_pVirutalItemFormat();
+			CControlUI *pControl = m_pVirutalItemFormat ? m_pVirutalItemFormat() : CreateTemplateControl();
 			if (pControl)
 			{
 				AddVirtualItem(pControl);
@@ -835,6 +965,14 @@ bool CListUI::IsEnableMouseWhell()
 	return m_bEnableMouseWhell;
 }
 
+CControlUI *CListUI::CreateTemplateControl()
+{
+	ASSERT(!m_ItemtemplateXml.IsEmpty());
+	CDialogBuilder builder;
+	CControlUI* pChildControl = static_cast<CControlUI*>(builder.Create(m_ItemtemplateXml.GetData(), (UINT)0, NULL, m_pManager, NULL));
+	return pChildControl; 
+}
+
 void CListUI::CalcPanelPos()
 {
 	RECT rtPanel = m_rcItem;
@@ -866,13 +1004,17 @@ void CListUI::CalcPanelPos()
 
 bool CListUI::SelectItem(int iIndex, bool bTakeFocus, bool bTriggerEvent)
 {
-    if( iIndex == m_iCurSel ) return true;
+	if( iIndex == m_iCurSel ) return true;
 
     int iOldSel = m_iCurSel;
     // We should first unselect the currently selected item
     if( m_iCurSel >= 0 ) {
         CControlUI* pControl = GetItemAt(m_iCurSel);
         if( pControl != NULL) {
+			if (IsUseVirtualList() && bTriggerEvent && pControl->GetTag() != 0)
+			{
+				SetSelectControlTag(pControl->GetTag());
+			}
             IListItemUI* pListItem = static_cast<IListItemUI*>(pControl->GetInterface(DUI_CTR_ILISTITEM));
             if( pListItem != NULL ) pListItem->Select(false, bTriggerEvent);
         }
@@ -895,7 +1037,10 @@ bool CListUI::SelectItem(int iIndex, bool bTakeFocus, bool bTriggerEvent)
     }
 	//#liulei 20160901 不保证选中的Item始终在窗口
    // EnsureVisible(m_iCurSel);
-
+	if (IsUseVirtualList() && pControl->GetTag() != 0)
+	{
+		SetSelectControlTag(pControl->GetTag());
+	}
     if( bTakeFocus ) pControl->SetFocus();
     if( m_pManager != NULL && bTriggerEvent ) {
         m_pManager->SendNotify(this, DUI_MSGTYPE_ITEMSELECT, m_iCurSel, iOldSel);
@@ -1272,7 +1417,7 @@ void CListUI::SetAttribute(LPCTSTR pstrName, LPCTSTR pstrValue)
             m_ListInfo.uTextStyle &= ~(DT_BOTTOM | DT_VCENTER);
             m_ListInfo.uTextStyle |= DT_TOP;
         }
-        if (_tcsstr(pstrValue, _T("vcenter")) != NULL) {
+        if (_tcsstr(pstrValue, _T("center")) != NULL) {
             m_ListInfo.uTextStyle &= ~(DT_TOP | DT_BOTTOM);
             m_ListInfo.uTextStyle |= DT_VCENTER;
         }
@@ -1373,6 +1518,7 @@ void CListUI::SetAttribute(LPCTSTR pstrName, LPCTSTR pstrValue)
         SetItemHLineColor(clrColor);
     }
     else if( _tcscmp(pstrName, _T("itemshowhtml")) == 0 ) SetItemShowHtml(_tcscmp(pstrValue, _T("true")) == 0);
+	else if (_tcscmp(pstrName, _T("itemtemplate")) == 0) SetItemTemplateXml(pstrValue);
     else CVerticalLayoutUI::SetAttribute(pstrName, pstrValue);
 }
 
@@ -1483,9 +1629,9 @@ BOOL CListUI::Copy(int nMaxRowItemData, bool bUserDefine)
 	CControlUI *pItem = NULL;
 	if (IsUseVirtualList())
 	{
-		assert(m_pVirutalItemFormat);
 		///> 准备数据格式内存，需要释放数据delete
-		pItem = m_pVirutalItemFormat();
+		pItem = m_pVirutalItemFormat ? m_pVirutalItemFormat() : CreateTemplateControl();
+		assert(pItem);
 	}
 
 	for (int iRow = 0; iRow < nRowCount; ++iRow)
@@ -1835,7 +1981,9 @@ void CListBodyUI::SetPos(RECT rc, bool bNeedInvalidate)
             iChildPadding += pInfo->iHLineSize;
             if (pInfo->nColumns > 0)
 			{
-                szAvailable.cx = pInfo->rcColumn[pInfo->nColumns - 1].right - pInfo->rcColumn[0].left;
+				//#liulei 取消限制list Item的宽度始终和列保持一致
+				//列的宽度始终和ListUI的宽度保持一致
+                //szAvailable.cx = pInfo->rcColumn[pInfo->nColumns - 1].right - pInfo->rcColumn[0].left;
             }
         }
     }
@@ -2555,7 +2703,7 @@ void CListHeaderItemUI::SetAttribute(LPCTSTR pstrName, LPCTSTR pstrValue)
             m_uTextStyle &= ~(DT_BOTTOM | DT_VCENTER);
             m_uTextStyle |= DT_TOP;
         }
-        if (_tcsstr(pstrValue, _T("vcenter")) != NULL) {
+        if (_tcsstr(pstrValue, _T("center")) != NULL) {
             m_uTextStyle &= ~(DT_TOP | DT_BOTTOM);
             m_uTextStyle |= DT_VCENTER;
         }

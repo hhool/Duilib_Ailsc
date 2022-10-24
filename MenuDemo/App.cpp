@@ -2,6 +2,7 @@
 //
 
 #include "stdafx.h"
+#include "SpinButtonUI.h"
 /*Duilib 菜单使用
 1.new CMenuWnd 创建一个Menu窗口
 2.制定Menu的内容和位置：Init
@@ -9,6 +10,12 @@
 3.显示menu ShowWindow
 4.Menu事件处理，响应itemclick消息，处理完之后return，不需要交给底层处理
 */
+
+CUIFunctionalLayout *CreatePopupUI()
+{
+	return new CSpinButtonUI;
+}
+
 class CFrameWindowWnd: public WindowImplBase
 {
 public:
@@ -16,7 +23,35 @@ public:
 	virtual CDuiString GetSkinFolder() {return _T("");}
 	virtual CDuiString GetSkinFile(){return _T("skin/menu/menuwnd.xml");}
 	virtual LPCTSTR GetWindowClassName(void) const  {return _T("CFrameWindowWnd");}
+	virtual CControlUI* CreateControl(LPCTSTR pstrClass)
+	{
+		if (lstrcmp(pstrClass, "SpinButton") == 0)
+		{
+			return new CSpinButtonUI();
+		}
+		return NULL;
+	}
+	virtual void InitWindow()
+	{
+		CGridLayoutUI *pGridUI = dynamic_cast<CGridLayoutUI *>(m_PaintManager.FindControl(_T("grid_layout")));
+		pGridUI->AddTemplate();
+		pGridUI->AddTemplate();
+		pGridUI->AddTemplate();
+		pGridUI->AddTemplate();
+		pGridUI->AddTemplate();
+		pGridUI->AddTemplate();
+		pGridUI->AddTemplate();
+		pGridUI->AddTemplate();
+		pGridUI->AddTemplate();
+		pGridUI->AddTemplate();
+		pGridUI->AddTemplate();
+		pGridUI->AddTemplate();
+		pGridUI->AddTemplate();
+		pGridUI->AddTemplate();
 
+		CPopupUI *popup_wnd = dynamic_cast<CPopupUI *>(m_PaintManager.FindControl(_T("popup_wnd")));
+		popup_wnd->SetCreatePopupUI(CreatePopupUI);
+	}
 	virtual void Notify(TNotifyUI& msg)
 	{
 		if(msg.sType == DUI_MSGTYPE_MENU)
@@ -59,8 +94,52 @@ public:
 			}
 			return;//需要Return否则可能崩溃，因为此时pSender已经销毁，不需要传到底层
 		}
+		else if (msg.sType == DUI_MSGTYPE_CLICK  && msg.pSender->GetInterface(DUI_CTR_BUTTON))
+		{
+			if (msg.pSender->GetName() == _T("tab0"))
+			{
+				CTabLayoutUI *pTabLayout = dynamic_cast<CTabLayoutUI *>(m_PaintManager.FindControl(_T("tab_layout")));
+				if (pTabLayout)
+					pTabLayout->SelectItem(0);
+			}
+			else if (msg.pSender->GetName() == _T("tab1"))
+			{
+				CTabLayoutUI *pTabLayout = dynamic_cast<CTabLayoutUI *>(m_PaintManager.FindControl(_T("tab_layout")));
+				if (pTabLayout)
+					pTabLayout->SelectItem(1);
+			}
+			else if (msg.pSender->GetName() == _T("tab2"))
+			{
+				CTabLayoutUI *pTabLayout = dynamic_cast<CTabLayoutUI *>(m_PaintManager.FindControl(_T("tab_layout")));
+				if (pTabLayout)
+					pTabLayout->SelectItem(2);
+			}
+			if (msg.pSender->GetName() == _T("slider_tab0"))
+			{
+				CSliderTabLayoutUI *pTabLayout = dynamic_cast<CSliderTabLayoutUI *>(m_PaintManager.FindControl(_T("slider_tab_layout")));
+				if (pTabLayout)
+					pTabLayout->SelectItem(0);
+			}
+			else if (msg.pSender->GetName() == _T("slider_tab1"))
+			{
+				CSliderTabLayoutUI *pTabLayout = dynamic_cast<CSliderTabLayoutUI *>(m_PaintManager.FindControl(_T("slider_tab_layout")));
+				if (pTabLayout)
+					pTabLayout->SelectItem(1);
+			}
+			else if (msg.pSender->GetName() == _T("slider_tab2"))
+			{
+				CSliderTabLayoutUI *pTabLayout = dynamic_cast<CSliderTabLayoutUI *>(m_PaintManager.FindControl(_T("slider_tab_layout")));
+				if (pTabLayout)
+					pTabLayout->SelectItem(2);
+			}
+		}
+		else if (msg.sType == DUI_MSGTYPE_CLICK)
+		{
+			int a = 0;
+		}
 		__super::Notify(msg);
 	}
+
 };
 
 

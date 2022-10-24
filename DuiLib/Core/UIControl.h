@@ -56,7 +56,7 @@ public:
 	void SetShowBkImg(bool bShowImg);
 	void SetShowStatusImg(bool bShowImg);
 
-    bool DrawImage(HDC hDC, TDrawInfo& drawInfo);
+    virtual bool DrawImage(HDC hDC, TDrawInfo& drawInfo);
 
 	//±ß¿òÏà¹Ø
 	DWORD GetBorderColor() const;

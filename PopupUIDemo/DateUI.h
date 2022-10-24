@@ -3,13 +3,13 @@
 add by jefcat 20170315
 not:模仿QQ聊天记录中的 日期控件
 */
-class CDateUI :public CCompositeLayoutUI
+class CDateUI :public CUIFunctionalLayout
 {
 public:
 	CDateUI();
 	virtual void Notify(TNotifyUI& msg);
 	//使用PopupUI的字符串初始化CChildLayoutUI2017-3-14
-	virtual void initUIData(CPopupUI *m_pOowner);
+	virtual void initUIData(CControlUI *m_pOowner);
 	//将CChildLayoutUI 格式化，形成字符给PopupUI
 	virtual CDuiString FormatStringToPopUI();
 

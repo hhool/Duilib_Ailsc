@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!--root name非Windows无效，可以随便命名，egXConfig-->
 <MenuConfig>
 	<Default name="ComboBox" value="width=&quot;70&quot; height=&quot;23&quot; vscrollbar=&quot;true&quot; borderround=&quot;2,2&quot; bordersize=&quot;2&quot; normalimage=&quot;file='skin/res/Combo_nor.bmp' corner='5,2,30,2'&quot; hotimage=&quot;file='skin/res/Combo_over.bmp' corner='5,2,30,2'&quot; pushedimage=&quot;file='skin/res/Combo_over.bmp' corner='5,2,30,2'&quot;" />
 </MenuConfig>

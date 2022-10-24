@@ -190,8 +190,12 @@ HRESULT InitDefaultCharFormat(CRichEditUI* re, CHARFORMAT2W* pcf, HFONT hfont)
     if( !hfont )
         hfont = re->GetManager()->GetFont(re->GetFont());
     ::GetObject(hfont, sizeof(LOGFONT), &lf);
-
-    DWORD dwColor = re->GetTextColor();
+	DWORD dwColor = re->GetTextColor();
+	if (re->GetRawTextLength() <= 0)
+	{
+		dwColor = re->GetPlaceholderTexeColor();
+	}
+    
     pcf->cbSize = sizeof(CHARFORMAT2W);
     pcf->crTextColor = RGB(GetBValue(dwColor), GetGValue(dwColor), GetRValue(dwColor));
     LONG yPixPerInch = GetDeviceCaps(re->GetManager()->GetPaintDC(), LOGPIXELSY);
@@ -500,11 +504,16 @@ BOOL CTxtWinHost::TxSetScrollPos (INT fnBar, INT nPos, BOOL fRedraw)
 
 void CTxtWinHost::TxInvalidateRect(LPCRECT prc, BOOL fMode)
 {
-    if( prc == NULL ) {
-        m_re->GetManager()->Invalidate(rcClient);
-        return;
+	//修正win7下，RichEdit滚动超出界面时字体变小的bug
+	RECT rc = {};
+    if( prc == NULL ) 
+	{
+		rc = rcClient;
     }
-    RECT rc = *prc;
+	else
+	{
+		rc = *prc;
+	}
     m_re->GetManager()->Invalidate(rc);
 }
 
@@ -1077,7 +1086,7 @@ void CTxtWinHost::SetParaFormat(PARAFORMAT2 &p)
 
 CRichEditUI::CRichEditUI() : m_pTwh(NULL), m_bVScrollBarFixing(false), m_bWantTab(true), m_bWantReturn(true), 
     m_bWantCtrlReturn(true), m_bTransparent(true), m_bRich(true), m_bReadOnly(false), m_bWordWrap(false), m_dwTextColor(0), m_iFont(-1), 
-	m_iLimitText(cInitTextMax), m_lTwhStyle(ES_MULTILINE), m_bDrawCaret(true), m_bInited(false)
+	m_iLimitText(cInitTextMax), m_lTwhStyle(ES_MULTILINE), m_bDrawCaret(true), m_bInited(false), m_dwPlaceholderTexeColor(0xff000000)
 {
 	::ZeroMemory(&m_rcTextPadding, sizeof(m_rcTextPadding));
 }
@@ -1228,6 +1237,11 @@ DWORD CRichEditUI::GetTextColor()
     return m_dwTextColor;
 }
 
+DWORD CRichEditUI::GetPlaceholderTexeColor()
+{
+	return m_dwPlaceholderTexeColor;
+}
+
 void CRichEditUI::SetTextColor(DWORD dwTextColor)
 {
     m_dwTextColor = dwTextColor;
@@ -1235,6 +1249,15 @@ void CRichEditUI::SetTextColor(DWORD dwTextColor)
         m_pTwh->SetColor(dwTextColor);
     }
 }
+
+void CRichEditUI::SetPlaceholderTextColor(DWORD dwColor)
+{
+	m_dwPlaceholderTexeColor = dwColor;
+	if (m_pTwh) {
+		m_pTwh->SetColor(m_dwPlaceholderTexeColor);
+	}
+}
+
 
 int CRichEditUI::GetLimitText()
 {
@@ -1247,6 +1270,10 @@ void CRichEditUI::SetLimitText(int iChars)
     if( m_pTwh ) {
         m_pTwh->LimitText(m_iLimitText);
     }
+}
+long CRichEditUI::GetRawTextLength() const
+{
+	return m_sText.GetLength();
 }
 
 long CRichEditUI::GetTextLength(DWORD dwFlags) const
@@ -1292,8 +1319,17 @@ void CRichEditUI::SetText(LPCTSTR pstrText)
 {
     m_sText = pstrText;
     if( !m_pTwh ) return;
+	SetTextColor(m_dwTextColor);
     SetSel(0, -1);
     ReplaceSel(pstrText, FALSE);
+}
+
+void CRichEditUI::SetPlaceholderText(LPCTSTR pstrText)
+{
+	m_sPlaceholderText = pstrText;
+	if (!m_pTwh) return;
+	SetSel(0, -1);
+	ReplaceSel(pstrText, FALSE);
 }
 
 bool CRichEditUI::IsModify() const
@@ -1713,7 +1749,14 @@ void CRichEditUI::DoInit()
     cs.y = 0;
     cs.cy = 0;
     cs.cx = 0;
-    cs.lpszName = m_sText.GetData();
+	if (m_sText.IsEmpty())
+	{
+		cs.lpszName = m_sPlaceholderText.GetData();
+	}
+	else
+	{
+		cs.lpszName = m_sText.GetData();
+	}
     CreateHost(this, &cs, &m_pTwh);
     if( m_pTwh ) {
         if( m_bTransparent ) m_pTwh->SetTransparent(TRUE);
@@ -1918,6 +1961,12 @@ void CRichEditUI::DoEvent(TEventUI& event)
     }
     else if( event.Type == UIEVENT_SETFOCUS ) {
         if( m_pTwh ) {
+			if (m_sText.IsEmpty())
+			{
+				SetText("");
+			}
+			
+			m_pTwh->SetColor(m_dwTextColor);
             m_pTwh->OnTxInPlaceActivate(NULL);
             m_pTwh->GetTextServices()->TxSendMessage(WM_SETFOCUS, 0, 0, 0);
         }
@@ -1927,6 +1976,19 @@ void CRichEditUI::DoEvent(TEventUI& event)
     }
     if( event.Type == UIEVENT_KILLFOCUS )  {
         if( m_pTwh ) {
+			long length = GetTextLength();
+			//填充数据
+			m_sText = _T("full");
+			if (length == m_sPlaceholderText.GetLength() || length <= 0)
+			{
+				CDuiString strText = GetText();
+				if (length <= 0 || strText == m_sPlaceholderText)
+				{
+					m_sText = _T("");
+					SetPlaceholderText(m_sPlaceholderText);
+					m_pTwh->SetColor(m_dwPlaceholderTexeColor);
+				}				
+			}
             m_pTwh->OnTxInPlaceActivate(NULL);
             m_pTwh->GetTextServices()->TxSendMessage(WM_KILLFOCUS, 0, 0, 0);
         }
@@ -2292,6 +2354,13 @@ void CRichEditUI::SetAttribute(LPCTSTR pstrName, LPCTSTR pstrValue)
 		rcTextPadding.right = _tcstol(pstr + 1, &pstr, 10);  ASSERT(pstr);    
 		rcTextPadding.bottom = _tcstol(pstr + 1, &pstr, 10); ASSERT(pstr);    
 		SetTextPadding(rcTextPadding);
+	}
+	else if (_tcscmp(pstrName, _T("placeholdertext")) == 0) SetPlaceholderText(pstrValue);
+	else if (_tcscmp(pstrName, _T("placeholdertextcolor")) == 0) {
+		if (*pstrValue == _T('#')) pstrValue = ::CharNext(pstrValue);
+		LPTSTR pstr = NULL;
+		DWORD clrColor = _tcstoul(pstrValue, &pstr, 16);
+		SetPlaceholderTextColor(clrColor);
 	}
     else CContainerUI::SetAttribute(pstrName, pstrValue);
 }

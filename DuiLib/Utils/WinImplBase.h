@@ -26,7 +26,7 @@ namespace DuiLib
 		virtual void InitWindow(){};
 		virtual void OnFinalMessage( HWND hWnd );
 		virtual void Notify(TNotifyUI& msg);
-		BOOL IsInStaticControl(CControlUI *pControl);
+		virtual BOOL IsInStaticControl(CControlUI *pControl, POINT pt);
 
 		DUI_DECLARE_MESSAGE_MAP()
 		virtual void OnClick(TNotifyUI& msg);

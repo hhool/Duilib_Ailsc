@@ -15,6 +15,7 @@ void CDateUI::Notify(TNotifyUI& msg)
 	if (msg.sType == DUI_MSGTYPE_WINDOWINIT && m_pManager)
 	{
 		m_pLabel_date = dynamic_cast<CLabelUI *>(m_pManager->FindControl(_T("date")));
+		UpDateUI();
 	}
 	else if (msg.sType == DUI_MSGTYPE_CLICK)
 	{
@@ -69,10 +70,10 @@ void CDateUI::Notify(TNotifyUI& msg)
 	}
 }
 //使用PopupUI的字符串初始化CChildLayoutUI2017-3-14
-void CDateUI::initUIData( CPopupUI *pOowner)
+void CDateUI::initUIData( CControlUI *pOowner)
 {
 	if (pOowner == NULL) return;
-	m_pOowner = pOowner;
+	m_pOowner = dynamic_cast<CPopupUI *>(pOowner);
 	CDuiString strPopupUIString = m_pOowner->GetText();
 	TCHAR *pContext = NULL;
 	const TCHAR *pText = _tcstok_s((TCHAR *)strPopupUIString.GetData(), _T("-"), &pContext);
@@ -91,7 +92,7 @@ void CDateUI::initUIData( CPopupUI *pOowner)
 		}
 	}	
 
-	UpDateUI();
+	//UpDateUI();
 }
 
 

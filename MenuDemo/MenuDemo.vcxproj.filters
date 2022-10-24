@@ -7,6 +7,9 @@
     <ClCompile Include="App.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="SpinButtonUI.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Header Files">
@@ -18,6 +21,9 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="StdAfx.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="SpinButtonUI.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

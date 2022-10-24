@@ -2,7 +2,9 @@
 #define __SLIDERTABLAYOUT_H__
 
 #pragma once
-
+/*
+带有动画效果的TabLayout
+*/
 
 namespace DuiLib
 {

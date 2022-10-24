@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Window size="800,600" caption ="0,0,0,28" roundcorner="2,2">
+	<ListHBoxElement height="28">
+		<CheckBox name="index" height="16" width="30" selectedimage="file='skin\\res\\checked.png' dest='0,2,16,18'" normalimage="file='skin\\res\\unchecked.png' dest='0,2,16,18'"/>
+		<Label name="name" text="default template test" textcolor="0xffff0000"/>
+		<HorizontalLayout>
+			<Button height="16" width="30" text="编辑"  normalimage="file='skin\\res\\btn_normal.png'" hotimage="file='skin\\res\\btn_hot.png'" pushedimage="file='skin\\res\\btn_pushed.png'"/>
+			<Control width="20"/>
+			<Button height="16" width="30" text="删除"  normalimage="file='skin\\res\\btn_normal.png'" hotimage="file='skin\\res\\btn_hot.png'" pushedimage="file='skin\\res\\btn_pushed.png'"/>
+		</HorizontalLayout>
+	</ListHBoxElement>
+</Window>

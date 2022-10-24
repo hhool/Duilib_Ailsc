@@ -34,8 +34,9 @@
 		</HorizontalLayout>
 
 		<!--客户区-->
-		<VerticalLayout name="client" bordersize="4" bordercolor="#ff2656a3" >
-			<List name="list" padding="4,4,4,4" virtual="true" menu="true" vscrollbar="true" hscrollbar="true" itemalign="center" itembkcolor="#FFE2DDDF" itemaltbk="true"
+		<VerticalLayout name="client" bordersize="4" bordercolor="#ff2656a3">
+			<Label text="use virtual mode and template" textcolor="0xffff0000" height="30" valign="center" padding="5,0,0,0"/>
+			<List name="list" padding="4,4,4,4" virtual="true" itemtemplate="skin/template/list_item_default.xml" menu="true" vscrollbar="true" hscrollbar="true" itemalign="center" itembkcolor="#FFE2DDDF" itemaltbk="true"
 			itemtextcolor="#000000" headerbkimage="file='skin\res\list_header_bg.png'">
 				<ListHeader height="24">
 					<ListHeaderItem text="序" font="1" width="80" hotimage="file='skin\res\list_header_hot.png'"
@@ -45,6 +46,40 @@
 					<ListHeaderItem text="操作" name="1" sort="false" ascimage="file='skin\res\ASC.png'" descimage="file='skin\res\DESC.png'" sortwidth="9" sortheight="8"  font="1" width="120" hotimage="file='skin\res\list_header_hot.png'"
 					pushedimage="file='skin\res\list_header_pushed.png'" sepimage="file='skin\res\list_header_sep.png'" sepwidth="1"/>								           
 				</ListHeader>
+			</List>
+			
+			<Label text="not use virtual mode but use template" textcolor="0xffff0000" height="30" valign="center" padding="5,0,0,0"/>
+			<List name="list1" padding="4,4,4,4" itemtemplate="skin/template/list_item_default.xml" menu="true" vscrollbar="true" hscrollbar="true" itemalign="center" itembkcolor="#FFE2DDDF" itemaltbk="true"
+			itemtextcolor="#000000" headerbkimage="file='skin\res\list_header_bg.png'">
+				<ListHeader height="24">
+					<ListHeaderItem text="序" font="1" width="80" hotimage="file='skin\res\list_header_hot.png'"
+					pushedimage="file='skin\res\list_header_pushed.png'" sepimage="file='skin\res\list_header_sep.png'" sepwidth="1"/>				                        			
+					<ListHeaderItem text="名称" name="0" sort="true" defaultsort="1" ascimage="file='skin\res\ASC.png'" descimage="file='skin\res\DESC.png'" sortwidth="9" sortheight="8"  font="1" width="300" hotimage="file='skin\res\list_header_hot.png'"
+					pushedimage="file='skin\res\list_header_pushed.png'" sepimage="file='skin\res\list_header_sep.png'" sepwidth="1"/>
+					<ListHeaderItem text="操作" name="1" sort="false" ascimage="file='skin\res\ASC.png'" descimage="file='skin\res\DESC.png'" sortwidth="9" sortheight="8"  font="1" width="120" hotimage="file='skin\res\list_header_hot.png'"
+					pushedimage="file='skin\res\list_header_pushed.png'" sepimage="file='skin\res\list_header_sep.png'" sepwidth="1"/>								           
+				</ListHeader>
+				
+				<ListHBoxElement height="28">
+					<CheckBox height="16" text="1" width="30" selectedimage="file='skin\\res\\checked.png' dest='0,2,16,18'" normalimage="file='skin\\res\\unchecked.png' dest='0,2,16,18'"/>
+					<Label text="000001" textcolor="0xffff0000"/>
+					<HorizontalLayout>
+						<Button height="16" width="30" text="编辑"  normalimage="file='skin\\res\\btn_normal.png'" hotimage="file='skin\\res\\btn_hot.png'" pushedimage="file='skin\\res\\btn_pushed.png'"/>
+						<Control width="20"/>
+						<Button height="16" width="30" text="删除"  normalimage="file='skin\\res\\btn_normal.png'" hotimage="file='skin\\res\\btn_hot.png'" pushedimage="file='skin\\res\\btn_pushed.png'"/>
+					</HorizontalLayout>
+				</ListHBoxElement>
+				
+				<ListHBoxElement height="28">
+					<CheckBox height="16" text="2" width="30" selectedimage="file='skin\\res\\checked.png' dest='0,2,16,18'" normalimage="file='skin\\res\\unchecked.png' dest='0,2,16,18'"/>
+					<Label text="000002" textcolor="0xffff0000"/>
+					<HorizontalLayout>
+						<Button height="16" width="30" text="编辑"  normalimage="file='skin\\res\\btn_normal.png'" hotimage="file='skin\\res\\btn_hot.png'" pushedimage="file='skin\\res\\btn_pushed.png'"/>
+						<Control width="20"/>
+						<Button height="16" width="30" text="删除"  normalimage="file='skin\\res\\btn_normal.png'" hotimage="file='skin\\res\\btn_hot.png'" pushedimage="file='skin\\res\\btn_pushed.png'"/>
+					</HorizontalLayout>
+				</ListHBoxElement>
+				
 			</List>
 		</VerticalLayout>
     </VerticalLayout>

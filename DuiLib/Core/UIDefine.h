@@ -276,13 +276,14 @@ protected:                                                                \
 #define  DUI_CTR_ICONTAINER                      (_T("IContainer"))
 #define  DUI_CTR_ILISTOWNER                      (_T("IListOwner"))
 #define  DUI_CTR_LISTHEADER                      (_T("ListHeader"))
-#define  DUI_CTR_TILELAYOUT                      (_T("TileLayout"))
+#define  DUI_CTR_GRIDLAYOUT                      (_T("GridLayout"))
 #define  DUI_CTR_WEBBROWSER                      (_T("WebBrowser"))
+
 
 #define  DUI_CTR_MENUELEMENT					 (_T("MenuElement"))
 #define  DUI_CTR_CHILDLAYOUT                     (_T("ChildLayout"))
 #define  DUI_CTR_LISTELEMENT                     (_T("ListElement"))
-#define  DUI_CTR_VIRTUALLIST                     (_T("VirtualList"))
+#define  DUI_CTR_ALIGNLAYOUT                     (_T("AlignLayout"))
 
 #define  DUI_CTR_VERTICALLAYOUT                  (_T("VerticalLayout"))
 #define  DUI_CTR_LISTHEADERITEM                  (_T("ListHeaderItem"))
@@ -290,10 +291,10 @@ protected:                                                                \
 #define  DUI_CTR_LISTHBOXELEMENT                 (_T("ListHBoxElement"))
 #define  DUI_CTR_LISTTEXTELEMENT                 (_T("ListTextElement"))
 #define  DUI_CTR_SLIDERTABLAYOUT				 (_T("SliderTabLayout"))
-#define  DUI_CTR_COMPOSITELAYOUT				 (_T("CompositeLayout"))//#liulei 进行功能性封装这个需要CreateControl动态创建
 
 #define  DUI_CTR_HORIZONTALLAYOUT                (_T("HorizontalLayout"))
 #define  DUI_CTR_LISTLABELELEMENT                (_T("ListLabelElement"))
+#define  DUI_CTR_FUNCTIONALLAYOUT				 (_T("FunctionalLayout"))//#liulei 进行功能性封装这个需要CreateControl动态创建
 
 #define  DUI_CTR_LISTCONTAINERELEMENT            (_T("ListContainerElement"))
 

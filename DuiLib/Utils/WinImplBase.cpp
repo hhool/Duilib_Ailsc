@@ -22,6 +22,7 @@ LRESULT WindowImplBase::ResponseDefaultKeyEvent(WPARAM wParam, bool& bHandled)
 {
 	if (wParam == VK_RETURN)
 	{
+		bHandled = TRUE;
 		return FALSE;
 	}
 	else if (wParam == VK_ESCAPE)
@@ -193,7 +194,7 @@ LRESULT WindowImplBase::OnNcHitTest(UINT uMsg, WPARAM wParam, LPARAM lParam, BOO
 // 				_tcsicmp(pControl->GetClass(), DUI_CTR_OPTION) != 0 &&
 // 				_tcsicmp(pControl->GetClass(), DUI_CTR_TEXT) != 0 )
 // 				return HTCAPTION;
-			if (!IsInStaticControl(pControl))
+			if (!IsInStaticControl(pControl, pt))
 			{
 				return HTCAPTION;
 			}
@@ -521,7 +522,7 @@ void WindowImplBase::Notify(TNotifyUI& msg)
 	return CNotifyPump::NotifyPump(msg);
 }
 
-BOOL WindowImplBase::IsInStaticControl(CControlUI *pControl)
+BOOL WindowImplBase::IsInStaticControl(CControlUI *pControl, POINT pt)
 {
 	BOOL bRet = FALSE;
 	if (! pControl)

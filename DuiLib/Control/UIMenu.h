@@ -66,7 +66,7 @@ class DUILIB_API CMenuWnd : public CWindowWnd, public ContextMenuReceiver,public
 
 {
 public:
-	CMenuWnd(CPaintManagerUI *pParentPm, HWND hParent = NULL);
+	CMenuWnd(CPaintManagerUI *pParentPm, HWND hParent = NULL,UINT uDestrotyNotifyMessage = 0/*Menu销毁的时候是否通知窗口*/);
 	/*
 	@param point 菜单位置
 	@param pOwner 是属于哪个菜单的子菜单，如果不是则填NULL
@@ -82,6 +82,7 @@ public:
 	BOOL Receive(ContextMenuParam param);
 	virtual void Notify(TNotifyUI& msg);
 public:
+	UINT m_uNotifyMsg;
 	HWND m_hParent;
 	POINT m_BasedPoint;
 	STRINGorID m_xml;

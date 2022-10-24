@@ -130,12 +130,13 @@ void CMenuUI::SetAttribute(LPCTSTR pstrName, LPCTSTR pstrValue)
 }
 
 /////////////////////////////////////////////////////////////////////////////////////
-CMenuWnd::CMenuWnd(CPaintManagerUI *pParentPm,HWND hParent) :
+CMenuWnd::CMenuWnd(CPaintManagerUI *pParentPm, HWND hParent, UINT uDestrotyNotifyMessage) :
 m_hParent(hParent),
 m_pOwner(NULL),
 m_pMenuUI(),
 m_xml(_T("")),
-m_pNotifyPm(pParentPm)
+m_pNotifyPm(pParentPm),
+m_uNotifyMsg(uDestrotyNotifyMessage)
 {}
 
 BOOL CMenuWnd::Receive(ContextMenuParam param)
@@ -229,6 +230,11 @@ void CMenuWnd::ShowWindow()
 	int nWidth = rc.GetWidth();
 	int nHeight = rc.GetHeight();
 
+	if (point.x + nWidth > rcWork.right)
+		dwAlignment |= eMenuAlignment_Right;
+	if (point.y + nHeight > rcWork.bottom)
+		dwAlignment |= eMenuAlignment_Bottom;
+
 	if (dwAlignment & eMenuAlignment_Right)
 	{
 		rc.right = point.x;
@@ -279,6 +285,9 @@ void CMenuWnd::OnFinalMessage(HWND hWnd)
 		m_pOwner->m_uButtonState &= ~ UISTATE_PUSHED;
 		m_pOwner->Invalidate();
 	}
+
+	if (m_hParent && IsWindow(m_hParent) && m_uNotifyMsg)
+		::PostMessage(m_hParent, m_uNotifyMsg, 0, 0);
     delete this;
 }
 
@@ -302,6 +311,10 @@ LRESULT CMenuWnd::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
 			// the items back to the righfull owner/manager when the window closes.
 			m_pMenuUI = new CMenuUI();
 			m_pMenuUI->SetManager(&m_pm, NULL, true);
+
+			m_pMenuUI->SetBkColor(0xFFFFFFFF);
+			m_pMenuUI->SetBorderColor(0xFF85E4FF);
+
 			LPCTSTR pDefaultAttributes = m_pOwner->GetManager()->GetDefaultAttributeList(DUI_CTR_MENU);
 			if( pDefaultAttributes ) 
 			{
@@ -310,8 +323,6 @@ LRESULT CMenuWnd::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
 				m_pm.AddDefaultAttributeList(DUI_CTR_MENU, pDefaultAttributes);
 				m_pMenuUI->SetAttributeList(pDefaultAttributes);
 			}
-			m_pMenuUI->SetBkColor(0xFFFFFFFF);
-			m_pMenuUI->SetBorderColor(0xFF85E4FF);
 			m_pMenuUI->SetBorderSize(0);
 			m_pMenuUI->SetAutoDestroy(false);
 			m_pMenuUI->EnableScrollBar();
@@ -409,10 +420,15 @@ LRESULT CMenuWnd::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
 				rc.right = rcWindow.left;
 				rc.left = rc.right - cxFixed;
 
-				rc.top = rcWindow.bottom;
+				//#liulei 20200118 修复子菜单如果在右边显示不下，显示位置不对
+				//这里不应该是窗口的bottom,应该是该item的top
+				//rc.top = rcWindow.bottom;
+				POINT pt = { rcOwner.left, rcOwner.top };
+				ClientToScreen(m_pOwner->GetManager()->GetPaintWindow(), &pt);
+				rc.top = pt.y;
 				rc.bottom = rc.top + cyFixed;
 			}
-
+			
 			if( rc.top < rcWork.top )
 			{
 				rc.top = rcOwner.top;

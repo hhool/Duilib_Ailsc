@@ -21,7 +21,7 @@ public:
 public:
     CPaintManagerUI m_pm;
 	CPopupUI* m_pOwner;
-	CCompositeLayoutUI* m_pLayout;
+	CUIFunctionalLayout* m_pLayout;
 	bool m_bNotKillWnd;//是否应该关闭窗口
 };
 
@@ -117,10 +117,9 @@ LRESULT CPopupWnd::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
 		m_pLayout->SetBorderColor(0xFFC6C7D2);
 		m_pLayout->SetBorderSize(1);
 		m_pLayout->SetAutoDestroy(false);
+		m_pLayout->SetChildLayoutXML(m_pOwner->GetPopupXml());
 		m_pm.AddNotifier(this);
         m_pm.AttachDialog(m_pLayout);
-		m_pLayout->SetChildLayoutXML(m_pOwner->GetPopupXml());
-		m_pLayout->DoInit();
 		m_pLayout->Init();
 		m_pLayout->initUIData(m_pOwner);
         return 0;
@@ -168,8 +167,13 @@ LRESULT CPopupWnd::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
             HWND hWnd = ::GetFocus();
             HWND hParentWnd = NULL;
             bool bIsChildFocus = false;
+			//获取焦点的窗口可能是自己也可能是自己的child
+			if (hWnd == m_hWnd)
+			{
+				bIsChildFocus = true;
+			}
             while( hParentWnd = ::GetParent(hWnd) ) {
-                if( m_hWnd == hParentWnd ) {
+				if (bIsChildFocus || m_hWnd == hParentWnd) {
                     bIsChildFocus = true;
                     break;
                 }
@@ -330,13 +334,13 @@ bool CPopupUI::IsTopDirect()
 	return m_bTopDirect;
 }
 
-CCompositeLayoutUI *CPopupUI::CreatePopUI()
+CUIFunctionalLayout *CPopupUI::CreatePopUI()
 {
-	CCompositeLayoutUI *pChild = NULL;
+	CUIFunctionalLayout *pChild = NULL;
 	if (m_pPopUICreate)
 		pChild = m_pPopUICreate();
 	if (pChild == NULL)
-		pChild = new CCompositeLayoutUI;
+		pChild = new CUIFunctionalLayout;
 	return pChild;
 }
 
@@ -350,7 +354,7 @@ void CPopupUI::SetAttribute(LPCTSTR pstrName, LPCTSTR pstrValue)
 		szDropBoxSize.cy = _tcstol(pstr + 1, &pstr, 10);    ASSERT(pstr);
 		SetPopBoxSize(szDropBoxSize);
 	}
-	else if (_tcscmp(pstrName, _T("popxml")) == 0) SetPopupXml(pstrValue);
+	else if (_tcscmp(pstrName, _T("xmlfile")) == 0) SetPopupXml(pstrValue);
 	else if (_tcscmp(pstrName, _T("direct")) == 0) SetDirect(_tcscmp(pstrName, _T("top")) == 0);
 	else
 		__super::SetAttribute(pstrName, pstrValue);

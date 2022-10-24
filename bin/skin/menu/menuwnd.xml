@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Window size="800,600" caption ="0,0,0,28" roundcorner="2,2">
-  <Font id="0" name="微软雅黑" size="12" bold="false" default="true" />
+  <Font id="0" name="微软雅黑" size="15" bold="false" default="true" />
   <Font id="1" name="微软雅黑" size="12" bold="true"/>
   <Font id="2" name="微软雅黑" size="12"/>
   <Include source="skin/Default/Button.xml" />
@@ -35,6 +35,63 @@
 
 		<!--客户区-->
 		<VerticalLayout name="client" menu="true" bordersize="4" bordercolor="#ff2656a3" >
+			<Label text="ChildLayout && AlignLayout && Popup && CUIFunctionalLayout demo" textcolor="0xffff0000" height="30" bkcolor="0xffffdede" align="center" padding="5,5,5,5"/>
+			<HorizontalLayout height="200">
+				<ChildLayout xmlfile="skin/popup/DateUI/DateTime.xml" bkcolor="0xffff0000"  padding="5,5,5,5"/>
+				<AlignLayout >
+					<VerticalLayout height="100" width="120" >
+						<Popup name="popup_wnd" height="30" width="120" text="popup wnd" popboxsize="177,192" bkcolor="0xffff0000" xmlfile="skin/menu/pop_wnd.xml"/>
+						<Control />
+						<SpinButton  height="30" width="120" xmlfile="skin/menu/spin_button.xml" />
+					</VerticalLayout>
+				</AlignLayout>
+			</HorizontalLayout>
+			<Label text="GridLayout(use itemtemplate)&TabLayout show demo,empty area click mouse right to show menu" textcolor="0xffff0000" height="30" bkcolor="0xffffdede" align="center" padding="5,5,5,5"/>
+			<HorizontalLayout padding="5,5,5,5" height="100">
+				<GridLayout name="grid_layout" columns="4" itemsize="40,40" padding="5,5,5,5"  vscrollbar="true" itemtemplate="skin/template/grid_item_default.xml">
+					<Button text="123" />
+					<Button text="123" />
+					<Button text="123" />
+					<Button text="123" />
+					<Button text="123" />
+					<Button text="123" />
+					<Button text="123" />
+					<Button text="123" />
+				</GridLayout>
+
+				<VerticalLayout>
+					<HorizontalLayout height="20" padding="2,2,2,2">
+						<Button name="tab0" text="tab0" padding="5,0,5,0"/>
+						<Button name="tab1" text="tab1" padding="5,0,5,0"/>
+						<Button name="tab2" text="tab2" padding="5,0,5,0"/>
+					</HorizontalLayout>
+					
+					<TabLayout name="tab_layout" selectedid="1" >
+						<Container bkcolor="0xffff0000"/>
+						<Container bkcolor="0xff00ff00"/>
+						<Container bkcolor="0xff0000ff"/>
+					</TabLayout>
+				</VerticalLayout>
+			</HorizontalLayout>
+			
+			<Label text="SliderTabLayout&AlignLayout（center,center） show demo,empty area click mouse right to show menu" textcolor="0xffff0000" height="30" bkcolor="0xffffdede" align="center" padding="5,5,5,5"/>
+			<HorizontalLayout padding="5,5,5,5">
+				<VerticalLayout>
+					<HorizontalLayout height="20" padding="2,2,2,2">
+						<Button name="slider_tab0" text="tab0" padding="5,0,5,0"/>
+						<Button name="slider_tab1" text="tab1" padding="5,0,5,0"/>
+						<Button name="slider_tab2" text="tab2" padding="5,0,5,0"/>
+					</HorizontalLayout>
+					<SliderTabLayout name="slider_tab_layout" selectedid="0" >
+						<Container bkcolor="0xffff0000"/>
+						<Container bkcolor="0xff00ff00"/>
+						<Container bkcolor="0xff0000ff"/>
+					</SliderTabLayout>
+				</VerticalLayout>
+				<AlignLayout align="center" valign="center">
+					<Button text="test" height="30" width="100" bkcolor="0xff00ff00" />
+				</AlignLayout>
+			</HorizontalLayout>
 		</VerticalLayout>
     </VerticalLayout>
 </Window>  

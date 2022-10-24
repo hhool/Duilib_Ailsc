@@ -2,7 +2,9 @@
 #define __UITABLAYOUT_H__
 
 #pragma once
-
+/*
+TabLayout仅仅包括展示区，不包括标签区域，标签区域自己定制
+*/
 namespace DuiLib
 {
 	class DUILIB_API CTabLayoutUI : public CContainerUI

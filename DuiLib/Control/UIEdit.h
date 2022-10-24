@@ -5,9 +5,9 @@
 
 namespace DuiLib
 {
-	typedef bool(*PCONTROLINPUT)(TCHAR c);
-
+	class CEditUI;
 	class CEditWnd;
+	typedef bool(*PCONTROLINPUT)(CEditUI *pEdit,TCHAR c,LPVOID param);
 	class DUILIB_API CEditUI : public CLabelUI
 	{
 		friend class CEditWnd;
@@ -20,13 +20,15 @@ namespace DuiLib
 		HWND GetNativeWindow() const;
 
 		///> Edit的输入控制
-		void SetControlInput(PCONTROLINPUT inputcontrol);
+		void SetControlInput(PCONTROLINPUT inputcontrol,LPVOID param);
 		void SetEnabled(bool bEnable = true);
 		void SetDecimal(bool bDecimal = false);//是否只允许输入带有小数点的数字eg:3.14
 		bool IsDecimal();
 		void SetDigits(int ndigits);//后面保留位数
 		int GetDigits();
 		void SetText(LPCTSTR pstrText);
+		void SetPlaceholderText(LPCTSTR pstrText);
+		void SetPlaceholderTextColor(DWORD dwColor);
 		void SetMaxChar(UINT uMax);
 		UINT GetMaxChar();
 		void SetReadOnly(bool bReadOnly);
@@ -74,6 +76,7 @@ namespace DuiLib
 		int GetTextDigits(int nSelPos);//获取当前光标之前的数据小数点个数
 	protected:
 		PCONTROLINPUT m_pInputControl;
+		LPVOID m_pInputControlParam;
 		CEditWnd* m_pWindow;
 		UINT m_nDigits;
 		UINT m_uMaxChar;
@@ -84,8 +87,10 @@ namespace DuiLib
 		TCHAR m_cPasswordChar;
 		UINT m_uButtonState;
 		DWORD m_dwEditbkColor;
+		DWORD m_dwPlaceholderTexeColor;
 		int m_iWindowStyls;
 
+		CDuiString m_sPlaceholderText;
 		TDrawInfo m_diNormal;
 		TDrawInfo m_diHot;
 		TDrawInfo m_diFocused;

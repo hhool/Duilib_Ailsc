@@ -1,55 +1,127 @@
 #include "stdafx.h"
-#include "UITileLayout.h"
+#include "UIGridLayout.h"
 
 namespace DuiLib
 {
-	CTileLayoutUI::CTileLayoutUI() : m_nColumns(1), m_nRows(0), m_nColumnsFixed(0), m_iChildVPadding(0),
+	CGridLayoutUI::CGridLayoutUI() : m_nColumns(1), m_nRows(0), m_nColumnsFixed(0), m_iChildVPadding(0),
 		m_bIgnoreItemPadding(true)
 	{
 		m_szItem.cx = m_szItem.cy = 80;
 	}
 
-	LPCTSTR CTileLayoutUI::GetClass() const
+	LPCTSTR CGridLayoutUI::GetClass() const
 	{
-		return DUI_CTR_TILELAYOUT;
+		return DUI_CTR_GRIDLAYOUT;
 	}
 
-	LPVOID CTileLayoutUI::GetInterface(LPCTSTR pstrName)
+	LPVOID CGridLayoutUI::GetInterface(LPCTSTR pstrName)
 	{
-		if( _tcscmp(pstrName, DUI_CTR_TILELAYOUT) == 0 ) return static_cast<CTileLayoutUI*>(this);
+		if (_tcscmp(pstrName, DUI_CTR_GRIDLAYOUT) == 0) return static_cast<CGridLayoutUI*>(this);
 		return CContainerUI::GetInterface(pstrName);
 	}
 
-	int CTileLayoutUI::GetFixedColumns() const
+	bool CGridLayoutUI::Add(CControlUI* pControl)
+	{
+		if (m_ItemtemplateXml.IsEmpty())
+			return __super::Add(pControl);
+		else
+		{
+			CDialogBuilder builder;
+			CControlUI* pChildControl = static_cast<CControlUI*>(builder.Create(m_ItemtemplateXml.GetData(), (UINT)0, NULL, m_pManager, NULL));
+			if (pChildControl)
+			{
+				if (!__super::Add(pChildControl))
+				{
+					pChildControl->Delete();
+				}
+			}
+			return false;
+		}
+	}
+
+	bool CGridLayoutUI::AddAt(CControlUI* pControl, int iIndex)
+	{
+		if (m_ItemtemplateXml.IsEmpty())
+			return __super::AddAt(pControl,iIndex);
+		else
+		{
+			CDialogBuilder builder;
+			CControlUI* pChildControl = static_cast<CControlUI*>(builder.Create(m_ItemtemplateXml.GetData(), (UINT)0, NULL, m_pManager, NULL));
+			if (pChildControl)
+			{
+				if (!__super::AddAt(pChildControl, iIndex))
+				{
+					pChildControl->Delete();
+				}
+			}
+			return false;
+		}
+	}
+
+	CControlUI* CGridLayoutUI::AddTemplate()
+	{
+		ASSERT(!m_ItemtemplateXml.IsEmpty());
+		CDialogBuilder builder;
+		return (builder.Create(m_ItemtemplateXml.GetData(), (UINT)0, NULL, m_pManager, this));
+	}
+
+	CControlUI* CGridLayoutUI::AddTemplateAt(int iIndex)
+	{
+		ASSERT(!m_ItemtemplateXml.IsEmpty());
+		CDialogBuilder builder;
+		CControlUI* pChildControl = static_cast<CControlUI*>(builder.Create(m_ItemtemplateXml.GetData(), (UINT)0, NULL, m_pManager, NULL));
+		if (pChildControl)
+		{
+			if (!__super::AddAt(pChildControl, iIndex))
+			{
+				pChildControl->Delete();
+			}
+		}
+		return pChildControl;
+	}
+
+	int CGridLayoutUI::GetFixedColumns() const
 	{
 		return m_nColumnsFixed;
 	}
 
-	void CTileLayoutUI::SetFixedColumns(int iColums)
+	void CGridLayoutUI::SetFixedColumns(int iColums)
 	{
 		if( iColums < 0 ) return;
 		m_nColumnsFixed = iColums;
 		NeedUpdate();
 	}
 
-	int CTileLayoutUI::GetChildVPadding() const
+	int CGridLayoutUI::GetChildVPadding() const
 	{
 		return m_iChildVPadding;
 	}
 
-	void CTileLayoutUI::SetChildVPadding(int iPadding)
+	void CGridLayoutUI::SetItemTemplateXml(CDuiString xml)
+	{
+		if (m_ItemtemplateXml != xml)
+		{
+			m_ItemtemplateXml = xml;
+			if (!m_ItemtemplateXml.IsEmpty())
+			{
+				RemoveAll();
+			}
+		}
+	}
+
+	void CGridLayoutUI::SetChildVPadding(int iPadding)
 	{
 		m_iChildVPadding = iPadding;
 		if (m_iChildVPadding < 0) m_iChildVPadding = 0;
 		NeedUpdate();
 	}
 
-	SIZE CTileLayoutUI::GetItemSize() const
+	SIZE CGridLayoutUI::GetItemSize() const
 	{
 		return m_szItem;
 	}
 
-	void CTileLayoutUI::SetItemSize(SIZE szSize)
+	void CGridLayoutUI::SetItemSize(SIZE szSize)
 	{
 		if( m_szItem.cx != szSize.cx || m_szItem.cy != szSize.cy ) {
 			m_szItem = szSize;
@@ -57,17 +129,17 @@ namespace DuiLib
 		}
 	}
 
-	int CTileLayoutUI::GetColumns() const
+	int CGridLayoutUI::GetColumns() const
 	{
 		return m_nColumns;
 	}
 
-	int CTileLayoutUI::GetRows() const
+	int CGridLayoutUI::GetRows() const
 	{
 		return m_nRows;
 	}
 
-	void CTileLayoutUI::SetAttribute(LPCTSTR pstrName, LPCTSTR pstrValue)
+	void CGridLayoutUI::SetAttribute(LPCTSTR pstrName, LPCTSTR pstrValue)
 	{
 		if( _tcscmp(pstrName, _T("itemsize")) == 0 ) {
 			SIZE szItem = { 0 };
@@ -78,10 +150,11 @@ namespace DuiLib
 		}
 		else if( _tcscmp(pstrName, _T("columns")) == 0 ) SetFixedColumns(_ttoi(pstrValue));
 		else if( _tcscmp(pstrName, _T("childvpadding")) == 0 ) SetChildVPadding(_ttoi(pstrValue));
+		else if (_tcscmp(pstrName, _T("itemtemplate")) == 0) SetItemTemplateXml(pstrValue);
 		else CContainerUI::SetAttribute(pstrName, pstrValue);
 	}
 
-	void CTileLayoutUI::SetPos(RECT rc, bool bNeedInvalidate)
+	void CGridLayoutUI::SetPos(RECT rc, bool bNeedInvalidate)
 	{
 		CControlUI::SetPos(rc, bNeedInvalidate);
 		rc = m_rcItem;

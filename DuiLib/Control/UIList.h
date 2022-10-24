@@ -144,8 +144,7 @@ public:
 	//>  bUserDefine 是否为用户自定义数据，对于复杂的数据结构，copy不能盲足，需要用户自定义Copy
 	//> bUserDefine 如果为TRUE 则会触发 DUI_MSGTYPE_COPYITEM Wparam 为ListItem Lparam 为DUICopyItem需要返回数据的地址，
 	BOOL Copy(int nMaxRowItemData = 1024,bool bUserDefine = false);
-	///> 设置选中行的标记,这个标记根据Item的Tag来标记
-	void SetSelectControlTag(INT64 iControlTag);
+
 	INT64 GetSelectControlTag();
 	///> 是否启用虚表填充数据优化（优化：填充虚表数据的时候Item不可见，填充完毕之后恢复状态，减少刷新次数）
 	///> 默认开启, 如果含有Item 含有 combo  则必须关闭优化，否则combo显示有问题
@@ -165,7 +164,8 @@ public:
 	bool IsEnableMouseWhell();
 	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-
+	//支持设置子项模板
+	void SetItemTemplateXml(CDuiString xml);
 
     bool GetScrollSelect();
     void SetScrollSelect(bool bScrollSelect);
@@ -180,6 +180,8 @@ public:
 	int GetItemCount() const;//获取实际Item的个数
     bool Add(CControlUI* pControl);
     bool AddAt(CControlUI* pControl, int iIndex);
+	CControlUI* AddTemplate();
+	CControlUI* AddTemplateAt(int iIndex);
     bool Remove(CControlUI* pControl, bool bDoNotDestroy=false);
     bool RemoveAt(int iIndex, bool bDoNotDestroy=false);
     void RemoveAll();
@@ -276,9 +278,13 @@ public:
     bool SortItems(PULVCompareFunc pfnCompare, UINT_PTR dwData);
 
 private:
+	///> 虚表的时候设置选中行的标记,这个标记根据Item的Tag来标记
+	void SetSelectControlTag(INT64 iControlTag);
+
 	void ResizeVirtualItemBuffer();//动态调整虚拟表的缓冲区
 	bool AddVirtualItem(CControlUI* pControl);
 	void CalcPanelPos();
+	CControlUI *CreateTemplateControl();
 protected:
 	INT64 m_iSelectControlTag;
 	bool m_bUseVirtualList;
@@ -303,6 +309,7 @@ protected:
 	int m_nVirtualItemCount;
 	int	m_nMaxShowCount;
 	int	m_nDrawStartIndex;//从哪一行开始绘画的，从0开始
+	CDuiString m_ItemtemplateXml;
 };
 
 /////////////////////////////////////////////////////////////////////////////////////

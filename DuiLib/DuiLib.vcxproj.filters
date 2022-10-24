@@ -90,9 +90,6 @@
     <ClCompile Include="Layout\UITabLayout.cpp">
       <Filter>Source Files\Layout</Filter>
     </ClCompile>
-    <ClCompile Include="Layout\UITileLayout.cpp">
-      <Filter>Source Files\Layout</Filter>
-    </ClCompile>
     <ClCompile Include="Layout\UIVerticalLayout.cpp">
       <Filter>Source Files\Layout</Filter>
     </ClCompile>
@@ -162,14 +159,20 @@
     <ClCompile Include="Layout\UISliderTabLayout.cpp">
       <Filter>Source Files\Layout</Filter>
     </ClCompile>
-    <ClCompile Include="Layout\UICompositeLayout.cpp">
-      <Filter>Source Files\Layout</Filter>
-    </ClCompile>
     <ClCompile Include="Control\UIIPAddress.cpp">
       <Filter>Source Files\Control</Filter>
     </ClCompile>
     <ClCompile Include="Control\UIPopup.cpp">
       <Filter>Source Files\Control</Filter>
+    </ClCompile>
+    <ClCompile Include="Layout\UIAlignLayout.cpp">
+      <Filter>Source Files\Layout</Filter>
+    </ClCompile>
+    <ClCompile Include="Layout\UIFunctionalLayout.cpp">
+      <Filter>Source Files\Layout</Filter>
+    </ClCompile>
+    <ClCompile Include="Layout\UIGridLayout.cpp">
+      <Filter>Source Files\Layout</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -228,9 +231,6 @@
       <Filter>Header Files\Layout</Filter>
     </ClInclude>
     <ClInclude Include="Layout\UITabLayout.h">
-      <Filter>Header Files\Layout</Filter>
-    </ClInclude>
-    <ClInclude Include="Layout\UITileLayout.h">
       <Filter>Header Files\Layout</Filter>
     </ClInclude>
     <ClInclude Include="Layout\UIVerticalLayout.h">
@@ -302,14 +302,20 @@
     <ClInclude Include="Layout\UISliderTabLayout.h">
       <Filter>Header Files\Layout</Filter>
     </ClInclude>
-    <ClInclude Include="Layout\UICompositeLayout.h">
-      <Filter>Header Files\Layout</Filter>
-    </ClInclude>
     <ClInclude Include="Control\UIIPAddress.h">
       <Filter>Header Files\Control</Filter>
     </ClInclude>
     <ClInclude Include="Control\UIPopup.h">
       <Filter>Header Files\Control</Filter>
+    </ClInclude>
+    <ClInclude Include="Layout\UIAlignLayout.h">
+      <Filter>Header Files\Layout</Filter>
+    </ClInclude>
+    <ClInclude Include="Layout\UIFunctionalLayout.h">
+      <Filter>Header Files\Layout</Filter>
+    </ClInclude>
+    <ClInclude Include="Layout\UIGridLayout.h">
+      <Filter>Header Files\Layout</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

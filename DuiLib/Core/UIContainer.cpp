@@ -639,12 +639,14 @@ namespace DuiLib
 				SetFloatPos(it);
 			}
 			else { 
-				SIZE sz = { rc.right - rc.left, rc.bottom - rc.top };
+				//ÐÞ¸´Íâ±ß¾à
+				RECT rcPadding = pControl->GetPadding();
+				SIZE sz = { rc.right - rc.left - rcPadding.left - rcPadding.right, rc.bottom - rc.top - rcPadding.top - rcPadding.bottom};
 				if( sz.cx < pControl->GetMinWidth() ) sz.cx = pControl->GetMinWidth();
 				if( sz.cx > pControl->GetMaxWidth() ) sz.cx = pControl->GetMaxWidth();
 				if( sz.cy < pControl->GetMinHeight() ) sz.cy = pControl->GetMinHeight();
 				if( sz.cy > pControl->GetMaxHeight() ) sz.cy = pControl->GetMaxHeight();
-				RECT rcCtrl = { rc.left, rc.top, rc.left + sz.cx, rc.top + sz.cy };
+				RECT rcCtrl = { rc.left + rcPadding.left, rc.top + rcPadding.top, rc.left + sz.cx, rc.top + sz.cy };
 				pControl->SetPos(rcCtrl, false);
 			}
 		}
@@ -695,7 +697,7 @@ namespace DuiLib
 		}
 		else if( _tcscmp(pstrName, _T("childvalign")) == 0 ) {
 			if( _tcscmp(pstrValue, _T("top")) == 0 ) m_iChildVAlign = DT_TOP;
-			else if( _tcscmp(pstrValue, _T("vcenter")) == 0 ) m_iChildVAlign = DT_VCENTER;
+			else if( _tcscmp(pstrValue, _T("center")) == 0 ) m_iChildVAlign = DT_VCENTER;
 			else if( _tcscmp(pstrValue, _T("bottom")) == 0 ) m_iChildVAlign = DT_BOTTOM;
 		}
 		else CControlUI::SetAttribute(pstrName, pstrValue);

@@ -37,12 +37,16 @@ public:
     LONG GetWinStyle();
     void SetWinStyle(LONG lStyle);
     DWORD GetTextColor();
+	DWORD GetPlaceholderTexeColor();
     void SetTextColor(DWORD dwTextColor);
+	void SetPlaceholderTextColor(DWORD dwColor);
     int GetLimitText();
     void SetLimitText(int iChars);
+	long GetRawTextLength() const;
     long GetTextLength(DWORD dwFlags = GTL_DEFAULT) const;
     CDuiString GetText() const;
     void SetText(LPCTSTR pstrText);
+	void SetPlaceholderText(LPCTSTR pstrText);
     bool IsModify() const;
     void SetModify(bool bModified = true) const;
     void GetSel(CHARRANGE &cr) const;
@@ -136,6 +140,8 @@ protected:
 	};
 
     CTxtWinHost* m_pTwh;
+	CDuiString m_sPlaceholderText;
+	DWORD m_dwPlaceholderTexeColor;
     bool m_bVScrollBarFixing;
     bool m_bWantTab;
     bool m_bWantReturn;

@@ -18,7 +18,7 @@ eg:<Popup name="DateTime" popboxsize="177,192"  popxml="skin/popup/DateUI/DateTi
 namespace DuiLib {
 /////////////////////////////////////////////////////////////////////////////////////
 //
-typedef CCompositeLayoutUI *(*CRETAE_POPUP_UI)();
+typedef CUIFunctionalLayout *(*CRETAE_POPUP_UI)();
 class CPopupWnd;
 class DUILIB_API CPopupUI : public CButtonUI
 {
@@ -46,7 +46,7 @@ public:
 	bool IsTopDirect();
 
 private:
-	CCompositeLayoutUI *CreatePopUI();
+	CUIFunctionalLayout *CreatePopUI();
 private:
 	CPopupWnd *m_pWindow;
 	SIZE m_szDropBoxSize;//(200,100)

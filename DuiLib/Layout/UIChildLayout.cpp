@@ -16,13 +16,17 @@ namespace DuiLib
 			CContainerUI* pChildWindow = static_cast<CContainerUI*>(builder.Create(m_pstrXMLFile.GetData(), (UINT)0, NULL, m_pManager));
 			if (pChildWindow)
 			{
-				this->Add(pChildWindow);
+				if (!this->Add(pChildWindow))
+				{
+					pChildWindow->Delete();
+				}
 			}
 			else
 			{
 				this->RemoveAll();
 			}
 		}
+		__super::Init();
 	}
 
 	void CChildLayoutUI::SetAttribute( LPCTSTR pstrName, LPCTSTR pstrValue )
