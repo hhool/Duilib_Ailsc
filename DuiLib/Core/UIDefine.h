@@ -254,6 +254,7 @@ protected:                                                                \
 #define  DUI_CTR_BUTTON                          (_T("Button"))
 #define  DUI_CTR_OPTION                          (_T("Option"))
 #define  DUI_CTR_SLIDER                          (_T("Slider"))
+#define  DUI_CTR_QRCODE                          (_T("QRCode"))
 
 #define  DUI_CTR_CONTROL                         (_T("Control"))
 #define  DUI_CTR_ACTIVEX                         (_T("ActiveX"))

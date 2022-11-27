@@ -21,8 +21,7 @@
 			<Control bkcolor="#FFF22E2E" float="true" pos="80,40,260,220" bkimage="winbk.bmp" />
 			<Button name="insertimagebtn" float="0.5,0.5,0.5,0.5" pos="-80,-10,80,10" text="删除自己" />
 		</RichEdit>
-		<Control height="26"/>
-		<Edit name="testedit" text="{a www.baidu.com}ddd{/a}" showhtml="true" maxwidth="280" bkcolor="#0000E000" nativebkcolor="#0000E000"/>
+		<QRCode height="60" bkcolor="0xfff0f0f0" text="jefcat" qrcolor="0xffff0000" qrbkcolor="0xff00ff00"/>
 		<RichEdit name="testrichedit1" bordercolor="#FF0000" bordersize="2" borderround="8,8" inset="4,2,4,2" bkcolor="#FFE2E5EA" bkcolor2="#FF00F5DA" bkcolor3="#FFF2F5FA" font="1" multiline="false" rich="false" hscrollbar="true" autohscroll="true"/>
 		<DateTime name="DateTime" width="200" height="30" bkcolor="#FFE2E5EA" padding="0,5,0,0" />
 		<CheckBox name="CheckBox1" width="20" height="20" bkcolor="#FFEA679F" />

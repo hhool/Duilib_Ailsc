@@ -305,6 +305,7 @@ CControlUI* CDialogBuilder::_Parse(CMarkupNode* pRoot, CControlUI* pParent, CPai
                 if( _tcsicmp(pstrClass, DUI_CTR_BUTTON) == 0 )                pControl = new CButtonUI;
                 else if( _tcsicmp(pstrClass, DUI_CTR_OPTION) == 0 )           pControl = new COptionUI;
                 else if( _tcsicmp(pstrClass, DUI_CTR_SLIDER) == 0 )           pControl = new CSliderUI;
+				else if (_tcsicmp(pstrClass, DUI_CTR_QRCODE) == 0)            pControl = new CQRCodeUI;
                 break;
             case 7:
                 if( _tcsicmp(pstrClass, DUI_CTR_CONTROL) == 0 )               pControl = new CControlUI;

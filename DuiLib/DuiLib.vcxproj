@@ -282,6 +282,7 @@
     <ClCompile Include="Control\UIGifAnim.cpp" />
     <ClCompile Include="Control\UIIPAddress.cpp" />
     <ClCompile Include="Control\UIPopup.cpp" />
+    <ClCompile Include="Control\UIQRCode.cpp" />
     <ClCompile Include="Layout\UIAlignLayout.cpp" />
     <ClCompile Include="Layout\UIFunctionalLayout.cpp" />
     <ClCompile Include="Layout\UISliderTabLayout.cpp" />
@@ -294,6 +295,12 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='UnicodeRelease|Win32'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="UIlib.cpp" />
+    <ClCompile Include="Utils\qrcodegen.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='UnicodeRelease|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='UnicodeDebug|Win32'">NotUsing</PrecompiledHeader>
+    </ClCompile>
     <ClCompile Include="Utils\WinImplBase.cpp" />
     <ClCompile Include="Utils\stb_image.c">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -354,6 +361,7 @@
     <ClInclude Include="Control\UIGifAnim.h" />
     <ClInclude Include="Control\UIIPAddress.h" />
     <ClInclude Include="Control\UIPopup.h" />
+    <ClInclude Include="Control\UIQRCode.h" />
     <ClInclude Include="Layout\UIAlignLayout.h" />
     <ClInclude Include="Layout\UIFunctionalLayout.h" />
     <ClInclude Include="Layout\UISliderTabLayout.h" />
@@ -361,6 +369,7 @@
     <ClInclude Include="UIlib.h" />
     <ClInclude Include="Utils\downloadmgr.h" />
     <ClInclude Include="Utils\FlashEventHandler.h" />
+    <ClInclude Include="Utils\qrcodegen.hpp" />
     <ClInclude Include="Utils\UIDelegate.h" />
     <ClInclude Include="Utils\Utils.h" />
     <ClInclude Include="Utils\WebBrowserEventHandler.h" />

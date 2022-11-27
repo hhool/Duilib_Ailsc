@@ -205,6 +205,13 @@ eg:X之后开始布局，X随便命名。可以参考Default的xml
 		<Attribute name="xmlfile" default="" type="STRING" comment="弹出式窗口对应的xml,xml必须以Window标签开始"/>
 		<Attribute name="direct" default="" type="STRING" comment="弹出式窗口的首要位置,top,bottom"/>
 	</Popup>
+	<!--二维码-->
+	<QRCode parent="Control" notifies="setfocus killfocus timer menu windowinit(root)">
+		<Attribute name="errlevel" default="" type="STRING" comment="容错等级0,1,2,3,等级越高容错率越好，默认3,需要在text之前设置，否则当次无效"/>
+		<Attribute name="text" default="" type="STRING" comment="需要进行编码的文本，不能包括中文，如果是中文的请转utf-8之后手动设置"/>
+		<Attribute name="qrcolor" default="0xFF000000" type="DWORD" comment="二维码颜色"/>
+		<Attribute name="qrbkcolor" default="0xFFFFFFFF" type="DWORD" comment="二维码背颜色"/>
+	</QRCode>
 	<Label parent="Control" notifies="setfocus killfocus timer menu windowinit(root)">
 		<Attribute name="align" default="left" type="STRING" comment="文字横向对齐方式,取值left、center、right"/>
 		<Attribute name="valign" default="center" type="STRING" comment="文字纵向对齐方式,取值top、center、bottom"/>

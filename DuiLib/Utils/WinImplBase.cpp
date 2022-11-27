@@ -548,6 +548,7 @@ BOOL WindowImplBase::IsInStaticControl(CControlUI *pControl, POINT pt)
 		map<CDuiString, int>::value_type(DUI_CTR_BUTTON, 2),
 		map<CDuiString, int>::value_type(DUI_CTR_OPTION, 2),
 		map<CDuiString, int>::value_type(DUI_CTR_SLIDER, 2),
+		map<CDuiString, int>::value_type(DUI_CTR_QRCODE, 2),
 		map<CDuiString, int>::value_type(DUI_CTR_ACTIVEX, 2),
 		map<CDuiString, int>::value_type(DUI_CTR_GIFANIM, 2),
 		map<CDuiString, int>::value_type(DUI_CTR_PROGRESS, 2),
