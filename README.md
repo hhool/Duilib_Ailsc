@@ -8,6 +8,9 @@ Duilib是一个Windows下免费开源的DirectUI界面库，由于简约易扩�
 1.使用虚表的时候，可能会导致滚动条无法推动，这是因为大量刷新消息导致的，因为内部会不停的set并且invalidate，此时优化一下Duilib的Set接口，没有改变就不用刷新
 2.Duilib容器只对可见控件布局，如果控件不可见，则不调整该控件位置。此时如果容器位置改变，然后显示该控件，则会导致该控件位置不对。应尽量避免动态SetVisible，使用
 showbkimg和showstatusimg两个属性来代替SetVisible
+3.增加二维码控件QRCode
+
+更多详细使用信息可以参考csdn：https://blog.csdn.net/cair2/
 # Todo：
 1、完善属性设置和保存
 
