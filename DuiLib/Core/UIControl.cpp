@@ -29,7 +29,8 @@ m_dwBorderColor(0),
 m_dwFocusBorderColor(0),
 m_bColorHSL(false),
 m_nBorderStyle(PS_SOLID),
-m_nTooltipWidth(300)
+m_nTooltipWidth(300),
+m_nWeight(1)
 {
     m_cXY.cx = m_cXY.cy = 0;
     m_cxyFixed.cx = m_cxyFixed.cy = 0;
@@ -456,6 +457,19 @@ int CControlUI::GetHeight() const
     return m_rcItem.bottom - m_rcItem.top;
 }
 
+void CControlUI::SetWeight(int nWeight)
+{
+	if (nWeight <= 0)
+		m_nWeight = 1;
+
+	m_nWeight = nWeight;
+	NeedParentUpdate();
+}
+
+int CControlUI::GetWeight() const
+{
+	return m_nWeight;
+}
 int CControlUI::GetX() const
 {
     return m_rcItem.left;
@@ -1048,6 +1062,7 @@ void CControlUI::SetAttribute(LPCTSTR pstrName, LPCTSTR pstrValue)
     else if( _tcscmp(pstrName, _T("bkimage")) == 0 ) SetBkImage(pstrValue);
     else if( _tcscmp(pstrName, _T("width")) == 0 ) SetFixedWidth(_ttoi(pstrValue));
     else if( _tcscmp(pstrName, _T("height")) == 0 ) SetFixedHeight(_ttoi(pstrValue));
+	else if (_tcscmp(pstrName, _T("weight")) == 0) SetWeight(_ttoi(pstrValue));
     else if( _tcscmp(pstrName, _T("minwidth")) == 0 ) SetMinWidth(_ttoi(pstrValue));
     else if( _tcscmp(pstrName, _T("minheight")) == 0 ) SetMinHeight(_ttoi(pstrValue));
     else if( _tcscmp(pstrName, _T("maxwidth")) == 0 ) SetMaxWidth(_ttoi(pstrValue));

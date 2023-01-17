@@ -76,6 +76,8 @@ public:
 	virtual void Move(SIZE szOffset, bool bNeedInvalidate = true);
     virtual int GetWidth() const;
     virtual int GetHeight() const;
+	virtual void SetWeight(int nWeight);
+	virtual int GetWeight() const;
     virtual int GetX() const;
     virtual int GetY() const;
     virtual RECT GetPadding() const;
@@ -230,6 +232,7 @@ protected:
     bool m_bColorHSL;
 	int m_nBorderStyle;
 	int m_nTooltipWidth;
+	int m_nWeight;//±»÷ÿ£¨ƒ¨»œ1
     SIZE m_cxyBorderRound;
     RECT m_rcPaint;
 	RECT m_rcBorderSize;

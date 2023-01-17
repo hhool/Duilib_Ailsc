@@ -83,6 +83,7 @@ eg:X之后开始布局，X随便命名。可以参考Default的xml
 		<Attribute name="bkimage" default="" type="STRING" comment="背景图片,如(bk.bmp或file='aaa.jpg' res='' restype='0' dest='0,0,0,0' source='0,0,0,0' corner='0,0,0,0' mask='#FF0000' fade='255' hole='false' xtiled='false' ytiled='false')"/>
 		<Attribute name="width" default="0" type="INT" comment="控件预设的宽度，如(100)"/>
 		<Attribute name="height" default="0" type="INT" comment="控件预设的高度，如(30)"/>
+		<Attribute name="weight" default="1" type="INT" comment="控件预设的高或者宽度的比重，在HorizontalLayout，VerticalLayout中生效"/>
 		<Attribute name="minwidth" default="0" type="INT" comment="控件的最小宽度，如(100)"/>
 		<Attribute name="minheight" default="0" type="INT" comment="控件的最小高度，如(30)"/>
 		<Attribute name="maxwidth" default="9999" type="INT" comment="控件的最大宽度，如(100)"/>

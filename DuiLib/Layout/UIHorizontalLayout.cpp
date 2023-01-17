@@ -53,6 +53,7 @@ namespace DuiLib
 
 		int cyNeeded = 0;
 		int nAdjustables = 0;
+		int nWeights = 0;
 		int cxFixed = 0;
 		int nEstimateNum = 0;
 		SIZE szControlAvailable;
@@ -74,6 +75,7 @@ namespace DuiLib
 			SIZE sz = pControl->EstimateSize(szControlAvailable);
 			if( sz.cx == 0 ) {
 				nAdjustables++;
+				nWeights += pControl->GetWeight();
 			}
 			else {
 				if( sz.cx < pControl->GetMinWidth() ) sz.cx = pControl->GetMinWidth();
@@ -92,7 +94,7 @@ namespace DuiLib
 		// Place elements
 		int cxNeeded = 0;
 		int cxExpand = 0;
-		if( nAdjustables > 0 ) cxExpand = MAX(0, (szAvailable.cx - cxFixed) / nAdjustables);
+		if (nWeights > 0) cxExpand = MAX(0, (szAvailable.cx - cxFixed) / nWeights);
 		// Position the elements
 		SIZE szRemaining = szAvailable;
 		int iPosX = rc.left;
@@ -124,7 +126,7 @@ namespace DuiLib
 			SIZE sz = pControl->EstimateSize(szControlAvailable);
 			if( sz.cx == 0 ) {
 				iAdjustable++;
-				sz.cx = cxExpand;
+				sz.cx = cxExpand*pControl->GetWeight();
 				// Distribute remaining to last element (usually round-off left-overs)
 				if( iAdjustable == nAdjustables ) {
 					sz.cx = MAX(0, szRemaining.cx - rcPadding.right - cxFixedRemaining);

@@ -3527,7 +3527,13 @@ bool CPaintManagerUI::TranslateMessage(const LPMSG pMsg)
 					// 
 					// 					return false;  
 				}
-				hTempParent = GetParent(hTempParent);
+
+                //fix some window only parent windows,no WS_CHILD
+				UINT uParentStyle = GetWindowStyle(hTempParent);
+                if (uParentStyle & WS_CHILD)
+                    hTempParent = GetParent(hTempParent);
+                else
+                    hTempParent = NULL;
 			}
 
 		}
