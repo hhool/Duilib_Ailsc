@@ -95,9 +95,9 @@ namespace DuiLib
 		rc.right -= m_rcInset.right;
 		rc.bottom -= m_rcInset.bottom;
 
-		if (!m_items.IsEmpty())
+		for (int i = 0; i < m_items.GetSize();++i)
 		{
-			CControlUI* pControl = static_cast<CControlUI*>(m_items[0]);
+			CControlUI* pControl = static_cast<CControlUI*>(m_items[i]);
 			if(!pControl->IsVisible()) return;
 			if (pControl->IsFloat()) 
 			{
