@@ -77,6 +77,11 @@ namespace DuiLib
 		m_errCorLvl = ecc;
 	}
 
+	bool CQRCodeUI::IsQrEmpty()
+	{
+		return m_QrCode.isEmpty();
+	}
+
 	void CQRCodeUI::PaintBkImage(HDC hDC)
 	{
 		HDC hMemDc = CreateCompatibleDC(hDC);

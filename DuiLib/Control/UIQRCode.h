@@ -16,7 +16,7 @@ namespace DuiLib
 		void QREncodeBinary(const std::vector<std::uint8_t> &data);
 		void QREncodeText(CDuiString strText);
 		void SetQrEcc(QrCode::Ecc ecc);
-
+		bool IsQrEmpty();
 		virtual void PaintBkImage(HDC hDC);
 	private:
 		QrCode m_QrCode;//isempty

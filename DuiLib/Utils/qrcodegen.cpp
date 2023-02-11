@@ -329,7 +329,7 @@ QrCode QrCode::encodeSegments(const vector<QrSegment> &segs, Ecc ecl,
 
 QrCode::QrCode()
 {
-
+	size = 0;
 }
 
 QrCode::QrCode(int ver, Ecc ecl, const vector<uint8_t> &dataCodewords, int msk) :
@@ -383,6 +383,10 @@ int QrCode::getSize() const {
 	return size;
 }
 
+bool QrCode::isEmpty() const
+{
+	return size != 0;
+}
 
 QrCode::Ecc QrCode::getErrorCorrectionLevel() const {
 	return errorCorrectionLevel;

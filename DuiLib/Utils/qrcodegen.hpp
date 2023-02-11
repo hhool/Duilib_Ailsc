@@ -348,6 +348,8 @@ class QrCode {
 	 */
 	public: int getSize() const;
 	
+
+	public: bool isEmpty() const;
 	
 	/* 
 	 * Returns this QR Code's error correction level.

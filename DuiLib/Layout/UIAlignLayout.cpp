@@ -18,22 +18,6 @@ namespace DuiLib
 		return CContainerUI::GetInterface(pstrName);
 	}
 
-	bool CAlignLayoutUI::Add(CControlUI* pControl)
-	{
-		//only add once
-		if (m_items.IsEmpty())
-			return CContainerUI::Add(pControl);
-		return false;
-	}
-
-	bool CAlignLayoutUI::AddAt(CControlUI* pControl, int iIndex)
-	{
-		if (m_items.IsEmpty())
-			return CContainerUI::Add(pControl);
-
-		return false;
-	}
-
 	void CAlignLayoutUI::SetAttribute(LPCTSTR pstrName, LPCTSTR pstrValue)
 	{
 		if (_tcscmp(pstrName, _T("align")) == 0)

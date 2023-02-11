@@ -17,8 +17,6 @@ namespace DuiLib
 		LPCTSTR GetClass() const;
 		LPVOID GetInterface(LPCTSTR pstrName);
 
-		bool Add(CControlUI* pControl);
-		bool AddAt(CControlUI* pControl, int iIndex);
 
 		void SetPos(RECT rc, bool bNeedInvalidate = true);
 		void SetAttribute(LPCTSTR pstrName, LPCTSTR pstrValue);
