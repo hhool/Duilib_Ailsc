@@ -12,9 +12,35 @@ CUIFunctionalLayout *CreatePopupUI()
 	return new CDateUI;
 }
 
-class CFrameWindowWnd: public WindowImplBase
+class CFrameWindowWnd : public WindowImplBase, IMBWenviewEvent
 {
 public:
+	virtual bool handleTitleChanged(wkeWebView webWindow, CMbWebBrowserUI* pwebBrowser, const wchar_t* title)
+	{ 
+		return false;
+	}
+	virtual void onLoadUrlEnd(wkeWebView webView, CMbWebBrowserUI* pwebBrowser, const wchar_t* url, void* job, void* buf, int len)
+	{
+		int a = 0;
+	}
+	virtual bool onLoadUrlBegin(wkeWebView webView, CMbWebBrowserUI* pwebBrowser, const wchar_t* url, void* job)
+	{
+		return false;
+	}
+	virtual void onLoadingFinish(wkeWebView webView, CMbWebBrowserUI* pwebBrowser, const wchar_t* url, wkeLoadingResult result, const wkeString failedReason)
+	{
+		int a = 0;
+		pwebBrowser->ShowDevTool();
+	}
+	virtual void onLoadUrlFail(wkeWebView webView, CMbWebBrowserUI* pwebBrowser, const wchar_t* url, wkeNetJob job)
+	{
+		int a = 0;
+	}
+	virtual jsValue OnJsCallDuiMsg(CMbWebBrowserUI * pwebBrowser, jsExecState es)
+	{
+		int a = 0;
+		return 0;
+	}
 	CFrameWindowWnd(){};
 	virtual CDuiString GetSkinFolder() {return _T("");}
 	virtual CDuiString GetSkinFile(){return _T("skin/popup/popup.xml");}
@@ -23,6 +49,9 @@ public:
 	{
 		__super::InitWindow();
 		m_pPupUI  = dynamic_cast<CPopupUI *>(m_PaintManager.FindControl(_T("DateTime")));
+		m_pWebUI = dynamic_cast<CMbWebBrowserUI *>(m_PaintManager.FindControl(_T("web")));
+		m_pWebUI->RegisterWebEvent(this);
+		m_pWebUI->SetHomePage(L"file:///F:/project/CefDemo/x64/Debug/test.html");
 		if(m_pPupUI)
 		{
 			///> 设置需要处理PopUI的事件对象，功能性事件处理封装在CDateUI
@@ -36,15 +65,27 @@ public:
 			m_pPupUI->SetText(str);
 		}
 
+		
+		//测试Attach窗口
+		CMbWebBrowserUI *pWenUI = new CMbWebBrowserUI(CMbWebBrowserUI::CreateWebWindow(WKE_WINDOW_TYPE_POPUP, NULL, 0, 0, 800, 600));
+		pWenUI->LoadUrl(L"https://www.baidu.com");
+		pWenUI->SetInternVisible(true);
 	}
 
 	virtual void Notify(TNotifyUI& msg)
 	{
 		__super::Notify(msg);
+		if (msg.pSender->GetName() == _T("test"))
+		{
+			static bool bVisible = false;
+			m_pWebUI->SetVisible(bVisible);
+			bVisible = !bVisible;
+		}
 	}
 
 private:
 	CPopupUI *m_pPupUI;
+	CMbWebBrowserUI *m_pWebUI;
 };
 
 

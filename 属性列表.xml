@@ -18,14 +18,19 @@ eg:X之后开始布局，X随便命名。可以参考Default的xml
 		<Attribute name="roundcorner" default="0,0" type="SIZE" comment="窗口圆角大小,如(4,4)"/>
 		<Attribute name="mininfo" default="0,0" type="SIZE" comment="窗口最小大小,如(320,240)"/>
 		<Attribute name="maxinfo" default="0,0" type="SIZE" comment="窗口最大大小,如(1600,1200)"/>
-		<Attribute name="alpha" default="255" type="BYTE" comment="窗口的alpha值(0-255),如(100)"/>
-		<Attribute name="bktrans" default="false" type="BOOL" comment="窗口是否使用静态透明背景,如(false)"/>
-		<Attribute name="disabledfontcolor" default="0xFFA7A6AA" type="DWORD" comment="默认的disabled字体颜色,如(0xFFA7A6AA)"/>
-		<Attribute name="defaultfontcolor" default="0xFF000000" type="DWORD" comment="默认的字体颜色,如(0xFF000000)"/>
-		<Attribute name="linkfontcolor" default="0xFF0000FF" type="DWORD" comment="默认的link字体颜色,如(0xFF0000FF)"/>
-		<Attribute name="linkhoverfontcolor" default="0xFFD3215F" type="DWORD" comment="默认的linkhoverfont字体颜色,如(0xFFD3215F)"/>
-		<Attribute name="selectedcolor" default="0xFFBAE4FF" type="DWORD" comment="默认的selected字体颜色,如(0xFFBAE4FF)"/>
 		<Attribute name="showdirty" default="false" type="BOOL" comment="绘制脏矩形(屏幕上更新的区域被称为脏矩形)"/>
+		<Attribute name="noactivate" default="true" type="BOOL" comment="是否激活窗口，默认为True"/>
+		<Attribute name="opacity" default="255" type="BYTE" comment="窗口的透明度(0-255),如(100)"/>
+		
+		<Attribute name="layeredopacity" default="255" type="BYTE" comment="分层WS_EX_LAYERED窗口的透明度(0-255),如(100)"/>
+		<Attribute name="layeredimage" default="" type="STRING" comment="分层窗口的背景图，例如:异形窗口"/>
+		<Attribute name="disabledfontcolor" default="0x00000000" type="DWORD" comment="禁用控件字体的默认颜色"/>
+		<Attribute name="defaultfontcolor" default="0x00000000" type="DWORD" comment="控件字体的默认颜色"/>
+		
+		<Attribute name="linkfontcolor" default="0x00000000" type="DWORD" comment="link字体的默认颜色"/>
+		<Attribute name="linkhoverfontcolor" default="0x00000000" type="DWORD" comment="linkhover字体的默认颜色"/>
+		<Attribute name="selectedcolor" default="0x00000000" type="DWORD" comment="控件选中的默认背景颜色"/>
+		
 	</Window>
 	
 	<!--Include 需要包含的默认xml属性文件，xml需要包含Default标签
@@ -70,6 +75,7 @@ eg:X之后开始布局，X随便命名。可以参考Default的xml
 		<Attribute name="bkcolor" default="0x00000000" type="DWORD" comment="背景颜色,如(0xFFFF0000)"/>
 		<Attribute name="bkcolor2" default="0x00000000" type="DWORD" comment="背景渐变色2,和bkcolor配合使用,如(0xFFFFFF00)"/>
 		<Attribute name="bkcolor3" default="0x00000000" type="DWORD" comment="背景渐变色3,和bkcolor、bkcolor2配合使用,如(0xFFFF00FF)"/>
+		<Attribute name="bkdirect" default="vertical" type="String" comment="背景渐变色方向 vertical，horizon"/>
 		<Attribute name="bordercolor" default="0x00000000" type="DWORD" comment="边框颜色,如(0xFF000000)"/>
 		<Attribute name="focusbordercolor" default="0x00000000" type="DWORD" comment="获得焦点时边框的颜色,如(0xFFFF0000)"/>
 		<Attribute name="colorhsl" default="false" type="BOOL" comment="本控件的颜色是否随窗口的hsl变化而变化,如(false)"/>
@@ -154,6 +160,15 @@ eg:X之后开始布局，X随便命名。可以参考Default的xml
 		<Attribute name="homepage" default="" type="STRING" comment="默认首页" />
 		<Attribute name="autonavi" default="false" type="BOOL" comment="是否打开默认首页" />
 	</WebBrowser>
+	<!--基于Miniblink的webVeiew,该控件只封装了常用的web操作，
+	1. 使用该控件需要再当前目录先添加node.dll(mb的库)，否则会失败
+	2. 如果需要使用更多扩展请在exe外部初始化mb
+	3. 默认封装了c++函数CallDuiMsg，外部js可以直接通过window.CallDuiMsg调用
+	-->
+	<MBWebBrowser>
+		<Attribute name="homepage" default="" type="STRING" comment="默认首页" />
+	</MBWebBrowser>
+	
 	<IpAddress parent="Label">
 		<Attribute name="text"  default="0.0.0.0" type="STRING" comment="ip地址例如:192.168.1.1"/>
 		<Attribute name="field0" default="0,255" type="BYTE" comment="filed0的范围如(0,100)"/>
@@ -209,7 +224,7 @@ eg:X之后开始布局，X随便命名。可以参考Default的xml
 	<!--二维码-->
 	<QRCode parent="Control" notifies="setfocus killfocus timer menu windowinit(root)">
 		<Attribute name="errlevel" default="" type="STRING" comment="容错等级0,1,2,3,等级越高容错率越好，默认3,需要在text之前设置，否则当次无效"/>
-		<Attribute name="text" default="" type="STRING" comment="需要进行编码的文本，不能包括中文，如果是中文的请转utf-8之后手动设置"/>
+		<Attribute name="text" default="" type="STRING" comment="需要进行编码的文本，内部会自动转utf-8"/>
 		<Attribute name="qrcolor" default="0xFF000000" type="DWORD" comment="二维码颜色"/>
 		<Attribute name="qrbkcolor" default="0xFFFFFFFF" type="DWORD" comment="二维码背颜色"/>
 	</QRCode>
