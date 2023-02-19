@@ -56,6 +56,10 @@ public:
 	void SetShowBkImg(bool bShowImg);
 	void SetShowStatusImg(bool bShowImg);
 
+    //设置渐变色方向
+    void SetBkColorDirect(bool isVertical);
+    bool IsBkColorVertical();
+
     virtual bool DrawImage(HDC hDC, TDrawInfo& drawInfo);
 
 	//边框相关
@@ -213,6 +217,7 @@ protected:
     bool m_bFocused;
     bool m_bFloat;
 	bool m_bKillCombo;
+    bool m_bkColorIsVertical;
 	TPercentInfo m_piFloatPercent;
     bool m_bSetPos; // 防止SetPos循环调用
 

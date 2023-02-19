@@ -80,6 +80,7 @@
 #include "Core/UIRender.h"
 #include "Utils/WinImplBase.h"
 #include "Utils/WndShadow.h"
+#include "Utils/wke.h"
 
 #include "Layout/UIVerticalLayout.h"
 #include "Layout/UIHorizontalLayout.h"
@@ -117,3 +118,4 @@
 #include "Control/UIGifAnim.h"
 #include "Control/UIIPAddress.h"
 #include "Control/UIPopup.h"
+#include "Control/UIMbWebBrowser.h"

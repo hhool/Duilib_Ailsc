@@ -337,6 +337,9 @@ CControlUI* CDialogBuilder::_Parse(CMarkupNode* pRoot, CControlUI* pParent, CPai
 				else if (_tcsicmp(pstrClass, DUI_CTR_MENUELEMENT) == 0)		  pControl = new CMenuElementUI;
 				else if (_tcsicmp(pstrClass, DUI_CTR_ALIGNLAYOUT) == 0)		  pControl = new CAlignLayoutUI;
 				break;
+			case 12:
+				if (_tcsicmp(pstrClass, DUI_CTR_MBWEBBROWSER) == 0)			  pControl = new CMbWebBrowserUI();
+				break;
             case 14:
                 if( _tcsicmp(pstrClass, DUI_CTR_VERTICALLAYOUT) == 0 )        pControl = new CVerticalLayoutUI;
                 else if( _tcsicmp(pstrClass, DUI_CTR_LISTHEADERITEM) == 0 )   pControl = new CListHeaderItemUI;

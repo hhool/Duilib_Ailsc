@@ -1,5 +1,6 @@
 #include "StdAfx.h"
 #include "UIQRCode.h"
+#include "../Utils/StringUtil.h"
 
 
 namespace DuiLib
@@ -60,7 +61,7 @@ namespace DuiLib
 	{
 		if (!strText.IsEmpty())
 		{
-			m_QrCode = QrCode::encodeText(strText.GetData(), m_errCorLvl);
+			m_QrCode = QrCode::encodeText(StringUtil::Easy_AnsiToUtf8(strText.GetData()).c_str(), m_errCorLvl);
 		}
 	}
 

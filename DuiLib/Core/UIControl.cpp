@@ -28,6 +28,7 @@ m_dwBackColor3(0),
 m_dwBorderColor(0),
 m_dwFocusBorderColor(0),
 m_bColorHSL(false),
+m_bkColorIsVertical(false),
 m_nBorderStyle(PS_SOLID),
 m_nTooltipWidth(300),
 m_nWeight(1)
@@ -314,6 +315,15 @@ void CControlUI::SetShowStatusImg(bool bShowImg)
 	}
 }
 
+void CControlUI::SetBkColorDirect(bool isVertical)
+{
+    m_bkColorIsVertical = isVertical;
+}
+
+bool CControlUI::IsBkColorVertical()
+{
+    return m_bkColorIsVertical;
+}
 bool CControlUI::DrawImage(HDC hDC, TDrawInfo& drawInfo)
 {
 	return CRenderEngine::DrawImage(hDC, m_pManager, m_rcItem, m_rcPaint, drawInfo);
@@ -1060,6 +1070,7 @@ void CControlUI::SetAttribute(LPCTSTR pstrName, LPCTSTR pstrValue)
         SetBorderRound(cxyRound);
     }
     else if( _tcscmp(pstrName, _T("bkimage")) == 0 ) SetBkImage(pstrValue);
+    else if (_tcscmp(pstrName, _T("bkdirect")) == 0) SetBkColorDirect(_tcsncmp("horizon", pstrValue, 7) != 0);
     else if( _tcscmp(pstrName, _T("width")) == 0 ) SetFixedWidth(_ttoi(pstrValue));
     else if( _tcscmp(pstrName, _T("height")) == 0 ) SetFixedHeight(_ttoi(pstrValue));
 	else if (_tcscmp(pstrName, _T("weight")) == 0) SetWeight(_ttoi(pstrValue));
@@ -1186,15 +1197,28 @@ void CControlUI::PaintBkColor(HDC hDC)
     if( m_dwBackColor != 0 ) {
         if( m_dwBackColor2 != 0 ) {
             if( m_dwBackColor3 != 0 ) {
-                RECT rc = m_rcItem;
-                rc.bottom = (rc.bottom + rc.top) / 2;
-                CRenderEngine::DrawGradient(hDC, rc, GetAdjustColor(m_dwBackColor), GetAdjustColor(m_dwBackColor2), true, 8);
-                rc.top = rc.bottom;
-                rc.bottom = m_rcItem.bottom;
-                CRenderEngine::DrawGradient(hDC, rc, GetAdjustColor(m_dwBackColor2), GetAdjustColor(m_dwBackColor3), true, 8);
+                if (IsBkColorVertical())
+                {
+					RECT rc = m_rcItem;
+					rc.bottom = (rc.bottom + rc.top) / 2;
+					CRenderEngine::DrawGradient(hDC, rc, GetAdjustColor(m_dwBackColor), GetAdjustColor(m_dwBackColor2), IsBkColorVertical(), 8);
+					rc.top = rc.bottom;
+					rc.bottom = m_rcItem.bottom;
+					CRenderEngine::DrawGradient(hDC, rc, GetAdjustColor(m_dwBackColor2), GetAdjustColor(m_dwBackColor3), IsBkColorVertical(), 8);
+                }
+                else
+                {
+					RECT rc = m_rcItem;
+					rc.right = (rc.right + rc.left) / 2;
+					CRenderEngine::DrawGradient(hDC, rc, GetAdjustColor(m_dwBackColor), GetAdjustColor(m_dwBackColor2), IsBkColorVertical(), 8);
+					rc.left = rc.right;
+					rc.right = m_rcItem.right;
+					CRenderEngine::DrawGradient(hDC, rc, GetAdjustColor(m_dwBackColor2), GetAdjustColor(m_dwBackColor3), IsBkColorVertical(), 8);
+                }
+               
             }
             else 
-                CRenderEngine::DrawGradient(hDC, m_rcItem, GetAdjustColor(m_dwBackColor), GetAdjustColor(m_dwBackColor2), true, 16);
+                CRenderEngine::DrawGradient(hDC, m_rcItem, GetAdjustColor(m_dwBackColor), GetAdjustColor(m_dwBackColor2), IsBkColorVertical(), 16);
         }
         else if( m_dwBackColor >= 0xFF000000 ) CRenderEngine::DrawColor(hDC, m_rcPaint, GetAdjustColor(m_dwBackColor));
         else CRenderEngine::DrawColor(hDC, m_rcItem, GetAdjustColor(m_dwBackColor));

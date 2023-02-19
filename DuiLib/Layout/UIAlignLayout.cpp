@@ -82,11 +82,11 @@ namespace DuiLib
 		for (int i = 0; i < m_items.GetSize();++i)
 		{
 			CControlUI* pControl = static_cast<CControlUI*>(m_items[i]);
-			if(!pControl->IsVisible()) return;
+			if(!pControl->IsVisible()) continue;;
 			if (pControl->IsFloat()) 
 			{
 				SetFloatPos(0);
-				return;
+				continue;
 			}
 	
 			RECT rcPadding = pControl->GetPadding();

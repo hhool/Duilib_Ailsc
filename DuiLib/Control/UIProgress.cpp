@@ -60,12 +60,15 @@ namespace DuiLib
 		return m_nValue;
 	}
 
-	void CProgressUI::SetValue(int nValue)
+	void CProgressUI::SetValue(int nValue,bool bNotify)
 	{
 		m_nValue = nValue;
 		if (m_nValue > m_nMax) m_nValue = m_nMax;
 		if (m_nValue < m_nMin) m_nValue = m_nMin;
 		Invalidate();
+
+		if(bNotify)
+			m_pManager->SendNotify(this, DUI_MSGTYPE_VALUECHANGED);
 	}
 
 	LPCTSTR CProgressUI::GetForeImage() const

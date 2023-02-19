@@ -286,8 +286,11 @@ protected:                                                                \
 #define  DUI_CTR_LISTELEMENT                     (_T("ListElement"))
 #define  DUI_CTR_ALIGNLAYOUT                     (_T("AlignLayout"))
 
+#define  DUI_CTR_MBWEBBROWSER                      (_T("MBWebBrowser"))
+
 #define  DUI_CTR_VERTICALLAYOUT                  (_T("VerticalLayout"))
 #define  DUI_CTR_LISTHEADERITEM                  (_T("ListHeaderItem"))
+
 
 #define  DUI_CTR_LISTHBOXELEMENT                 (_T("ListHBoxElement"))
 #define  DUI_CTR_LISTTEXTELEMENT                 (_T("ListTextElement"))

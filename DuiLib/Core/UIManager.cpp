@@ -582,6 +582,33 @@ void CPaintManagerUI::SetOpacity(BYTE nOpacity)
 	}
 }
 
+void CPaintManagerUI::SetOpacity(BYTE nOpacity, COLORREF crKey)
+{
+	m_nOpacity = nOpacity;
+	if (m_hWndPaint != NULL) {
+		typedef BOOL(__stdcall* PFUNCSETLAYEREDWINDOWATTR)(HWND, COLORREF, BYTE, DWORD);
+		PFUNCSETLAYEREDWINDOWATTR fSetLayeredWindowAttributes;
+
+		HMODULE hUser32 = ::GetModuleHandle(_T("User32.dll"));
+		if (hUser32)
+		{
+			fSetLayeredWindowAttributes =
+				(PFUNCSETLAYEREDWINDOWATTR)::GetProcAddress(hUser32, "SetLayeredWindowAttributes");
+			if (fSetLayeredWindowAttributes == NULL) return;
+		}
+
+		DWORD dwStyle = ::GetWindowLong(m_hWndPaint, GWL_EXSTYLE);
+		DWORD dwNewStyle = dwStyle;
+		if (nOpacity >= 0 && nOpacity < 256) dwNewStyle |= WS_EX_LAYERED;
+		else dwNewStyle &= ~WS_EX_LAYERED;
+		if (dwStyle != dwNewStyle) ::SetWindowLong(m_hWndPaint, GWL_EXSTYLE, dwNewStyle);
+		fSetLayeredWindowAttributes(m_hWndPaint, crKey, nOpacity, LWA_COLORKEY|LWA_ALPHA);
+
+		m_bLayered = false;
+		Invalidate();
+	}
+}
+
 bool CPaintManagerUI::IsLayered()
 {
 	return m_bLayered;

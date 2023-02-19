@@ -20,7 +20,7 @@ namespace DuiLib
 		int GetMaxValue() const;
 		void SetMaxValue(int nMax);
 		int GetValue() const;
-		void SetValue(int nValue);
+		void SetValue(int nValue,bool bNotify = false);
 		LPCTSTR GetForeImage() const;
 		void SetForeImage(LPCTSTR pStrImage);
 

@@ -231,6 +231,7 @@ public:
 
 	BYTE GetOpacity() const;
 	void SetOpacity(BYTE nOpacity);
+    void SetOpacity(BYTE nOpacity, COLORREF crKey);
 
 	bool IsLayered();
 	void SetLayered(bool bLayered);
