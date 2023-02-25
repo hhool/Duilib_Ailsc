@@ -21,7 +21,6 @@ namespace DuiLib
 		virtual void handleWindowDestroy(wkeWebView webWindow, CMbWebBrowserUI* pwebBrowser){}
 		virtual bool handleWindowClosing(wkeWebView webWindow, CMbWebBrowserUI* pwebBrowser){ return true; }
 		virtual wkeWebView onCreateView(wkeWebView webWindow, CMbWebBrowserUI* pwebBrowser, wkeNavigationType navType, const wchar_t* url, const wkeWindowFeatures* features){ return nullptr; }
-		virtual void onLoadUrlEnd(wkeWebView webView, CMbWebBrowserUI* pwebBrowser, const wchar_t* url, void* job, void* buf, int len){}
 		virtual bool onLoadUrlBegin(wkeWebView webView, CMbWebBrowserUI* pwebBrowser, const wchar_t* url, void* job){ return false; }
 		virtual void onLoadingFinish(wkeWebView webView, CMbWebBrowserUI* pwebBrowser, const wchar_t* url, wkeLoadingResult result, const wkeString failedReason){}
 		virtual void onLoadUrlFail(wkeWebView webView, CMbWebBrowserUI* pwebBrowser, const wchar_t* url, wkeNetJob job){}
@@ -63,17 +62,50 @@ namespace DuiLib
 		bool GoBack();
 		bool CanGoForward() const;
 		bool GoForward();
+		//cookie设置
 		void SetCookieEnabled(bool enable);
 		bool IsCookieEnabled() const;
+		const wchar_t* GetCookie();
+		//cookie格式必须是类似:cna=4UvTFE12fEECAXFKf4SFW5eo; expires=Tue, 23-Jan-2029 13:17:21 GMT; path=/; domain=.youku.com
+		void SetCookie(const char* utf8_url, const char* utf_8_cookie);
+		void SetCookieJarPath(const WCHAR* path);
+		void SetCookieJarFullPath(const WCHAR* path);
+		void ClearCookie();
 
+		//
+		void SetLocalStorageFullPath(const WCHAR* path);
+		void AddPluginDirectory(const WCHAR* path);
 		//c++ js 交互
 		//调用js
 		jsValue CallJs(const char* funcname, jsValue* params, int params_count);
 		static jsValue CallJs(jsExecState es, const char* funcname, jsValue* params, int params_count);
 		//注册默认可供js调用的函数,js可直接调用DuiCallMsg传递参数
 		static friend jsValue WKE_CALL_TYPE CallDuiMsg(jsExecState es, void* param);
+		//参数获取
+		static int JsArgCount(jsExecState es);
+		static jsType JsArgType(jsExecState es, int argIdx);
+		static jsValue JsArg(jsExecState es, int argIdx);
+		//js 和 C++ 类型转换
+		jsValue JsString(const wchar_t* val);
+		static jsValue JsString(jsExecState es, const wchar_t* val);
+		static jsValue JsNull();
+		static jsValue JsUndefined();
+		static jsValue JsBool(bool b);
+		static jsValue JsDouble(double ival);
+		static jsValue JsFloat(float ival);
+		static jsValue JsInt(int ival);
+		static bool JsIsNumber(jsValue v);
+		static bool JsIsString(jsValue v);
+		static bool JsIsBoolean(jsValue v);
+		static bool JsIsObject(jsValue v);
+		static bool JsIsFunction(jsValue v);
+		static bool JsIsUndefined(jsValue v);
+		static bool JsIsNull(jsValue v);
+		static bool JsIsArray(jsValue v);
+		static bool JsIsTrue(jsValue v);
+		static bool JsIsFalse(jsValue v);
+
 	protected:
-		
 		void InitWebEventHandle();
 		//web常用监听事件
 		static friend void WKE_CALL_TYPE onDidCreateScriptContextCallback(wkeWebView webView, void* param, wkeWebFrameHandle frameId, void* context, int extensionGroup, int worldId);
@@ -82,12 +114,11 @@ namespace DuiLib
 		static friend void WKE_CALL_TYPE handleWindowDestroy(wkeWebView webWindow, void* param);
 		static friend bool WKE_CALL_TYPE handleWindowClosing(wkeWebView webWindow, void* param);
 		static friend wkeWebView WKE_CALL_TYPE onCreateView(wkeWebView webWindow, void* param, wkeNavigationType navType, const wkeString url, const wkeWindowFeatures* features);
-		static friend void WKE_CALL_TYPE onLoadUrlEnd(wkeWebView webView, void* param, const char* url, void* job, void* buf, int len);
 		static friend bool WKE_CALL_TYPE onLoadUrlBegin(wkeWebView webView, void* param, const char* url, void* job);
 		static friend void WKE_CALL_TYPE onLoadingFinish(wkeWebView webView, void* param, const wkeString url, wkeLoadingResult result, const wkeString failedReason);
 		static friend void WKE_CALL_TYPE onLoadUrlFail(wkeWebView webView, void* param, const utf8* url, wkeNetJob job);
 	protected:
-		bool DoCreateControl();
+		void DoInit();
 		
 	private:
 		wkeWebView m_webView;

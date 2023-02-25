@@ -21,6 +21,7 @@ namespace DuiLib
 		m_pIWebEvent = NULL;
 		m_webView = webView;
 		InitMb();
+		InitWebEventHandle();
 		Attach(wkeGetWindowHandle(m_webView));
 	}
 
@@ -50,7 +51,6 @@ namespace DuiLib
 #else
 			SetHomePage(StringUtil::Easy_AnsiToUnicode(pstrValue).c_str());
 #endif
-
 		}
 
 	}
@@ -93,12 +93,12 @@ namespace DuiLib
 	void CMbWebBrowserUI::SetPos(RECT rc, bool bNeedInvalidate)
 	{
 		__super::SetPos(rc);
-		if (m_webView == NULL) DoCreateControl();
 		::SetWindowPos(m_hWnd, NULL, rc.left, rc.top, rc.right - rc.left, rc.bottom - rc.top, SWP_NOZORDER | SWP_NOACTIVATE);
 	}
 
 	void CMbWebBrowserUI::InitWebEventHandle()
 	{
+		ASSERT(m_webView);
 		wkeOnDidCreateScriptContext(m_webView, onDidCreateScriptContextCallback, this);
 		wkeOnWindowClosing(m_webView, handleWindowClosing, this);
 		wkeOnWindowDestroy(m_webView, handleWindowDestroy, this);
@@ -106,7 +106,7 @@ namespace DuiLib
 		wkeOnTitleChanged(m_webView, handleTitleChanged, this);
 		wkeOnCreateView(m_webView, onCreateView, this);
 		wkeOnLoadUrlBegin(m_webView, onLoadUrlBegin, this);
-		wkeOnLoadUrlEnd(m_webView, onLoadUrlEnd, this);
+		//wkeOnLoadUrlEnd(m_webView, onLoadUrlEnd, this);
 		wkeOnLoadingFinish(m_webView, onLoadingFinish, this);
 		wkeOnLoadUrlFail(m_webView, onLoadUrlFail, this);
 		//wkeSetDebugConfig(m_webView, "decodeUrlRequest", nullptr);
@@ -146,6 +146,7 @@ namespace DuiLib
 
 	HWND CMbWebBrowserUI::GetwkeWindowHandle()
 	{
+		ASSERT(m_webView);
 		return wkeGetWindowHandle(m_webView);
 	}
 
@@ -159,37 +160,81 @@ namespace DuiLib
 
 	void CMbWebBrowserUI::Refresh()
 	{
+		ASSERT(m_webView);
 		wkeReload(m_webView);
 	}
 
 	bool CMbWebBrowserUI::CanGoBack() const
 	{
+		ASSERT(m_webView);
 		return wkeCanGoBack(m_webView);
 	}
 	
 	bool CMbWebBrowserUI::GoBack()
 	{
+		ASSERT(m_webView);
 		return wkeGoBack(m_webView);
 	}
 	
 	bool CMbWebBrowserUI::CanGoForward() const
 	{
+		ASSERT(m_webView);
 		return wkeCanGoForward(m_webView);
 	}
 	
 	bool CMbWebBrowserUI::GoForward()
 	{
+		ASSERT(m_webView);
 		return wkeGoForward(m_webView);
 	}
 	
 	void CMbWebBrowserUI::SetCookieEnabled(bool enable)
 	{
+		ASSERT(m_webView);
 		wkeSetCookieEnabled(m_webView, enable);
 	}
 	
 	bool CMbWebBrowserUI::IsCookieEnabled() const
 	{
+		ASSERT(m_webView);
 		return wkeIsCookieEnabled(m_webView);
+	}
+
+	void CMbWebBrowserUI::SetCookie(const char* utf8_url, const char* utf_8_cookie)
+	{
+		ASSERT(m_webView);
+		wkeSetCookie(m_webView, utf8_url, utf_8_cookie);
+	}
+
+	void CMbWebBrowserUI::SetCookieJarPath(const WCHAR* path)
+	{
+		ASSERT(m_webView);
+		wkeSetCookieJarPath(m_webView, path);
+	}
+
+	void CMbWebBrowserUI::SetCookieJarFullPath(const WCHAR* path)
+	{
+		ASSERT(m_webView);
+		wkeSetCookieJarFullPath(m_webView, path);
+	}
+
+	void CMbWebBrowserUI::ClearCookie()
+	{
+		ASSERT(m_webView);
+		wkeClearCookie(m_webView);
+	}
+
+	//
+	void CMbWebBrowserUI::SetLocalStorageFullPath(const WCHAR* path)
+	{
+		ASSERT(m_webView);
+		wkeSetLocalStorageFullPath(m_webView, path);
+	}
+
+	void CMbWebBrowserUI::AddPluginDirectory(const WCHAR* path)
+	{
+		ASSERT(m_webView);
+		wkeAddPluginDirectory(m_webView, path);
 	}
 
 	void CMbWebBrowserUI::SetTitle(LPCWSTR lpszUrl)
@@ -202,6 +247,7 @@ namespace DuiLib
 
 	void CMbWebBrowserUI::ShowDevTool()
 	{
+		ASSERT(m_webView);
 		wchar_t szPath[MAX_PATH] = L"";
 		GetModuleFileNameW(NULL, szPath, MAX_PATH);
 		PathRemoveFileSpecW(szPath);
@@ -219,7 +265,7 @@ namespace DuiLib
 		}
 	}
 
-	bool CMbWebBrowserUI::DoCreateControl()
+	void CMbWebBrowserUI::DoInit()
 	{
 		if (m_bInit && m_webView == NULL)
 		{
@@ -243,11 +289,11 @@ namespace DuiLib
 			}
 			Attach(wkeGetWindowHandle(m_webView));
 		}
-		return true;
 	}
 
 	jsValue CMbWebBrowserUI::CallJs(const char* funcname, jsValue* params, int params_count)
 	{
+		ASSERT(m_webView);
 		jsExecState es = wkeGlobalExec(m_webView);
 		return CallJs(es, funcname, params, params_count);
 	}
@@ -270,6 +316,112 @@ namespace DuiLib
 			return pMbWebView->m_pIWebEvent->OnJsCallDuiMsg(pMbWebView, es);
 
 		return jsUndefined();
+	}
+
+	int CMbWebBrowserUI::JsArgCount(jsExecState es)
+	{
+		return jsArgCount(es);
+	}
+	
+	jsType CMbWebBrowserUI::JsArgType(jsExecState es, int argIdx)
+	{
+		return jsArgType(es, argIdx);
+	}
+
+	jsValue CMbWebBrowserUI::JsArg(jsExecState es, int argIdx)
+	{
+		return jsArg(es, argIdx);
+	}
+
+	jsValue CMbWebBrowserUI::JsString(const wchar_t* val)
+	{
+		jsExecState es = wkeGlobalExec(m_webView);
+		return jsStringW(es, val);
+	}
+
+	jsValue CMbWebBrowserUI::JsString(jsExecState es, const wchar_t* val)
+	{
+		return jsStringW(es, val);
+	}
+
+	jsValue CMbWebBrowserUI::JsInt(int ival)
+	{
+		return jsInt(ival);
+	}
+
+	jsValue CMbWebBrowserUI::JsFloat(float ival)
+	{
+		return jsFloat(ival);
+	}
+
+	jsValue CMbWebBrowserUI::JsDouble(double ival)
+	{
+		return jsDouble(ival);
+	}
+
+	jsValue CMbWebBrowserUI::JsBool(bool b)
+	{
+		return jsBoolean(b);
+	}
+
+	jsValue CMbWebBrowserUI::JsUndefined()
+	{
+		return jsUndefined();
+	}
+
+	jsValue CMbWebBrowserUI::JsNull()
+	{
+		return jsNull();
+	}
+
+	bool CMbWebBrowserUI::JsIsNumber(jsValue v)
+	{
+		return jsIsNumber(v);
+	}
+
+	bool CMbWebBrowserUI::JsIsString(jsValue v)
+	{
+		return jsIsString(v);
+	}
+
+	bool CMbWebBrowserUI::JsIsBoolean(jsValue v)
+	{
+		return jsIsBoolean(v);
+	}
+
+	bool CMbWebBrowserUI::JsIsObject(jsValue v)
+	{
+		return jsIsObject(v);
+	}
+
+	bool CMbWebBrowserUI::JsIsFunction(jsValue v)
+	{
+		return jsIsFunction(v);
+	}
+
+	bool CMbWebBrowserUI::JsIsUndefined(jsValue v)
+	{
+		return jsIsUndefined(v);
+	}
+
+	bool CMbWebBrowserUI::JsIsNull(jsValue v)
+	{
+		return jsIsFalse(v);
+	}
+
+	bool CMbWebBrowserUI::JsIsArray(jsValue v)
+	{
+		return jsIsArray(v);
+	}
+
+	bool CMbWebBrowserUI::JsIsTrue(jsValue v)
+	{
+		return jsIsTrue(v);
+	}
+
+	bool CMbWebBrowserUI::JsIsFalse(jsValue v)
+	{
+		return jsIsFalse(v);
 	}
 
 	void WKE_CALL_TYPE onDidCreateScriptContextCallback(wkeWebView webView, void* param, wkeWebFrameHandle frameId, void* context, int extensionGroup, int worldId)
@@ -345,13 +497,6 @@ namespace DuiLib
 		if (pMbWebView && pMbWebView->m_pIWebEvent)
 			return pMbWebView->m_pIWebEvent->onLoadUrlBegin(webView, pMbWebView, StringUtil::Easy_AnsiToUnicode(url).c_str(), job);
 		return false;
-	}
-
-	void WKE_CALL_TYPE onLoadUrlEnd(wkeWebView webView, void* param, const char* url, void* job, void* buf, int len)
-	{
-		CMbWebBrowserUI* pMbWebView = (CMbWebBrowserUI*)param;
-		if (pMbWebView && pMbWebView->m_pIWebEvent)
-			return pMbWebView->m_pIWebEvent->onLoadUrlEnd(webView, pMbWebView, StringUtil::Easy_AnsiToUnicode(url).c_str(), job, buf, len);
 	}
 
 	void WKE_CALL_TYPE onLoadingFinish(wkeWebView webView, void* param, const wkeString url, wkeLoadingResult result, const wkeString failedReason)
