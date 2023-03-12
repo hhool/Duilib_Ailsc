@@ -236,7 +236,7 @@ eg:X之后开始布局，X随便命名。可以参考Default的xml
 		<Attribute name="textcolor" default="0x00000000" type="DWORD" comment="字体颜色，0表示使用默认字体颜色,如(0xFFFF0000)"/>
 		<Attribute name="disabledtextcolor" default="0x00000000" type="DWORD" comment="disabled字体颜色，0表示使用默认disabled字体颜色,如(0xFFFF0000)"/>
 		<Attribute name="textpadding" default="0,0,0,0" type="RECT" comment="文字显示的边距,如(2,2,2,2)"/>
-		<Attribute name="multiline" default="true" type="BOOL" comment="是否使用多行,如(true)"/>
+		<Attribute name="multiline" default="false" type="BOOL" comment="是否使用多行,如(true)"/>
 		<Attribute name="estimate" default="false" type="BOOL" comment="label大小是否自己适应，类似于Button的自己调整大小"/>
 		<Attribute name="showhtml" default="false" type="BOOL" comment="是否使用类html富文本绘制,如(false)"/>
 		<Attribute name="enabledeffect" default="false" type="BOOL" comment="是否使用字体特效，使用下面文字特效属性必须该属性设置为true方有效"/>

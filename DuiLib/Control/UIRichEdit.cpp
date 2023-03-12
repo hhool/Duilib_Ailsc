@@ -2040,6 +2040,7 @@ void CRichEditUI::DoEvent(TEventUI& event)
     }
     if( event.Type == UIEVENT_BUTTONUP ) 
     {
+        if (m_pManager != NULL) m_pManager->SendNotify(this, DUI_MSGTYPE_CLICK);
         return;
     }
     if( event.Type > UIEVENT__KEYBEGIN && event.Type < UIEVENT__KEYEND )

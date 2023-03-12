@@ -424,6 +424,51 @@ namespace DuiLib
 		return jsIsFalse(v);
 	}
 
+	int CMbWebBrowserUI::JsToInt(jsExecState es, jsValue v)
+	{
+		return jsToInt(es, v);
+	}
+
+	float CMbWebBrowserUI::JsToFloat(jsExecState es, jsValue v)
+	{
+		return jsToFloat(es, v);
+	}
+
+	double CMbWebBrowserUI::JsToDouble(jsExecState es, jsValue v)
+	{
+		return jsToDouble(es, v);
+	}
+
+	const char* CMbWebBrowserUI::JsToDoubleString(jsExecState es, jsValue v)
+	{
+		return jsToDoubleString(es, v);
+	}
+
+	BOOL CMbWebBrowserUI::JsToBoolean(jsExecState es, jsValue v)
+	{
+		return jsToBoolean(es, v);
+	}
+
+	jsValue CMbWebBrowserUI::JsArrayBuffer(jsExecState es, const char* buffer, size_t size)
+	{
+		return jsArrayBuffer(es, buffer,size);
+	}
+
+	wkeMemBuf* CMbWebBrowserUI::JsGetArrayBuffer(jsExecState es, jsValue value)
+	{
+		return jsGetArrayBuffer(es, value);
+	}
+
+	const utf8* CMbWebBrowserUI::JsToTempString(jsExecState es, jsValue v)
+	{
+		return jsToTempString(es, v);
+	}
+
+	const wchar_t* CMbWebBrowserUI::JsToTempStringW(jsExecState es, jsValue v)
+	{
+		return jsToTempStringW(es, v);
+	}
+
 	void WKE_CALL_TYPE onDidCreateScriptContextCallback(wkeWebView webView, void* param, wkeWebFrameHandle frameId, void* context, int extensionGroup, int worldId)
 	{
 		CMbWebBrowserUI* pMbWebView = (CMbWebBrowserUI*)param;

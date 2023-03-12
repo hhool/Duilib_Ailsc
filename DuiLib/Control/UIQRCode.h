@@ -1,5 +1,5 @@
 #pragma once
-#include "Utils/qrcodegen.hpp"
+#include "../Utils/qrcodegen.hpp"
 using qrcodegen::QrCode;
 namespace DuiLib
 {

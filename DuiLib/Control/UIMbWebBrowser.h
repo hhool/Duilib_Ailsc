@@ -105,6 +105,16 @@ namespace DuiLib
 		static bool JsIsTrue(jsValue v);
 		static bool JsIsFalse(jsValue v);
 
+		static int JsToInt(jsExecState es, jsValue v);
+		static float JsToFloat(jsExecState es, jsValue v);
+		static double JsToDouble(jsExecState es, jsValue v);
+		static const char* JsToDoubleString(jsExecState es, jsValue v);
+		static BOOL JsToBoolean(jsExecState es, jsValue v);
+		static jsValue JsArrayBuffer(jsExecState es, const char* buffer, size_t size);
+		static wkeMemBuf* JsGetArrayBuffer(jsExecState es, jsValue value);
+		static const utf8* JsToTempString(jsExecState es, jsValue v);
+		static const wchar_t* JsToTempStringW(jsExecState es, jsValue v);
+
 	protected:
 		void InitWebEventHandle();
 		//web常用监听事件
