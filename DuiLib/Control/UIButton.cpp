@@ -12,6 +12,7 @@ namespace DuiLib
 		, m_uFadeAlphaDelta(0)
 		, m_uFadeAlpha(255)
 	{
+		m_EnableEffect = true;
 		m_uTextStyle = DT_SINGLELINE | DT_VCENTER | DT_CENTER;
 	}
 
@@ -434,12 +435,7 @@ namespace DuiLib
 		else if( ((m_uButtonState & UISTATE_FOCUSED) != 0) && (GetFocusedTextColor() != 0) )
 			clrColor = GetFocusedTextColor();
 
-		if( m_bShowHtml )
-			CRenderEngine::DrawHtmlText(hDC, m_pManager, rc, m_sText, clrColor, \
-			NULL, NULL, nLinks, m_iFont, m_uTextStyle);
-		else
-			CRenderEngine::DrawText(hDC, m_pManager, rc, m_sText, clrColor, \
-			m_iFont, m_uTextStyle);
+		__super::PaintText(hDC, clrColor);
 	}
 
 	void CButtonUI::PaintStatusImage(HDC hDC)

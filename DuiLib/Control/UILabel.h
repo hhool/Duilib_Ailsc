@@ -49,7 +49,8 @@ namespace DuiLib
 		void DoEvent(TEventUI& event);
 		void SetAttribute(LPCTSTR pstrName, LPCTSTR pstrValue);
 
-		void PaintText(HDC hDC);
+		virtual void PaintText(HDC hDC);
+		virtual void PaintText(HDC hDC,DWORD clrColor);
 
 #ifdef _USE_GDIPLUS
 		void		SetEnabledEffect(bool _EnabledEffect);

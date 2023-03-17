@@ -1156,7 +1156,7 @@ void CRenderEngine::DrawColor(HDC hDC, const RECT& rc, DWORD color)
 
         RECT rcBmpPart = {0, 0, 1, 1};
         RECT rcCorners = {0};
-        DrawImage(hDC, hBitmap, rc, rc, rcBmpPart, rcCorners, true, 255);
+        DrawImage(hDC, hBitmap, rc, rc, rcBmpPart, rcCorners, true, GetAValue(color));
         ::DeleteObject(hBitmap);
     }
 }

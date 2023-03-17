@@ -31,7 +31,9 @@
 #endif
 
 #define _CRT_SECURE_NO_DEPRECATE
-
+#ifndef GetAValue
+#define GetAValue(rgb) (LOBYTE(((DWORD)(rgb)) >> 24))
+#endif
 // Remove pointless warning messages
 #ifdef _MSC_VER
 #pragma warning (disable : 4511) // copy operator could not be generated

@@ -21,7 +21,7 @@ eg:X之后开始布局，X随便命名。可以参考Default的xml
 		<Attribute name="showdirty" default="false" type="BOOL" comment="绘制脏矩形(屏幕上更新的区域被称为脏矩形)"/>
 		<Attribute name="noactivate" default="true" type="BOOL" comment="是否激活窗口，默认为True"/>
 		<Attribute name="opacity" default="255" type="BYTE" comment="窗口的透明度(0-255),如(100)"/>
-		
+		<Attribute name="layered" default="false" type="BOOL" comment="是否启用分层窗口，例如:异形窗口"/>
 		<Attribute name="layeredopacity" default="255" type="BYTE" comment="分层WS_EX_LAYERED窗口的透明度(0-255),如(100)"/>
 		<Attribute name="layeredimage" default="" type="STRING" comment="分层窗口的背景图，例如:异形窗口"/>
 		<Attribute name="disabledfontcolor" default="0x00000000" type="DWORD" comment="禁用控件字体的默认颜色"/>

@@ -20,8 +20,9 @@ namespace DuiLib
 		m_bEnableLuminous(false),
 		m_fLuminousFuzzy(3),
 		m_gdiplusToken(0),
-		m_dwTextShadowColorA(0xff000000),
-		m_dwTextShadowColorB(-1),
+		m_dwTextShadowColorA(0),
+		m_dwTextShadowColorB(0),
+		m_dwTextColor1(0),
 		m_GradientAngle(0),
 		m_EnabledStroke(false),
 		m_dwStrokeColor(0),
@@ -368,9 +369,14 @@ namespace DuiLib
 
 	void CLabelUI::PaintText(HDC hDC)
 	{
-		if( m_dwTextColor == 0 ) m_dwTextColor = m_pManager->GetDefaultFontColor();
-		if( m_dwDisabledTextColor == 0 ) m_dwDisabledTextColor = m_pManager->GetDefaultDisabledColor();
+		if (m_dwTextColor == 0) m_dwTextColor = m_pManager->GetDefaultFontColor();
+		if (m_dwDisabledTextColor == 0) m_dwDisabledTextColor = m_pManager->GetDefaultDisabledColor();
+		DWORD clrColor = IsEnabled() ? m_dwTextColor : m_dwDisabledTextColor;
+		PaintText(hDC, clrColor);
+	}
 
+	void CLabelUI::PaintText(HDC hDC, DWORD clrColor)
+	{
 		RECT rc = m_rcItem;
 		rc.left += m_rcTextPadding.left;
 		rc.right -= m_rcTextPadding.right;
@@ -381,22 +387,13 @@ namespace DuiLib
 		{
 			if( m_sText.IsEmpty() ) return;
 			int nLinks = 0;
-			if( IsEnabled() ) {
-				if( m_bShowHtml )
-					CRenderEngine::DrawHtmlText(hDC, m_pManager, rc, m_sText, m_dwTextColor, \
-					NULL, NULL, nLinks, m_iFont, m_uTextStyle);
-				else
-					CRenderEngine::DrawText(hDC, m_pManager, rc, m_sText, m_dwTextColor, \
-					m_iFont, m_uTextStyle);
-			}
-			else {
-				if( m_bShowHtml )
-					CRenderEngine::DrawHtmlText(hDC, m_pManager, rc, m_sText, m_dwDisabledTextColor, \
-					NULL, NULL, nLinks, m_iFont, m_uTextStyle);
-				else
-					CRenderEngine::DrawText(hDC, m_pManager, rc, m_sText, m_dwDisabledTextColor, \
-					m_iFont, m_uTextStyle);
-			}
+			if( m_bShowHtml )
+				CRenderEngine::DrawHtmlText(hDC, m_pManager, rc, m_sText, clrColor, \
+				NULL, NULL, nLinks, m_iFont, m_uTextStyle);
+			else
+				CRenderEngine::DrawText(hDC, m_pManager, rc, m_sText, clrColor, \
+				m_iFont, m_uTextStyle);
+		
 		}
 		else
 		{
@@ -425,8 +422,9 @@ namespace DuiLib
 			if(nGradientLength == 0)
 				nGradientLength = (rc.bottom-rc.top);
 
-			LinearGradientBrush nLineGrBrushA(Point(GetGradientAngle(), 0),Point(0,nGradientLength),ARGB2Color(GetTextShadowColorA()),ARGB2Color(GetTextShadowColorB() == -1?GetTextShadowColorA():GetTextShadowColorB()));
-			LinearGradientBrush nLineGrBrushB(Point(GetGradientAngle(), 0),Point(0,nGradientLength),ARGB2Color(GetTextColor()),ARGB2Color(GetTextColor1() == -1?GetTextColor():GetTextColor1()));
+			DWORD dwTextShadowColorA = GetTextShadowColorA() == 0 ? clrColor : GetTextShadowColorA();
+			LinearGradientBrush nLineGrBrushA(Point(GetGradientAngle(), 0),Point(0,nGradientLength),ARGB2Color(dwTextShadowColorA),ARGB2Color(GetTextShadowColorB() == 0? dwTextShadowColorA :GetTextShadowColorB()));
+			LinearGradientBrush nLineGrBrushB(Point(GetGradientAngle(), 0),Point(0,nGradientLength),ARGB2Color(clrColor),ARGB2Color(GetTextColor1() == 0? clrColor :GetTextColor1()));
 
 			if (GetEnabledLuminous())
 			{

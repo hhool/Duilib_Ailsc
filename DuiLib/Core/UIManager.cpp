@@ -1035,7 +1035,8 @@ bool CPaintManagerUI::MessageHandler(UINT uMsg, WPARAM wParam, LPARAM lParam, LR
 					BYTE R = 0;
 					BYTE G = 0;
 					BYTE B = 0;
-					if (m_diLayered.pImageInfo != NULL) {
+					//if (m_diLayered.pImageInfo != NULL)
+                    {
 						if( m_hbmpBackground == NULL) {
 							m_hDcBackground = ::CreateCompatibleDC(m_hDcPaint);
 							m_hbmpBackground = CRenderEngine::CreateARGB32Bitmap(m_hDcPaint, dwWidth, dwHeight, &m_pBackgroundBits); 
@@ -1045,15 +1046,17 @@ bool CPaintManagerUI::MessageHandler(UINT uMsg, WPARAM wParam, LPARAM lParam, LR
 							::SelectObject(m_hDcBackground, m_hbmpBackground);
 							CRenderClip clip;
 							CRenderClip::GenerateClip(m_hDcBackground, rcLayeredClient, clip);
-							CRenderEngine::DrawImage(m_hDcBackground, this, rcLayeredClient, rcLayeredClient, m_diLayered);
+                            if(m_diLayered.pImageInfo != NULL)
+    							CRenderEngine::DrawImage(m_hDcBackground, this, rcLayeredClient, rcLayeredClient, m_diLayered);
 						}
 						else if( m_bLayeredChanged ) {
 							::ZeroMemory(m_pBackgroundBits, dwWidth * dwHeight * 4);
 							CRenderClip clip;
 							CRenderClip::GenerateClip(m_hDcBackground, rcLayeredClient, clip);
-							CRenderEngine::DrawImage(m_hDcBackground, this, rcLayeredClient, rcLayeredClient, m_diLayered);
+                            if (m_diLayered.pImageInfo != NULL)
+							    CRenderEngine::DrawImage(m_hDcBackground, this, rcLayeredClient, rcLayeredClient, m_diLayered);
 						}
-						if( m_diLayered.pImageInfo->bAlpha ) {
+						if(m_diLayered.pImageInfo && m_diLayered.pImageInfo->bAlpha ) {
 							for( LONG y = rcClient.bottom - rcPaint.bottom; y < rcClient.bottom - rcPaint.top; ++y ) {
 								for( LONG x = rcPaint.left; x < rcPaint.right; ++x ) {
 									pOffscreenBits = m_pOffscreenBits + y * dwWidth + x;
@@ -3163,6 +3166,9 @@ void CPaintManagerUI::SetWindowAttribute(LPCTSTR pstrName, LPCTSTR pstrValue)
     else if( _tcscmp(pstrName, _T("layeredopacity")) == 0 ) {
         SetLayeredOpacity(_ttoi(pstrValue));
     } 
+	else if (_tcscmp(pstrName, _T("layered")) == 0) {
+        SetLayered(_tcscmp(pstrValue, _T("true")) == 0);
+	}
     else if( _tcscmp(pstrName, _T("layeredimage")) == 0 ) {
         SetLayered(true);
         SetLayeredImage(pstrValue);
