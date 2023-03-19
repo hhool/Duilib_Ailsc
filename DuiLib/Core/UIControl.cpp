@@ -37,7 +37,7 @@ m_nWeight(1)
     m_cxyFixed.cx = m_cxyFixed.cy = 0;
     m_cxyMin.cx = m_cxyMin.cy = 0;
     m_cxyMax.cx = m_cxyMax.cy = 9999;
-    m_cxyBorderRound.cx = m_cxyBorderRound.cy = 0;
+    m_cxyRoundCorner.cx = m_cxyRoundCorner.cy = 0;
 
     ::ZeroMemory(&m_rcPadding, sizeof(RECT));
     ::ZeroMemory(&m_rcItem, sizeof(RECT));
@@ -285,14 +285,14 @@ void CControlUI::SetBorderSize(int iSize)
 	Invalidate();
 }
 
-SIZE CControlUI::GetBorderRound() const
+SIZE CControlUI::GetRoundCorner() const
 {
-    return m_cxyBorderRound;
+    return m_cxyRoundCorner;
 }
 
-void CControlUI::SetBorderRound(SIZE cxyRound)
+void CControlUI::SetRoundCorner(SIZE cxyRound)
 {
-    m_cxyBorderRound = cxyRound;
+    m_cxyRoundCorner = cxyRound;
     Invalidate();
 }
 
@@ -1062,12 +1062,12 @@ void CControlUI::SetAttribute(LPCTSTR pstrName, LPCTSTR pstrValue)
 		}
 	}
 	else if( _tcscmp(pstrName, _T("borderstyle")) == 0 ) SetBorderStyle(_ttoi(pstrValue));
-    else if( _tcscmp(pstrName, _T("borderround")) == 0 ) {
+    else if( _tcscmp(pstrName, _T("roundcorner")) == 0 ) {
         SIZE cxyRound = { 0 };
         LPTSTR pstr = NULL;
         cxyRound.cx = _tcstol(pstrValue, &pstr, 10);  ASSERT(pstr);    
         cxyRound.cy = _tcstol(pstr + 1, &pstr, 10);    ASSERT(pstr);     
-        SetBorderRound(cxyRound);
+        SetRoundCorner(cxyRound);
     }
     else if( _tcscmp(pstrName, _T("bkimage")) == 0 ) SetBkImage(pstrValue);
     else if (_tcscmp(pstrName, _T("bkdirect")) == 0) SetBkColorDirect(_tcsncmp("horizon", pstrValue, 7) != 0);
@@ -1169,9 +1169,9 @@ bool CControlUI::Paint(HDC hDC, const RECT& rcPaint, CControlUI* pStopControl)
 bool CControlUI::DoPaint(HDC hDC, const RECT& rcPaint, CControlUI* pStopControl)
 {
     // 绘制循序：背景颜色->背景图->状态图->文本->边框
-    if( m_cxyBorderRound.cx > 0 || m_cxyBorderRound.cy > 0 ) {
+    if( m_cxyRoundCorner.cx > 0 || m_cxyRoundCorner.cy > 0 ) {
         CRenderClip roundClip;
-        CRenderClip::GenerateRoundClip(hDC, m_rcPaint,  m_rcItem, m_cxyBorderRound.cx, m_cxyBorderRound.cy, roundClip);
+        CRenderClip::GenerateRoundClip(hDC, m_rcPaint,  m_rcItem, m_cxyRoundCorner.cx, m_cxyRoundCorner.cy, roundClip);
         PaintBkColor(hDC);
 		if (m_bShowBkImg)
 			PaintBkImage(hDC);
@@ -1243,12 +1243,12 @@ void CControlUI::PaintText(HDC hDC)
 void CControlUI::PaintBorder(HDC hDC)
 {
 	if(m_rcBorderSize.left > 0 && (m_dwBorderColor != 0 || m_dwFocusBorderColor != 0)) {
-		if( m_cxyBorderRound.cx > 0 || m_cxyBorderRound.cy > 0 )//画圆角边框
+		if( m_cxyRoundCorner.cx > 0 || m_cxyRoundCorner.cy > 0 )//画圆角边框
 		{
 			if (IsFocused() && m_dwFocusBorderColor != 0)
-				CRenderEngine::DrawRoundRect(hDC, m_rcItem, m_rcBorderSize.left, m_cxyBorderRound.cx, m_cxyBorderRound.cy, GetAdjustColor(m_dwFocusBorderColor), m_nBorderStyle);
+				CRenderEngine::DrawRoundRect(hDC, m_rcItem, m_rcBorderSize.left, m_cxyRoundCorner.cx, m_cxyRoundCorner.cy, GetAdjustColor(m_dwFocusBorderColor), m_nBorderStyle);
 			else
-				CRenderEngine::DrawRoundRect(hDC, m_rcItem, m_rcBorderSize.left, m_cxyBorderRound.cx, m_cxyBorderRound.cy, GetAdjustColor(m_dwBorderColor), m_nBorderStyle);
+				CRenderEngine::DrawRoundRect(hDC, m_rcItem, m_rcBorderSize.left, m_cxyRoundCorner.cx, m_cxyRoundCorner.cy, GetAdjustColor(m_dwBorderColor), m_nBorderStyle);
 		}
 		else {
 			if (m_rcBorderSize.right == m_rcBorderSize.left && m_rcBorderSize.top == m_rcBorderSize.left && m_rcBorderSize.bottom == m_rcBorderSize.left) {

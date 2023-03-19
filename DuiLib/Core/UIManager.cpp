@@ -558,6 +558,13 @@ BYTE CPaintManagerUI::GetOpacity() const
 void CPaintManagerUI::SetOpacity(BYTE nOpacity)
 {
 	m_nOpacity = nOpacity;
+    //如果设置了分层则直接返回
+	if (m_bLayered)
+	{
+		if (m_hWndPaint != nullptr) Invalidate();
+		return;
+	}
+
 	if( m_hWndPaint != NULL ) {
 		typedef BOOL (__stdcall *PFUNCSETLAYEREDWINDOWATTR)(HWND, COLORREF, BYTE, DWORD);
 		PFUNCSETLAYEREDWINDOWATTR fSetLayeredWindowAttributes;
@@ -585,6 +592,13 @@ void CPaintManagerUI::SetOpacity(BYTE nOpacity)
 void CPaintManagerUI::SetOpacity(BYTE nOpacity, COLORREF crKey)
 {
 	m_nOpacity = nOpacity;
+
+    //如果设置了分层则直接返回
+	if (m_bLayered)
+	{
+		if (m_hWndPaint != nullptr) Invalidate();
+		return;
+	}
 	if (m_hWndPaint != NULL) {
 		typedef BOOL(__stdcall* PFUNCSETLAYEREDWINDOWATTR)(HWND, COLORREF, BYTE, DWORD);
 		PFUNCSETLAYEREDWINDOWATTR fSetLayeredWindowAttributes;
@@ -3623,6 +3637,14 @@ void CPaintManagerUI::SetTransparent(int nOpacity)
 		m_nOpacity = 255;
 	else
 		m_nOpacity = nOpacity;
+
+	//如果设置了分层则直接返回
+    if (m_bLayered)
+    {
+        if (m_hWndPaint != nullptr) Invalidate();
+        return;
+    }
+
 	if (m_hWndPaint != NULL) {
 		typedef BOOL(__stdcall *PFUNCSETLAYEREDWINDOWATTR)(HWND, COLORREF, BYTE, DWORD);
 		PFUNCSETLAYEREDWINDOWATTR fSetLayeredWindowAttributes;

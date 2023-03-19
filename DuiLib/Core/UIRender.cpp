@@ -1129,6 +1129,27 @@ bool CRenderEngine::DrawImage(HDC hDC, CPaintManagerUI* pManager, const RECT& rc
 	return true;
 }
 
+void CRenderEngine::DrawColor(HDC hDC, const RECT& rc, DWORD color,SIZE rcCorner)
+{
+	Graphics g(hDC);
+	GraphicsPath cornerPath;
+	// 把圆角矩形分成八段直线、弧的组合，依次加到路径中 
+	INT elWid = 2 * rcCorner.cx;
+	INT elHei = 2 * rcCorner.cy;
+	INT width = rc.right - rc.left;
+	INT height = rc.bottom - rc.top;
+	cornerPath.AddArc(rc.left, rc.top, elWid, elHei, 180, 90); // 左上角圆弧
+	cornerPath.AddLine(rc.left + rcCorner.cx, rc.top, rc.left + width - rcCorner.cx, rc.top); // 上边
+	cornerPath.AddArc(rc.left + width - elWid, rc.top, elWid, elHei, 270, 90); // 右上角圆弧
+	cornerPath.AddLine(rc.left + width, rc.top + rcCorner.cy, rc.left + width, rc.top + height - rcCorner.cy);// 右边
+	cornerPath.AddArc(rc.left + width - elWid, rc.top + height - elHei, elWid, elHei, 0, 90); // 右下角圆弧
+	cornerPath.AddLine(rc.left + width - rcCorner.cx, rc.top + height, rc.left + rcCorner.cx, rc.top + height); // 下边
+	cornerPath.AddArc(rc.left, rc.top + height - elHei, elWid, elHei, 90, 90);
+	cornerPath.AddLine(rc.left, rc.top + rcCorner.cy, rc.left, rc.top + height - rcCorner.cy);
+	SolidBrush brush(Color(GetAValue(color),GetBValue(color),GetGValue(color),GetRValue(color)));
+	g.FillPath(&brush, &cornerPath);
+}
+
 void CRenderEngine::DrawColor(HDC hDC, const RECT& rc, DWORD color)
 {
     if( color <= 0x00FFFFFF ) return;

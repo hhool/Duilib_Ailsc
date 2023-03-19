@@ -1,0 +1,10 @@
+1.修复popui的killfocus的 bug
+2.增加AlignLayout
+3.TileLayout修改名称为GridLayout，CimpositeLayout更改为FunctionalLayout
+4.修正win7下，RichEdit滚动超出界面时字体变小的bug
+5.list，gridlayout增加itemtemplate属性，支持Item模板设置
+6.修复部分bug
+7.修复container的padding属性
+8.RichEdit增加PlaceHolder属性
+9.优化List虚表选中指定项，必须设置Tag
+10.listitem 完全填充

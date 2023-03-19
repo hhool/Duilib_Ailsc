@@ -50,8 +50,8 @@ public:
 	void SetFocusBorderColor(DWORD dwBorderColor);
     bool IsColorHSL() const;
     void SetColorHSL(bool bColorHSL);
-    SIZE GetBorderRound() const;
-    void SetBorderRound(SIZE cxyRound);
+    SIZE GetRoundCorner() const;
+    void SetRoundCorner(SIZE cxyRound);
 	// 是否显示背景图
 	void SetShowBkImg(bool bShowImg);
 	void SetShowStatusImg(bool bShowImg);
@@ -238,7 +238,7 @@ protected:
 	int m_nBorderStyle;
 	int m_nTooltipWidth;
 	int m_nWeight;//比重，默认1
-    SIZE m_cxyBorderRound;
+    SIZE m_cxyRoundCorner;
     RECT m_rcPaint;
 	RECT m_rcBorderSize;
 	CDuiStringPtrMap m_mCustomAttrHash;
