@@ -400,7 +400,7 @@ namespace DuiLib
 #ifdef _USE_GDIPLUS
 			Font	nFont(hDC,m_pManager->GetFont(GetFont()));
 			Graphics nGraphics(hDC);
-			nGraphics.SetTextRenderingHint(TextRenderingHintAntiAlias);
+			//nGraphics.SetTextRenderingHint(TextRenderingHintAntiAlias);
 
 			StringFormat format;
 			StringAlignment sa = StringAlignment::StringAlignmentNear;
@@ -411,6 +411,9 @@ namespace DuiLib
 			if ((m_uTextStyle & DT_CENTER) != 0) sa = StringAlignment::StringAlignmentCenter;
 			else if( (m_uTextStyle & DT_RIGHT) != 0) sa = StringAlignment::StringAlignmentFar;
 			format.SetAlignment((StringAlignment)sa);
+
+			if (m_uTextStyle & DT_SINGLELINE) format.SetFormatFlags(StringFormatFlagsNoWrap);
+			if (m_uTextStyle & DT_END_ELLIPSIS) format.SetTrimming(StringTrimmingEllipsisCharacter);
 
 			RectF nRc((float)rc.left,(float)rc.top,(float)rc.right-rc.left,(float)rc.bottom-rc.top);
 			RectF nShadowRc = nRc;
@@ -438,7 +441,7 @@ namespace DuiLib
 				Bitmap Bit1((INT)nRc.Width, (INT)nRc.Height);
 				Graphics g1(&Bit1);
 				g1.SetSmoothingMode(SmoothingModeAntiAlias);
-				g1.SetTextRenderingHint(TextRenderingHintAntiAlias);
+				//g1.SetTextRenderingHint(TextRenderingHintAntiAlias);
 				g1.SetCompositingQuality(CompositingQualityAssumeLinear);
 				Bitmap Bit2(iFuzzyWidth, iFuzzyHeight);
 				Graphics g2(&Bit2);
@@ -453,7 +456,7 @@ namespace DuiLib
 				g2.DrawImage(&Bit1, 0, 0, (int)iFuzzyWidth, (int)iFuzzyHeight);
 				g1.Clear(Color(0));
 				g1.DrawImage(&Bit2, (int)m_ShadowOffset.X, (int)m_ShadowOffset.Y, (int)nRc.Width, (int)nRc.Height);
-				g1.SetTextRenderingHint(TextRenderingHintAntiAlias);
+				//g1.SetTextRenderingHint(TextRenderingHintAntiAlias);
 
 				nGraphics.DrawImage(&Bit1, nRc.X, nRc.Y);
 			}

@@ -438,6 +438,11 @@ namespace DuiLib
 		__super::PaintText(hDC, clrColor);
 	}
 
+	void CButtonUI::PaintText(HDC hDC, DWORD clrColor)
+	{
+		__super::PaintText(hDC, clrColor);
+	}
+
 	void CButtonUI::PaintStatusImage(HDC hDC)
 	{
 		if( IsFocused() ) m_uButtonState |= UISTATE_FOCUSED;

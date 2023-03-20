@@ -50,6 +50,7 @@ namespace DuiLib
 		void SetAttribute(LPCTSTR pstrName, LPCTSTR pstrValue);
 
 		void PaintText(HDC hDC);
+		void PaintText(HDC hDC, DWORD clrColor);
 		void PaintStatusImage(HDC hDC);
 
 	protected:
