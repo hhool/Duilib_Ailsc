@@ -70,6 +70,7 @@ eg:X之后开始布局，X随便命名。可以参考Default的xml
 	</AlignLayout>
 	<Control parent="" notifies="setfocus killfocus timer menu windowinit(root)">
 		<Attribute name="name" default="" type="STRING" comment="控件名字，同一窗口内必须唯一，如(testbtn)"/>
+		<Attribute name="mousetransparent" default="true" type="BOOL" comment="鼠标事件是否穿透窗口，配合layered属性使用"/>
 		<Attribute name="roundcorner" default="0,0" type="SIZE" comment="窗口圆角大小,如(4,4)"/>
 		<Attribute name="pos" default="0,0,0,0" type="RECT" comment="位置，如果为float控件则指定位置和大小，否则只指定大小,如(0,0,100,100)"/>
 		<Attribute name="padding" default="0,0,0,0" type="RECT" comment="外边距,如(2,2,2,2)"/>
@@ -249,6 +250,8 @@ eg:X之后开始布局，X随便命名。可以参考Default的xml
 		<Attribute name="gradientlength" default="0" type="INT" comment="渐变距离"/>
 		<Attribute name="shadowoffset" default="0,0" type="SIZE" comment=""/>
 		<Attribute name="textcolor1" default="0x00000000" type="STRING" comment="字体渐变色"/>
+		<Attribute name="textrenderinghint" default="cleartypegridfit" type="STRING" comment="Gdi+字体优化,systemdefault,singlebitperpixelgridgit,singlebitperpixel,antialiasgridfit,antialias"/>
+		
 		<Attribute name="textshadowcolora" default="0xff000000" type="STRING" comment="字体阴影渐变色"/>
 		<Attribute name="textshadowcolorb" default="0xff000000" type="STRING" comment="字体阴影渐变色"/>
 		<Attribute name="strokecolor" default="0x00000000" type="STRING" comment="字体描边的颜色"/>
@@ -263,11 +266,18 @@ eg:X之后开始布局，X随便命名。可以参考Default的xml
 		<Attribute name="hotforeimage" default="" type="STRING" comment="前景图片"/>
 		<Attribute name="fivestatusimage" default="" type="STRING" comment="Fives状态图片"/>
 		<Attribute name="fadedelta" default="" type="INT" comment="透明度 0-255"/>
-		<Attribute name="itemhotbkcolor" default="0xFFE9F5FF" type="DWORD" comment="item鼠标悬浮时的背景颜色"/>
+		<Attribute name="hotbkcolor" default="0xFFE9F5FF" type="DWORD" comment="item鼠标悬浮时的背景颜色"/>
 		<Attribute name="hottextcolor" default="0x00000000" type="DWORD" comment="鼠标悬浮字体颜色，0表示不使用此颜色,如(0xFFFF0000)"/>
 		<Attribute name="pushedtextcolor" default="0x00000000" type="DWORD" comment="鼠标按下字体颜色，0表示不使用此颜色,如(0xFFFF0000)"/>
 		<Attribute name="focusedtextcolor" default="0x00000000" type="DWORD" comment="获得焦点字体颜色，0表示不使用此颜色,如(0xFFFF0000)"/>
 	</Button>
+	
+	<!--支持加载png,icon图片以及HICON句柄-->
+	<Icon parent="Button">
+		<Attribute name="icopadding" default="0,0,0,0" type="RECT" comment="Icon的边距,如(2,2,2,2)"/>
+		<Attribute name="circlemode" default="fasle" type="BOOL" comment="是否使用圆形模式，展示圆形图标"/>
+	</Icon>
+	
 	<Option parent="Button" notifies="setfocus killfocus timer menu click selectchanged windowinit(root)">
 		<Attribute name="group" default="" type="STRING" comment="所属组的名称，可不设"/>
 		<Attribute name="selected" default="false" type="BOOL" comment="是否选中"/>
@@ -280,6 +290,7 @@ eg:X之后开始布局，X随便命名。可以参考Default的xml
 	<Text parent="Label" notifies="setfocus killfocus timer menu link windowinit(root)">
 	</Text>
 	<Progress parent="Label" notifies="setfocus killfocus timer menu windowinit(root)">
+		<Attribute name="thumbpadding" default="0,0,0,0" type="RECT" comment="thum的边距,如(2,2,2,2)"/>
 		<Attribute name="foreimage" default="" type="STRING" comment="前景图片"/>
 		<Attribute name="hor" default="true" type="BOOL" comment="水平或垂直,如(true)"/>
 		<Attribute name="min" default="0" type="INT" comment="进度最小值，如(0)"/>
@@ -288,6 +299,7 @@ eg:X之后开始布局，X随便命名。可以参考Default的xml
 	</Progress>
 	
 	<Slider parent="Progress" notifies="setfocus killfocus timer menu valuechanged windowinit(root)">
+		<Attribute name="imgpadding" default="0,0,0,0" type="RECT" comment="图标的边距,如(2,2,2,2)"/>
 		<Attribute name="thumbimage" default="" type="STRING" comment="拖动滑块普通状态图片"/>
 		<Attribute name="thumbhotimage" default="" type="STRING" comment="拖动滑块鼠标悬浮状态图片"/>
 		<Attribute name="thumbpushedimage" default="" type="STRING" comment="拖动滑块鼠标按下状态图片"/>
