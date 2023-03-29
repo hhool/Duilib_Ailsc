@@ -21,11 +21,14 @@ namespace DuiLib
 		void SetMaxValue(int nMax);
 		int GetValue() const;
 		void SetValue(int nValue,bool bNotify = false);
+		void SetImgPadding(RECT rcImgPadding);
+		RECT GetImgPadding() const;
 		LPCTSTR GetForeImage() const;
 		void SetForeImage(LPCTSTR pStrImage);
 
 		void SetAttribute(LPCTSTR pstrName, LPCTSTR pstrValue);
 		void PaintStatusImage(HDC hDC);
+		void PaintBkImage(HDC hDC);
 		SIZE EstimateSize(SIZE szAvailable);
 
 	protected:
@@ -33,7 +36,7 @@ namespace DuiLib
 		int m_nMax;
 		int m_nMin;
 		int m_nValue;
-
+		RECT m_rcImgPadding;
 		TDrawInfo m_diFore;
 	};
 

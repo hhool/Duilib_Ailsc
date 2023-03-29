@@ -480,6 +480,7 @@ namespace DuiLib
 			if (DrawImage(hDC, m_diHotFore)) return;
 			else if(m_dwHotBkColor != 0) {
 				CRenderEngine::DrawColor(hDC, m_rcPaint, GetAdjustColor(m_dwHotBkColor));
+				DrawImage(hDC, m_diNormal);
 				return;
 			}
 			else goto Label_ForeImage;

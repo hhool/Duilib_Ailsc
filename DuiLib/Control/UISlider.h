@@ -28,6 +28,8 @@ namespace DuiLib
 		void SetThumbHotImage(LPCTSTR pStrImage);
 		LPCTSTR GetThumbPushedImage() const;
 		void SetThumbPushedImage(LPCTSTR pStrImage);
+		void SetThumbPadding(RECT rcImgPadding);
+		RECT GetThumbPadding() const;
 
 		void DoEvent(TEventUI& event);
 		void SetAttribute(LPCTSTR pstrName, LPCTSTR pstrValue);
@@ -38,7 +40,7 @@ namespace DuiLib
 		UINT m_uButtonState;
 		int m_nStep;
 		bool m_bImmMode;
-
+		RECT m_rcThumbPadding;
 		TDrawInfo m_diThumb;
 		TDrawInfo m_diThumbHot;
 		TDrawInfo m_diThumbPushed;

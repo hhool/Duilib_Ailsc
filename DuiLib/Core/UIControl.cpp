@@ -29,6 +29,7 @@ m_dwBorderColor(0),
 m_dwFocusBorderColor(0),
 m_bColorHSL(false),
 m_bkColorIsVertical(false),
+m_bMouseTransparent(true),
 m_nBorderStyle(PS_SOLID),
 m_nTooltipWidth(300),
 m_nWeight(1)
@@ -324,6 +325,21 @@ bool CControlUI::IsBkColorVertical()
 {
     return m_bkColorIsVertical;
 }
+
+void CControlUI::SetMouseTransparent(bool istrans)
+{
+	if (m_bMouseTransparent != istrans)
+	{
+		m_bMouseTransparent = istrans;
+		Invalidate();
+	}
+}
+
+bool CControlUI::IsMouseTransparent()
+{
+	return m_bMouseTransparent;
+}
+
 bool CControlUI::DrawImage(HDC hDC, TDrawInfo& drawInfo)
 {
 	return CRenderEngine::DrawImage(hDC, m_pManager, m_rcItem, m_rcPaint, drawInfo);
@@ -1071,6 +1087,7 @@ void CControlUI::SetAttribute(LPCTSTR pstrName, LPCTSTR pstrValue)
     }
     else if( _tcscmp(pstrName, _T("bkimage")) == 0 ) SetBkImage(pstrValue);
     else if (_tcscmp(pstrName, _T("bkdirect")) == 0) SetBkColorDirect(_tcsncmp("horizon", pstrValue, 7) != 0);
+	else if (_tcscmp(pstrName, _T("mousetransparent")) == 0) SetMouseTransparent(_tcscmp("true", pstrValue) == 0);
     else if( _tcscmp(pstrName, _T("width")) == 0 ) SetFixedWidth(_ttoi(pstrValue));
     else if( _tcscmp(pstrName, _T("height")) == 0 ) SetFixedHeight(_ttoi(pstrValue));
 	else if (_tcscmp(pstrName, _T("weight")) == 0) SetWeight(_ttoi(pstrValue));
@@ -1194,6 +1211,12 @@ bool CControlUI::DoPaint(HDC hDC, const RECT& rcPaint, CControlUI* pStopControl)
 
 void CControlUI::PaintBkColor(HDC hDC)
 {
+	//暂时不考虑穿透情况下的渐变，如果需要可以通过gdi+绘画
+	if (!IsMouseTransparent())
+	{
+		SIZE corner = { 0 };
+		return CRenderEngine::DrawColor(hDC, m_rcItem, GetAdjustColor(m_dwBackColor), corner);
+	}
     if( m_dwBackColor != 0 ) {
         if( m_dwBackColor2 != 0 ) {
             if( m_dwBackColor3 != 0 ) {

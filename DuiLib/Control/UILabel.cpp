@@ -10,6 +10,7 @@ namespace DuiLib
 
 	CLabelUI::CLabelUI() : 
 		m_pWideText(0),
+		m_nTextRenderingHint(TextRenderingHintSystemDefault),
 		m_uTextStyle(DT_VCENTER|DT_SINGLELINE), 
 		m_dwTextColor(0), 
 		m_dwDisabledTextColor(0),
@@ -25,7 +26,7 @@ namespace DuiLib
 		m_dwTextColor1(0),
 		m_GradientAngle(0),
 		m_EnabledStroke(false),
-		m_dwStrokeColor(0),
+		m_dwStrokeColor(0xcc24293E),
 		m_EnabledShadow(false),
 		m_bEstimate(false),
 		m_GradientLength(0)
@@ -181,6 +182,17 @@ namespace DuiLib
 		m_rcTextPadding = rc;
         m_bNeedEstimateSize = true;
 		Invalidate();
+	}
+
+	void CLabelUI::SetTextRenderingHint(int nTextRenderingHint)
+	{
+		m_nTextRenderingHint = nTextRenderingHint;
+		Invalidate();
+	}
+
+	int CLabelUI::GetTextRenderingHint(int nTextRenderingHint)
+	{
+		return m_nTextRenderingHint;
 	}
 
 	bool CLabelUI::IsShowHtml()
@@ -364,6 +376,21 @@ namespace DuiLib
 			DWORD clrColor = _tcstoul(pstrValue, &pstr, 16);
 			SetStrokeColor(clrColor);
 		}
+		else if (_tcscmp(pstrName, _T("textrenderinghint")) == 0)
+		{
+			if(_tcscmp(pstrValue, _T("systemdefault")) == 0)
+				SetTextRenderingHint(TextRenderingHintSystemDefault);
+			else if (_tcscmp(pstrValue, _T("singlebitperpixelgridgit")) == 0)
+				SetTextRenderingHint(TextRenderingHintSingleBitPerPixelGridFit);
+			else if (_tcscmp(pstrValue, _T("singlebitperpixel")) == 0)
+				SetTextRenderingHint(TextRenderingHintSingleBitPerPixel);
+			else if (_tcscmp(pstrValue, _T("antialiasgridfit")) == 0)
+				SetTextRenderingHint(TextRenderingHintAntiAliasGridFit);
+			else if (_tcscmp(pstrValue, _T("antialias")) == 0)
+				SetTextRenderingHint(TextRenderingHintAntiAlias);
+			else if (_tcscmp(pstrValue, _T("cleartypegridfit")) == 0)
+				SetTextRenderingHint(TextRenderingHintClearTypeGridFit);
+		}
 		else CControlUI::SetAttribute(pstrName, pstrValue);
 	}
 
@@ -400,7 +427,8 @@ namespace DuiLib
 #ifdef _USE_GDIPLUS
 			Font	nFont(hDC,m_pManager->GetFont(GetFont()));
 			Graphics nGraphics(hDC);
-			//nGraphics.SetTextRenderingHint(TextRenderingHintAntiAlias);
+			nGraphics.SetSmoothingMode(SmoothingModeHighQuality);
+			nGraphics.SetTextRenderingHint((TextRenderingHint)m_nTextRenderingHint);
 
 			StringFormat format;
 			StringAlignment sa = StringAlignment::StringAlignmentNear;
@@ -440,8 +468,8 @@ namespace DuiLib
 
 				Bitmap Bit1((INT)nRc.Width, (INT)nRc.Height);
 				Graphics g1(&Bit1);
-				g1.SetSmoothingMode(SmoothingModeAntiAlias);
-				//g1.SetTextRenderingHint(TextRenderingHintAntiAlias);
+				g1.SetSmoothingMode(SmoothingModeHighQuality);
+				g1.SetTextRenderingHint((TextRenderingHint)m_nTextRenderingHint);
 				g1.SetCompositingQuality(CompositingQualityAssumeLinear);
 				Bitmap Bit2(iFuzzyWidth, iFuzzyHeight);
 				Graphics g2(&Bit2);
@@ -456,12 +484,10 @@ namespace DuiLib
 				g2.DrawImage(&Bit1, 0, 0, (int)iFuzzyWidth, (int)iFuzzyHeight);
 				g1.Clear(Color(0));
 				g1.DrawImage(&Bit2, (int)m_ShadowOffset.X, (int)m_ShadowOffset.Y, (int)nRc.Width, (int)nRc.Height);
-				//g1.SetTextRenderingHint(TextRenderingHintAntiAlias);
-
 				nGraphics.DrawImage(&Bit1, nRc.X, nRc.Y);
 			}
 			
-			if(GetEnabledStroke() && GetStrokeColor() > 0)
+			if(GetEnabledStroke())
 			{
 				LinearGradientBrush nLineGrBrushStroke(Point(GetGradientAngle(),0),Point(0,rc.bottom-rc.top+2),ARGB2Color(GetStrokeColor()),ARGB2Color(GetStrokeColor()));
 #ifdef _UNICODE

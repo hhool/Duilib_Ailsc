@@ -5,6 +5,7 @@ namespace DuiLib
 {
 	CSliderUI::CSliderUI() : m_uButtonState(0), m_nStep(1), m_bImmMode(false)
 	{
+		m_rcThumbPadding.left = m_rcThumbPadding.right = m_rcThumbPadding.top = m_rcThumbPadding.bottom = 0;
 		m_uTextStyle = DT_SINGLELINE | DT_CENTER;
 		m_szThumb.cx = m_szThumb.cy = 10;
 	}
@@ -112,6 +113,15 @@ namespace DuiLib
 		Invalidate();
 	}
 
+	void CSliderUI::SetThumbPadding(RECT rcImgPadding)
+	{
+		m_rcThumbPadding = rcImgPadding;
+		Invalidate();
+	}
+	RECT CSliderUI::GetThumbPadding() const
+	{
+		return m_rcThumbPadding;
+	}
 	void CSliderUI::DoEvent(TEventUI& event)
 	{
 		if( !IsMouseEnabled() && event.Type > UIEVENT__MOUSEBEGIN && event.Type < UIEVENT__MOUSEEND ) {
@@ -260,6 +270,15 @@ namespace DuiLib
 			SetChangeStep(_ttoi(pstrValue));
 		}
 		else if( _tcscmp(pstrName, _T("imm")) == 0 ) SetImmMode(_tcscmp(pstrValue, _T("true")) == 0);
+		else if (_tcscmp(pstrName, _T("thumbpadding")) == 0) {
+			RECT rcPadding = { 0 };
+			LPTSTR pstr = NULL;
+			rcPadding.left = _tcstol(pstrValue, &pstr, 10);  ASSERT(pstr);
+			rcPadding.top = _tcstol(pstr + 1, &pstr, 10);    ASSERT(pstr);
+			rcPadding.right = _tcstol(pstr + 1, &pstr, 10);  ASSERT(pstr);
+			rcPadding.bottom = _tcstol(pstr + 1, &pstr, 10); ASSERT(pstr);
+			SetThumbPadding(rcPadding);
+		}
 		else CProgressUI::SetAttribute(pstrName, pstrValue);
 	}
 
@@ -280,6 +299,11 @@ namespace DuiLib
 			m_diThumbHot.rcDestOffset = rcThumb;
 			if( DrawImage(hDC, m_diThumbHot) ) return;
 		}
+
+		rcThumb.left += m_rcThumbPadding.left;
+		rcThumb.top += m_rcThumbPadding.top;
+		rcThumb.right -= m_rcThumbPadding.right;
+		rcThumb.bottom -= m_rcThumbPadding.bottom;
 
 		m_diThumb.rcDestOffset = rcThumb;
 		if( DrawImage(hDC, m_diThumb) ) return;

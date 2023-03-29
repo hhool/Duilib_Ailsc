@@ -331,6 +331,114 @@ void CRenderEngine::AdjustImage(bool bUseHSL, TImageInfo* imageInfo, short H, sh
 		HSLtoRGB((DWORD*)(imageInfo->pBits + i*4), fH, fS, fL);
 	}
 }
+TImageData* CRenderEngine::LoadImageData(STRINGorID bitmap, LPCTSTR type)
+{
+	LPBYTE pData = NULL;
+	DWORD dwSize = 0;
+
+	do
+	{
+		if (type == NULL) {
+			CDuiString sFile = CPaintManagerUI::GetResourcePath();
+			if (CPaintManagerUI::GetResourceZip().IsEmpty()) {
+				sFile += bitmap.m_lpstr;
+				HANDLE hFile = ::CreateFile(sFile.GetData(), GENERIC_READ, FILE_SHARE_READ, NULL, OPEN_EXISTING, \
+					FILE_ATTRIBUTE_NORMAL, NULL);
+				if (hFile == INVALID_HANDLE_VALUE) break;
+				dwSize = ::GetFileSize(hFile, NULL);
+				if (dwSize == 0)
+				{
+					CloseHandle(hFile);
+					break;
+				}
+
+				DWORD dwRead = 0;
+				pData = new BYTE[dwSize];
+				::ReadFile(hFile, pData, dwSize, &dwRead, NULL);
+				::CloseHandle(hFile);
+
+				if (dwRead != dwSize) {
+					delete[] pData;
+					pData = NULL;
+					break;
+				}
+			}
+			else {
+				sFile += CPaintManagerUI::GetResourceZip();
+				HZIP hz = NULL;
+				if (CPaintManagerUI::IsCachedResourceZip()) hz = (HZIP)CPaintManagerUI::GetResourceZipHandle();
+				else hz = OpenZip((void*)sFile.GetData(), 0, 2);
+				if (hz == NULL) break;
+				ZIPENTRY ze;
+				int i;
+				if (FindZipItem(hz, bitmap.m_lpstr, true, &i, &ze) != 0) break;
+				dwSize = ze.unc_size;
+				if (dwSize == 0) break;
+				pData = new BYTE[dwSize];
+				int res = UnzipItem(hz, i, pData, dwSize, 3);
+				if (res != 0x00000000 && res != 0x00000600) {
+					delete[] pData;
+					pData = NULL;
+					if (!CPaintManagerUI::IsCachedResourceZip()) CloseZip(hz);
+					break;
+				}
+				if (!CPaintManagerUI::IsCachedResourceZip()) CloseZip(hz);
+			}
+		}
+		else if (_tcscmp(type, RES_TYPE_COLOR) == 0) {
+			pData = (PBYTE)0x1;  /* dummy pointer */
+		}
+		else {
+			HRSRC hResource = ::FindResource(CPaintManagerUI::GetResourceDll(), bitmap.m_lpstr, type);
+			if (hResource == NULL) break;
+			HGLOBAL hGlobal = ::LoadResource(CPaintManagerUI::GetResourceDll(), hResource);
+			if (hGlobal == NULL) {
+				FreeResource(hResource);
+				break;
+			}
+
+			dwSize = ::SizeofResource(CPaintManagerUI::GetResourceDll(), hResource);
+			if (dwSize == 0) break;
+			pData = new BYTE[dwSize];
+			::CopyMemory(pData, (LPBYTE)::LockResource(hGlobal), dwSize);
+			::FreeResource(hResource);
+		}
+	} while (0);
+
+	while (!pData)
+	{
+		//读不到图片, 则直接去读取bitmap.m_lpstr指向的路径
+		HANDLE hFile = ::CreateFile(bitmap.m_lpstr, GENERIC_READ, FILE_SHARE_READ, NULL, OPEN_EXISTING, \
+			FILE_ATTRIBUTE_NORMAL, NULL);
+		if (hFile == INVALID_HANDLE_VALUE) break;
+		dwSize = ::GetFileSize(hFile, NULL);
+		if (dwSize == 0)
+		{
+			CloseHandle(hFile);
+			break;
+		}
+
+		DWORD dwRead = 0;
+		pData = new BYTE[dwSize];
+		::ReadFile(hFile, pData, dwSize, &dwRead, NULL);
+		::CloseHandle(hFile);
+
+		if (dwRead != dwSize) {
+			delete[] pData;
+			pData = NULL;
+		}
+		break;
+	}
+	if (!pData)
+	{
+		return NULL;
+	}
+	
+	TImageData *pimgdata = new TImageData();
+	pimgdata->pdata = pData;
+	pimgdata->size = dwSize;
+	return pimgdata;
+}
 
 TImageInfo* CRenderEngine::LoadImage(STRINGorID bitmap, LPCTSTR type, DWORD mask)
 {

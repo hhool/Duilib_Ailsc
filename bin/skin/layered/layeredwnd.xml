@@ -1,0 +1,15 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Window size="200,400" caption ="0,0,0,-1" roundcorner="2,2" layered="true">
+  <Font id="0" name="微软雅黑" size="12" bold="false" default="true" />
+  <Font id="1" name="微软雅黑" size="12" bold="false"/>
+  <Font id="2" name="微软雅黑" size="12"/>
+ 
+  <VerticalLayout>
+	<VerticalLayout height="100" width="200" bkcolor="#1124293E" mousetransparent="false">
+		<Icon text="英雄联盟" bkimage="Icon/360极速浏览器.ico" font="1" height="80" width="65" padding="3,5,3,3" enabled="true" menu="false" icopadding="8,6,9,26" valign="bottom" textcolor="#ffffffff" hotbkcolor="#99000000" hottextcolor="#ffffffff" strokecolor="#1124293E" visible="true" endellipsis="true" enabledstroke="true" roundcorner="5,5" />
+	</VerticalLayout>
+	<Control height="60" />
+	<Icon text="英雄联盟" bkimage="Icon/icon_user_disk_hover.png" font="1" height="80" width="65" padding="3,5,3,3" enabled="true" menu="false" icopadding="8,6,9,26" valign="bottom" textcolor="#ffffffff" hotbkcolor="#99000000" hottextcolor="#ffffffff" strokecolor="#1124293E" visible="true" endellipsis="true" enabledstroke="true" roundcorner="5,5" />
+	<Icon text="英雄联盟" bkimage="Icon/icon_user_disk_hover.png" circlemode="true" font="1" height="80" width="65" padding="3,5,3,3" enabled="true" menu="false" icopadding="8,6,9,26" valign="bottom" textcolor="#ffffffff" hotbkcolor="#99000000" hottextcolor="#ffffffff" strokecolor="#1124293E" visible="true" endellipsis="true" enabledstroke="true" roundcorner="5,5" />
+  </VerticalLayout>
+</Window>  

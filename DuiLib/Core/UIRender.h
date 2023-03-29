@@ -2,7 +2,6 @@
 #define __UIRENDER_H__
 
 #pragma once
-
 namespace DuiLib {
 /////////////////////////////////////////////////////////////////////////////////////
 //
@@ -32,6 +31,7 @@ public:
 	static HBITMAP CreateARGB32Bitmap(HDC hDC, int cx, int cy, COLORREF** pBits);
 	static void AdjustImage(bool bUseHSL, TImageInfo* imageInfo, short H, short S, short L);
     static TImageInfo* LoadImage(STRINGorID bitmap, LPCTSTR type = NULL, DWORD mask = 0);
+	static TImageData* LoadImageData(STRINGorID bitmap, LPCTSTR type = NULL);
     static void FreeImage(TImageInfo* bitmap, bool bDelete = true);
     static void DrawImage(HDC hDC, HBITMAP hBitmap, const RECT& rc, const RECT& rcPaint, \
         const RECT& rcBmpPart, const RECT& rcScale9, bool alphaChannel, BYTE uFade = 255, 

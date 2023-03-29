@@ -60,6 +60,10 @@ public:
     void SetBkColorDirect(bool isVertical);
     bool IsBkColorVertical();
 
+	//背景是否穿透
+	bool IsMouseTransparent();
+	void SetMouseTransparent(bool istrans);
+
     virtual bool DrawImage(HDC hDC, TDrawInfo& drawInfo);
 
 	//边框相关
@@ -218,6 +222,7 @@ protected:
     bool m_bFloat;
 	bool m_bKillCombo;
     bool m_bkColorIsVertical;
+	bool m_bMouseTransparent;//鼠标是否穿透，配合layered属性使用
 	TPercentInfo m_piFloatPercent;
     bool m_bSetPos; // 防止SetPos循环调用
 

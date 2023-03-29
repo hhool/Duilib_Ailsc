@@ -42,13 +42,14 @@ namespace DuiLib
 		int GetFont() const;
 		RECT GetTextPadding() const;
 		void SetTextPadding(RECT rc);
+		void SetTextRenderingHint(int nTextRenderingHint = TextRenderingHintClearTypeGridFit);
+		int GetTextRenderingHint(int nTextRenderingHint);
 		bool IsShowHtml();
 		void SetShowHtml(bool bShowHtml = true);
 
 		SIZE EstimateSize(SIZE szAvailable);
 		void DoEvent(TEventUI& event);
 		void SetAttribute(LPCTSTR pstrName, LPCTSTR pstrValue);
-
 		virtual void PaintText(HDC hDC);
 		virtual void PaintText(HDC hDC,DWORD clrColor);
 
@@ -86,6 +87,7 @@ namespace DuiLib
 		int		m_iFont;
 		UINT	m_uTextStyle;
 		RECT	m_rcTextPadding;
+		int		m_nTextRenderingHint;//字体优化
 		bool	m_bShowHtml;
 		bool	m_bEstimate;//是否像Contain一样自己适位置大小，而不是根据位置调整
         SIZE    m_szAvailableLast;

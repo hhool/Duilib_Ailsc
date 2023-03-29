@@ -280,6 +280,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Control\UIGifAnim.cpp" />
+    <ClCompile Include="Control\UIIcon.cpp" />
     <ClCompile Include="Control\UIIPAddress.cpp" />
     <ClCompile Include="Control\UIMbWebBrowser.cpp" />
     <ClCompile Include="Control\UIPopup.cpp" />
@@ -361,6 +362,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Control\UIGifAnim.h" />
+    <ClInclude Include="Control\UIIcon.h" />
     <ClInclude Include="Control\UIIPAddress.h" />
     <ClInclude Include="Control\UIMbWebBrowser.h" />
     <ClInclude Include="Control\UIPopup.h" />

@@ -107,6 +107,13 @@ typedef struct DUILIB_API tagTImageInfo
     DWORD dwMask;
 } TImageInfo;
 
+typedef struct DUILIB_API tagTImageData
+{
+	unsigned int size;
+	void *pdata;
+	void Clear();
+} TImageData;
+
 typedef struct DUILIB_API tagTDrawInfo
 {
 	tagTDrawInfo();
