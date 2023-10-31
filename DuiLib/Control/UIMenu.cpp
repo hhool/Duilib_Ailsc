@@ -555,6 +555,24 @@ LRESULT CMenuWnd::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
 			Close();
 		}
 	}
+	else if (uMsg == WM_SIZE)
+	{
+		//if (m_pOwner && m_pOwner->GetManager())
+		{
+			SIZE szRoundCorner = m_pm.GetRoundCorner();
+#if defined(WIN32) && !defined(UNDER_CE)
+			if (!::IsIconic(*this) && (szRoundCorner.cx != 0 || szRoundCorner.cy != 0)) {
+				CDuiRect rcWnd;
+				::GetWindowRect(*this, &rcWnd);
+				rcWnd.Offset(-rcWnd.left, -rcWnd.top);
+				rcWnd.right++; rcWnd.bottom++;
+				HRGN hRgn = ::CreateRoundRectRgn(rcWnd.left, rcWnd.top, rcWnd.right, rcWnd.bottom, szRoundCorner.cx, szRoundCorner.cy);
+				::SetWindowRgn(*this, hRgn, TRUE);
+				::DeleteObject(hRgn);
+			}
+#endif
+		}
+	}
 
     LRESULT lRes = 0;
     if( m_pm.MessageHandler(uMsg, wParam, lParam, lRes) ) return lRes;

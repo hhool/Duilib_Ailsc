@@ -29,6 +29,7 @@ public:
     void SetRich(bool bRich = true);
     bool IsReadOnly();
     void SetReadOnly(bool bReadOnly = true);
+    void SetPasswordMode(bool bPassWord);
     bool IsWordWrap();
     void SetWordWrap(bool bWordWrap = true);
     int GetFont();

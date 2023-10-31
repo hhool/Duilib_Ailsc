@@ -316,6 +316,17 @@ namespace DuiLib
 		return NULL;
 	}
 
+	void CEditUI::SetFocus()
+	{
+		__super::SetFocus();
+		Activate();
+	}
+
+	void CEditUI::KillFocuse()
+	{
+		if (m_pWindow)
+			::SendMessage(*m_pWindow, WM_KILLFOCUS, 0, 0);
+	}
 	bool CEditUI::Activate()
 	{
 		::OutputDebugString(_T("Activate()\r\n"));

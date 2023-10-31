@@ -48,7 +48,7 @@ public:
     void SetWordWrap(BOOL fWordWrap);
     BOOL IsReadOnly();
     void SetReadOnly(BOOL fReadOnly);
-
+    void SetPasswordMode(BOOL fPassWord);
     void SetFont(HFONT hFont);
     void SetColor(DWORD dwColor);
     SIZEL* GetExtent();
@@ -795,6 +795,22 @@ void CTxtWinHost::SetReadOnly(BOOL fReadOnly)
         fReadOnly ? TXTBIT_READONLY : 0);
 }
 
+void CTxtWinHost::SetPasswordMode(BOOL fPassWord)
+{
+	if (fPassWord)
+	{
+		dwStyle |= ES_PASSWORD;
+	}
+	else
+	{
+		dwStyle &= ~ES_PASSWORD;
+	}
+
+	pserv->OnTxPropertyBitsChange(TXTBIT_USEPASSWORD,
+        fPassWord ? TXTBIT_USEPASSWORD : 0);
+}
+
+
 void CTxtWinHost::SetFont(HFONT hFont) 
 {
     if( hFont == NULL ) return;
@@ -1178,6 +1194,11 @@ void CRichEditUI::SetReadOnly(bool bReadOnly)
 {
     m_bReadOnly = bReadOnly;
     if( m_pTwh ) m_pTwh->SetReadOnly(bReadOnly);
+}
+
+void CRichEditUI::SetPasswordMode(bool bPassWord)
+{
+	if (m_pTwh) m_pTwh->SetPasswordMode(bPassWord);
 }
 
 bool CRichEditUI::IsWordWrap()

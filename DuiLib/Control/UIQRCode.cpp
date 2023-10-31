@@ -9,8 +9,8 @@ namespace DuiLib
 	{
 		m_errCorLvl = QrCode::Ecc::HIGH;
 		//m_QrCode = QrCode::encodeText("https://gitee.com/Ailsc/Duilib", m_errCorLvl);
-		m_dwQRColor = 0xff000000;
-		m_dwQRBkColor = 0xffffffff;
+		m_dwQRColor = 0xffffffff;
+		m_dwQRBkColor = 0xff000000;
 	}
 	
 	CQRCodeUI::~CQRCodeUI()
