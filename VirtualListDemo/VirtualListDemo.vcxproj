@@ -144,7 +144,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>false</LinkIncremental>
     <TargetName>$(ProjectName)_d</TargetName>
-    <OutDir>$(SolutionDir)binx64\  </OutDir>
+    <OutDir>$(SolutionDir)binx64\</OutDir>
     <IntDir>.\Debugx64\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='UnicodeDebug|Win32'">
