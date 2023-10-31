@@ -1086,8 +1086,8 @@ void CControlUI::SetAttribute(LPCTSTR pstrName, LPCTSTR pstrValue)
         SetRoundCorner(cxyRound);
     }
     else if( _tcscmp(pstrName, _T("bkimage")) == 0 ) SetBkImage(pstrValue);
-    else if (_tcscmp(pstrName, _T("bkdirect")) == 0) SetBkColorDirect(_tcsncmp("horizon", pstrValue, 7) != 0);
-	else if (_tcscmp(pstrName, _T("mousetransparent")) == 0) SetMouseTransparent(_tcscmp("true", pstrValue) == 0);
+    else if (_tcscmp(pstrName, _T("bkdirect")) == 0) SetBkColorDirect(_tcsncmp(_T("horizon"), pstrValue, 7) != 0);
+	else if (_tcscmp(pstrName, _T("mousetransparent")) == 0) SetMouseTransparent(_tcscmp(_T("true"), pstrValue) == 0);
     else if( _tcscmp(pstrName, _T("width")) == 0 ) SetFixedWidth(_ttoi(pstrValue));
     else if( _tcscmp(pstrName, _T("height")) == 0 ) SetFixedHeight(_ttoi(pstrValue));
 	else if (_tcscmp(pstrName, _T("weight")) == 0) SetWeight(_ttoi(pstrValue));

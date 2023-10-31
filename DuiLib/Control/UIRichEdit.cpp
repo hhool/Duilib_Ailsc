@@ -1984,7 +1984,7 @@ void CRichEditUI::DoEvent(TEventUI& event)
         if( m_pTwh ) {
 			if (m_sText.IsEmpty())
 			{
-				SetText("");
+				SetText(_T(""));
 			}
 			
 			m_pTwh->SetColor(m_dwTextColor);

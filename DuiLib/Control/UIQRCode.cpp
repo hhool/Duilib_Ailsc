@@ -61,7 +61,13 @@ namespace DuiLib
 	{
 		if (!strText.IsEmpty())
 		{
+#ifdef _UNICODE
+			m_QrCode = QrCode::encodeText(StringUtil::Easy_UnicodeToUtf8(strText.GetData()).c_str(), m_errCorLvl);
+#else
 			m_QrCode = QrCode::encodeText(StringUtil::Easy_AnsiToUtf8(strText.GetData()).c_str(), m_errCorLvl);
+#endif // _UNICODE
+
+			
 		}
 	}
 
