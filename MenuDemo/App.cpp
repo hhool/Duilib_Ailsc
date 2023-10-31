@@ -25,7 +25,7 @@ public:
 	virtual LPCTSTR GetWindowClassName(void) const  {return _T("CFrameWindowWnd");}
 	virtual CControlUI* CreateControl(LPCTSTR pstrClass)
 	{
-		if (lstrcmp(pstrClass, "SpinButton") == 0)
+		if (lstrcmp(pstrClass, _T("SpinButton")) == 0)
 		{
 			return new CSpinButtonUI();
 		}
