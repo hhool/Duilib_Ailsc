@@ -16,17 +16,18 @@ using namespace DuiLib;
 
 #ifdef _DEBUG
 #   ifdef _UNICODE
-#       pragma comment(lib, "..\\Lib\\DuiLib_ud.lib")
+#       pragma comment(lib, "..\\Lib\\Debug\\DuiLib.lib")
 #   else
-#       pragma comment(lib, "..\\Lib\\DuiLib_d.lib")
+#       pragma comment(lib, "..\\Lib\\Debug\\DuiLib.lib")
 #   endif
 #else
 #   ifdef _UNICODE
-#       pragma comment(lib, "..\\Lib\\DuiLib_u.lib")
+#       pragma comment(lib, "..\\Lib\\Release\\DuiLib.lib")
 #   else
-#       pragma comment(lib, "..\\Lib\\DuiLib.lib")
+#       pragma comment(lib, "..\\Lib\\Release\\DuiLib.lib")
 #   endif
 #endif
+
 
 
 //{{AFX_INSERT_LOCATION}}

@@ -24,6 +24,11 @@ showbkimg和showstatusimg两个属性来代替SetVisible
 
 6、支持功能性UI
 
+# Windows编译
+当前仅支持CMake编译，编译选项支持UILIB_STATIC,UNICODE,MT等选项
+
+# 关于Miniblink
+由于duilib对web控件支持不是很好，内部支持Mini插件(事实Miniblink也存在很多问题)，如果不想使用MB可以删除MB插件node.dll
 
 ### 支付宝扫码
 ![支付宝扫码](https://github.com/wangchyz/privatedata/blob/master/alipay.png)

@@ -137,7 +137,7 @@ void CCanvasContainerUI::DoEvent(TEventUI& event)
 		::SetCursor(::LoadCursor(NULL, MAKEINTRESOURCE(GetSizerCursor(event.ptMouse, m_iCursor))));
 		return;
 	}
-	if( event.Type == UIEVENT_BUTTONDOWN && IsEnabled() )
+	if( event.Type == UIEVENT_LBUTTONDOWN && IsEnabled() )
 	{
 		m_uButtonState |= UISTATE_CAPTURED;
 		m_ptLastMouse = event.ptMouse;

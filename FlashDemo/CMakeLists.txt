@@ -1,16 +1,30 @@
-#Cmake file for FlashDemo
-#Author: Qi Gao(monkgau@gmail.com)
-#Created: 2012/9/17
+# cmake file for peoject
+#Author lei liu(471971925@qq.com 20240109)
+#Created: 2024/01/09
 
-set(source_files App.cpp StdAfx.cpp)
+set(TARGET_NAME "FlashDemo")
+
+#print dir
+message("${TARGET_NAME} ${CMAKE_CURRENT_SOURCE_DIR} " ${CMAKE_CURRENT_SOURCE_DIR})
+
+file(GLOB Root_src ${CMAKE_CURRENT_SOURCE_DIR}/*.cpp)
+file(GLOB Root_headers ${CMAKE_CURRENT_SOURCE_DIR}/*.h)
+
+#keep folder tree mode
+#source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES ${Root_src} ${Root_headers})
+source_group("header files" ${Root_headers}) 
+source_group("source files" ${Root_src})
+
 include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 
+#set exe dir
 set(EXECUTABLE_OUTPUT_PATH ${PROJECT_BINARY_DIR}/bin)
-add_executable(FlashDemo ${source_files})
-add_dependencies(FlashDemo duilib)
-target_link_libraries(FlashDemo duilib)
-set_target_properties(FlashDemo PROPERTIES LINK_FLAGS "/SUBSYSTEM:WINDOWS")
 
-add_custom_command(TARGET FlashDemo POST_BUILD
-  COMMAND ${CMAKE_COMMAND} -E copy_if_different
-  ${PROJECT_BINARY_DIR}/bin/FlashDemo.exe ${PROJECT_SOURCE_DIR}/bin/FlashDemo.exe)
+add_executable(${TARGET_NAME} ${Root_src} ${Root_headers})
+
+#set app is win32 windows app
+set_target_properties(${TARGET_NAME} PROPERTIES LINK_FLAGS "/SUBSYSTEM:WINDOWS")
+#set(LIBRARY_OUTPUT_PATH ${PROJECT_BINARY_DIR}/lib)
+target_link_libraries(${TARGET_NAME} duilib)
+
+
