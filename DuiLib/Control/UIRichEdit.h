@@ -6,7 +6,8 @@
 namespace DuiLib {
 
 class CTxtWinHost;
-
+class CRichEditUI;
+typedef bool(*PRICHEDITCONTROLINPUT)(const CRichEditUI* pEdit, TCHAR c, UINT nRepCnt);
 class DUILIB_API CRichEditUI : public CContainerUI, public IMessageFilterUI
 {
 public:
@@ -16,7 +17,7 @@ public:
     LPCTSTR GetClass() const;
     LPVOID GetInterface(LPCTSTR pstrName);
     UINT GetControlFlags() const;
-
+    void SetControlInput(PRICHEDITCONTROLINPUT inputcontrol);
     bool IsWantTab();
     void SetWantTab(bool bWantTab = true);
     bool IsWantReturn();
@@ -29,6 +30,10 @@ public:
     void SetRich(bool bRich = true);
     bool IsReadOnly();
     void SetReadOnly(bool bReadOnly = true);
+	bool IsNumberOnly();
+	void SetNumberOnly(bool bNumberOnly = true);
+	bool IsEnablePaste();
+	void SetEnablePaste(bool bEnablePaste = true);
     void SetPasswordMode(bool bPassWord);
     bool IsWordWrap();
     void SetWordWrap(bool bWordWrap = true);
@@ -48,6 +53,7 @@ public:
     CDuiString GetText() const;
     void SetText(LPCTSTR pstrText);
 	void SetPlaceholderText(LPCTSTR pstrText);
+    CDuiString GetPlaceholderText();
     bool IsModify() const;
     void SetModify(bool bModified = true) const;
     void GetSel(CHARRANGE &cr) const;
@@ -143,6 +149,7 @@ protected:
     CTxtWinHost* m_pTwh;
 	CDuiString m_sPlaceholderText;
 	DWORD m_dwPlaceholderTexeColor;
+    PRICHEDITCONTROLINPUT m_pInputControl;
     bool m_bVScrollBarFixing;
     bool m_bWantTab;
     bool m_bWantReturn;
@@ -150,7 +157,9 @@ protected:
     bool m_bTransparent;
     bool m_bRich;
     bool m_bReadOnly;
+    bool m_bNumberOnly;
     bool m_bWordWrap;
+    bool m_bEnablePaste;
     DWORD m_dwTextColor;
     int m_iFont;
     int m_iLimitText;

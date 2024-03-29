@@ -201,25 +201,16 @@ namespace DuiLib
 
 	void COptionUI::PaintStatusImage(HDC hDC)
 	{
-		if( (m_uButtonState & UISTATE_SELECTED) != 0 ) {
-			if ((m_uButtonState & UISTATE_HOT) != 0)
-			{
-				if (DrawImage(hDC, m_diSelectedHot)) goto Label_ForeImage;
-			}
-
-			if( DrawImage(hDC, m_diSelected) ) goto Label_ForeImage;
-			else if(m_dwSelectedBkColor != 0) {
+		if ((m_uButtonState & UISTATE_SELECTED) != 0)
+		{
+			if (DrawImage(hDC, m_diSelected)) return;
+			else if (m_dwSelectedBkColor != 0)
 				CRenderEngine::DrawColor(hDC, m_rcPaint, GetAdjustColor(m_dwSelectedBkColor));
-				goto Label_ForeImage;
-			}	
 		}
+		else if ((m_uButtonState & UISTATE_HOT) != 0)
+			if (DrawImage(hDC, m_diSelectedHot)) return;
 
-		UINT uSavedState = m_uButtonState;
-		m_uButtonState &= ~UISTATE_PUSHED;
 		CButtonUI::PaintStatusImage(hDC);
-		m_uButtonState = uSavedState;
-
-Label_ForeImage:
 		DrawImage(hDC, m_diFore);
 	}
 
@@ -234,19 +225,8 @@ Label_ForeImage:
 			if( m_dwDisabledTextColor == 0 ) m_dwDisabledTextColor = m_pManager->GetDefaultDisabledColor();
 
 			if( m_sText.IsEmpty() ) return;
-			int nLinks = 0;
-			RECT rc = m_rcItem;
-			rc.left += m_rcTextPadding.left;
-			rc.right -= m_rcTextPadding.right;
-			rc.top += m_rcTextPadding.top;
-			rc.bottom -= m_rcTextPadding.bottom;
-
-			if( m_bShowHtml )
-				CRenderEngine::DrawHtmlText(hDC, m_pManager, rc, m_sText, IsEnabled()?m_dwTextColor:m_dwDisabledTextColor, \
-				NULL, NULL, nLinks, m_iFont, m_uTextStyle);
-			else
-				CRenderEngine::DrawText(hDC, m_pManager, rc, m_sText, IsEnabled()?m_dwTextColor:m_dwDisabledTextColor, \
-				m_iFont, m_uTextStyle);
+		
+			__super::PaintText(hDC, IsEnabled() ? m_dwTextColor : m_dwDisabledTextColor);
 
 			m_dwTextColor = oldTextColor;
 		}

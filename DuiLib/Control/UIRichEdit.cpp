@@ -1101,9 +1101,10 @@ void CTxtWinHost::SetParaFormat(PARAFORMAT2 &p)
 //
 
 CRichEditUI::CRichEditUI() : m_pTwh(NULL), m_bVScrollBarFixing(false), m_bWantTab(true), m_bWantReturn(true), 
-    m_bWantCtrlReturn(true), m_bTransparent(true), m_bRich(true), m_bReadOnly(false), m_bWordWrap(false), m_dwTextColor(0), m_iFont(-1), 
+    m_bWantCtrlReturn(true), m_bTransparent(true), m_bRich(true), m_bReadOnly(false), m_bEnablePaste(true), m_bNumberOnly(false), m_bWordWrap(false), m_dwTextColor(0), m_iFont(-1),
 	m_iLimitText(cInitTextMax), m_lTwhStyle(ES_MULTILINE), m_bDrawCaret(true), m_bInited(false), m_dwPlaceholderTexeColor(0xff000000)
 {
+    m_pInputControl = NULL;
 	::ZeroMemory(&m_rcTextPadding, sizeof(m_rcTextPadding));
 }
 
@@ -1131,6 +1132,11 @@ UINT CRichEditUI::GetControlFlags() const
     if( !IsEnabled() ) return CControlUI::GetControlFlags();
 
     return UIFLAG_SETCURSOR | UIFLAG_TABSTOP;
+}
+
+void CRichEditUI::SetControlInput(PRICHEDITCONTROLINPUT inputcontrol)
+{
+    m_pInputControl = inputcontrol;
 }
 
 bool CRichEditUI::IsWantTab()
@@ -1196,6 +1202,25 @@ void CRichEditUI::SetReadOnly(bool bReadOnly)
     if( m_pTwh ) m_pTwh->SetReadOnly(bReadOnly);
 }
 
+bool CRichEditUI::IsNumberOnly()
+{
+    return m_bNumberOnly;
+}
+
+void CRichEditUI::SetNumberOnly(bool bNumberOnly)
+{
+    m_bNumberOnly = bNumberOnly;
+}
+
+bool CRichEditUI::IsEnablePaste()
+{
+    return m_bEnablePaste;
+}
+
+void CRichEditUI::SetEnablePaste(bool bEnablePaste)
+{
+    m_bEnablePaste = bEnablePaste;
+}
 void CRichEditUI::SetPasswordMode(bool bPassWord)
 {
 	if (m_pTwh) m_pTwh->SetPasswordMode(bPassWord);
@@ -1353,6 +1378,10 @@ void CRichEditUI::SetPlaceholderText(LPCTSTR pstrText)
 	ReplaceSel(pstrText, FALSE);
 }
 
+CDuiString CRichEditUI::GetPlaceholderText()
+{
+    return m_sPlaceholderText;
+}
 bool CRichEditUI::IsModify() const
 { 
     if( !m_pTwh ) return false;
@@ -1797,6 +1826,21 @@ HRESULT CRichEditUI::TxSendMessage(UINT msg, WPARAM wparam, LPARAM lparam, LRESU
         if( msg == WM_KEYDOWN && TCHAR(wparam) == VK_RETURN ) {
             if( !m_bWantReturn || (::GetKeyState(VK_CONTROL) < 0 && !m_bWantCtrlReturn) ) {
                 if( m_pManager != NULL ) m_pManager->SendNotify((CControlUI*)this, DUI_MSGTYPE_RETURN);
+                return S_OK;
+            }
+        }
+        else if (msg == WM_KEYDOWN && (TCHAR(wparam) == _T('V') || TCHAR(wparam) == _T('v')))
+        {
+            if ((!m_bEnablePaste || m_bNumberOnly) && ::GetKeyState(VK_CONTROL) < 0)
+                return S_OK;
+        }
+        else if (msg == WM_CHAR)
+        {
+            if (m_pInputControl && m_pInputControl(this, wparam, LOWORD(lparam)))
+                return S_OK;
+                
+            if (m_bNumberOnly && (wparam < _T('0') || wparam >_T('9')))
+            {
                 return S_OK;
             }
         }
@@ -2343,6 +2387,13 @@ void CRichEditUI::SetAttribute(LPCTSTR pstrName, LPCTSTR pstrValue)
     else if( _tcscmp(pstrName, _T("readonly")) == 0 ) {
         if( _tcscmp(pstrValue, _T("true")) == 0 ) { m_lTwhStyle |= ES_READONLY; m_bReadOnly = true; }
     }
+	else if (_tcscmp(pstrName, _T("numberonly")) == 0) {
+        SetNumberOnly(_tcscmp(pstrValue, _T("true")) == 0);
+	}
+	else if (_tcscmp(pstrName, _T("enablepaste")) == 0) {
+		SetEnablePaste(_tcscmp(pstrValue, _T("true")) == 0);
+	}
+    else if (_tcscmp(pstrName, _T("maxchar")) == 0) SetLimitText(_ttoi(pstrValue));
     else if( _tcscmp(pstrName, _T("password")) == 0 ) {
         if( _tcscmp(pstrValue, _T("true")) == 0 ) m_lTwhStyle |= ES_PASSWORD;
     }

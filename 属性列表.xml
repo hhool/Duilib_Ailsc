@@ -444,6 +444,9 @@ eg:X之后开始布局，X随便命名。可以参考Default的xml
 		<Attribute name="expandable" default="false" type="BOOL" comment="是否展开,如(true)"/>
 	</ListContainerElement>
 	<RichEdit parent="Container" notifies="setfocus killfocus timer menu return windowinit(root)">
+		<Attribute name="maxchar" type="INT" comment="输入字符最大长度，如(100)"/>
+		<Attribute name="numberonly" default="false" type="BOOL" comment="是否只允许输入数字,如(false)"/>
+		<Attribute name="enablepaste" default="false" type="BOOL" comment="是否允许粘贴操作,如(true)"/>
 		<Attribute name="vscrollbar" default="false" type="BOOL" comment="是否使用竖向滚动条,如(true)"/>
 		<Attribute name="autovscroll" default="false" type="BOOL" comment="是否随输入竖向滚动,如(true)"/>
 		<Attribute name="hscrollbar" default="false" type="BOOL" comment="是否使用横向滚动条,如(true)"/>
