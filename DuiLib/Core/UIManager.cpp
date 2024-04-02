@@ -1,6 +1,7 @@
 #include "StdAfx.h"
 #include <zmouse.h>
 #include <stdlib.h>
+#include "StringUtil.h"
 
 DECLARE_HANDLE(HZIP);	// An HZIP identifies a zip file that has been opened
 typedef DWORD ZRESULT;
@@ -403,6 +404,29 @@ bool CPaintManagerUI::LoadPlugin(LPCTSTR pstrModuleName)
 CDuiPtrArray* CPaintManagerUI::GetPlugins()
 {
     return &m_aPlugins;
+}
+
+bool CPaintManagerUI::MeasureString(HFONT hFont,LPCTSTR pstrText, size_t len, SIZE& bounds/*if val != 0 fix val*/)
+{
+	 if(pstrText == nullptr || hFont == NULL) return false;
+	HDC hDc = GetDC(GetDesktopWindow());
+	Gdiplus::Graphics g(hDc);
+#ifdef _UNICODE
+	std::wstring wstrText(pstrText, len);
+#else
+	std::string strText(pstrText, len);
+	std::wstring wstrText = A2WSTR(strText);
+#endif
+	Gdiplus::Font	nFont(hDc, hFont);
+	Gdiplus::RectF rt = { 0.0f,0.0f,Gdiplus::REAL(bounds.cx),Gdiplus::REAL(bounds.cy) };
+	Gdiplus::RectF rtCalc;
+	g.MeasureString(wstrText.c_str(), wstrText.size(), &nFont, rt, &rtCalc);
+	Gdiplus::SizeF gsize;
+	rtCalc.GetSize(&gsize);
+	bounds.cx = gsize.Width;
+	bounds.cy = gsize.Height;
+	ReleaseDC(GetDesktopWindow(), hDc);
+    return true;
 }
 
 HWND CPaintManagerUI::GetPaintWindow() const

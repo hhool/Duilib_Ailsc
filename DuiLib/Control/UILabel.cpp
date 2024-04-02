@@ -1,5 +1,7 @@
 #include "StdAfx.h"
 #include "UILabel.h"
+#include "StringUtil.h"
+using namespace Gdiplus;
 
 namespace DuiLib
 {
@@ -20,7 +22,6 @@ namespace DuiLib
 		m_EnableEffect(false),
 		m_bEnableLuminous(false),
 		m_fLuminousFuzzy(3),
-		m_gdiplusToken(0),
 		m_dwTextShadowColorA(0),
 		m_dwTextShadowColorB(0),
 		m_dwTextColor1(0),
@@ -39,10 +40,6 @@ namespace DuiLib
         m_cxyFixedLast.cx = m_cxyFixedLast.cy = 0;
         m_szAvailableLast.cx = m_szAvailableLast.cy = 0;
 		::ZeroMemory(&m_rcTextPadding, sizeof(m_rcTextPadding));
-
-#ifdef _USE_GDIPLUS
-        GdiplusStartup( &m_gdiplusToken,&m_gdiplusStartupInput, NULL);
-#endif
 	}
 
 	CLabelUI::~CLabelUI()
@@ -51,10 +48,6 @@ namespace DuiLib
 		if( m_pWideText && m_pWideText != m_sText.GetData()) delete[] m_pWideText;
 #else
 		if( m_pWideText ) delete[] m_pWideText;
-#endif
-
-#ifdef _USE_GDIPLUS
-		GdiplusShutdown( m_gdiplusToken );
 #endif
 	}
 
@@ -67,6 +60,31 @@ namespace DuiLib
 	{
 		if( _tcscmp(pstrName, DUI_CTR_LABEL) == 0 ) return static_cast<CLabelUI*>(this);
 		return CControlUI::GetInterface(pstrName);
+	}
+
+	bool CLabelUI::MeasureString(LPCTSTR pstrText, size_t len, SIZE& bounds/*if val != 0 fix val*/)
+	{
+		if (m_pManager == nullptr || pstrText == nullptr) return false;
+		return m_pManager->MeasureString(m_pManager->GetFont(GetFont()), pstrText, len, bounds);
+		/*
+		HDC hDc = GetDC(m_pManager->GetPaintWindow());
+		Gdiplus::Graphics g(hDc);
+#ifdef _UNICODE
+		std::string wstrText(pstrText, len);
+#else
+		std::string strText(pstrText,len);
+		std::wstring wstrText = A2WSTR(strText);
+#endif
+		Gdiplus::Font	nFont(hDc, m_pManager->GetFont(GetFont()));
+		Gdiplus::RectF rt = { 0.0f,0.0f,Gdiplus::REAL(bounds.cx),Gdiplus::REAL(bounds.cy) };
+		Gdiplus::RectF rtCalc;
+		g.MeasureString(wstrText.c_str(), wstrText.size(), &nFont, rt, &rtCalc);
+		Gdiplus::SizeF gsize;
+		rtCalc.GetSize(&gsize);
+		bounds.cx = gsize.Width;
+		bounds.cy = gsize.Height;
+		ReleaseDC(m_pManager->GetPaintWindow(),hDc);
+		*/
 	}
 
     void CLabelUI::SetFixedWidth(int cx)
@@ -424,7 +442,6 @@ namespace DuiLib
 		}
 		else
 		{
-#ifdef _USE_GDIPLUS
 			Font	nFont(hDC,m_pManager->GetFont(GetFont()));
 			Graphics nGraphics(hDC);
 			nGraphics.SetSmoothingMode(SmoothingModeHighQuality);
@@ -524,7 +541,6 @@ namespace DuiLib
 				nGraphics.DrawString(m_pWideText,iLen,&nFont,nShadowRc,&format,&nLineGrBrushA);
 
 			nGraphics.DrawString(m_pWideText,iLen,&nFont,nRc,&format,&nLineGrBrushB);
-#endif
 #endif
 		}
 	}

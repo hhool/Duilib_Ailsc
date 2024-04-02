@@ -30,7 +30,7 @@ namespace DuiLib
 		static CDuiStringPtrMap m_IconData;
 	private:
 		RECT m_rtIconPadding;
-		Image *m_pImage;
+		Gdiplus::Image *m_pImage;
 		bool m_isFromHicon;
 		bool m_bSetCursor;
 		bool m_bCircleMode;//Ô²½ÇÄ£Ê½

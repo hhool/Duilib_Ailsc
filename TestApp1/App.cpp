@@ -371,6 +371,10 @@ public:
         if( msg.sType == _T("windowinit") ) OnPrepare();
         else if( msg.sType == _T("click") ) {
             if( msg.pSender->GetName() == _T("insertimagebtn") ) {
+                CLabelUI* pLabel = dynamic_cast<CLabelUI*>(msg.pSender);
+                std::string str = "我\r\n是中国人加菲猫Hellow word";
+                SIZE size = { 50,0 };
+                pLabel->MeasureString(str.c_str(), str.size(), size);
                 CRichEditUI* pRich = static_cast<CRichEditUI*>(m_pm.FindControl(_T("testrichedit")));
                 if( pRich ) {
                     pRich->RemoveAll();

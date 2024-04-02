@@ -1,7 +1,8 @@
 #ifndef __UICONTROL_H__
 #define __UICONTROL_H__
-
-#pragma once
+#include <GdiPlus.h>
+#pragma comment( lib, "GdiPlus.lib" )
+using namespace Gdiplus;
 
 namespace DuiLib {
 
@@ -36,7 +37,7 @@ public:
     // 文本相关
     virtual CDuiString GetText() const;
     virtual void SetText(LPCTSTR pstrText);
-
+   
     // 图形相关
     DWORD GetBkColor() const;
     void SetBkColor(DWORD dwBackColor);
@@ -249,6 +250,9 @@ protected:
 	CDuiStringPtrMap m_mCustomAttrHash;
 	bool	m_bShowStatusImg;//是否显示Status图片
 	bool	m_bShowBkImg;//是否显示BkImg
+private:
+	static ULONG_PTR				s_gdiplusToken;
+	static GdiplusStartupInput		s_gdiplusStartupInput;
 };
 
 } // namespace DuiLib

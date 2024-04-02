@@ -1,19 +1,6 @@
 #ifndef __UILABEL_H__
 #define __UILABEL_H__
 
-#pragma once
-
-#define _USE_GDIPLUS 1
-
-#ifdef _USE_GDIPLUS
-#include <GdiPlus.h>
-#pragma comment( lib, "GdiPlus.lib" )
-using namespace Gdiplus;
-class DUILIB_API Gdiplus::RectF;
-struct DUILIB_API Gdiplus::GdiplusStartupInput;
-#endif
-
-
 namespace DuiLib
 {
 	class DUILIB_API CLabelUI : public CControlUI
@@ -24,6 +11,8 @@ namespace DuiLib
 
 		LPCTSTR GetClass() const;
 		LPVOID GetInterface(LPCTSTR pstrName);
+
+		virtual bool MeasureString(LPCTSTR pstrText, size_t len, SIZE& bounds/*if val != 0 fix val*/);
 
         void SetFixedWidth(int cx);
         void SetFixedHeight(int cy);
@@ -42,7 +31,7 @@ namespace DuiLib
 		int GetFont() const;
 		RECT GetTextPadding() const;
 		void SetTextPadding(RECT rc);
-		void SetTextRenderingHint(int nTextRenderingHint = TextRenderingHintClearTypeGridFit);
+		void SetTextRenderingHint(int nTextRenderingHint = Gdiplus::TextRenderingHintClearTypeGridFit);
 		int GetTextRenderingHint(int nTextRenderingHint);
 		bool IsShowHtml();
 		void SetShowHtml(bool bShowHtml = true);
@@ -53,7 +42,6 @@ namespace DuiLib
 		virtual void PaintText(HDC hDC);
 		virtual void PaintText(HDC hDC,DWORD clrColor);
 
-#ifdef _USE_GDIPLUS
 		void		SetEnabledEffect(bool _EnabledEffect);
 		bool		GetEnabledEffect();
 		void		SetEnabledLuminous(bool bEnableLuminous);
@@ -63,7 +51,7 @@ namespace DuiLib
 		void		SetGradientLength(int _GradientLength);
 		int			GetGradientLength();
 		void		SetShadowOffset(int _offset,int _angle);
-		RectF		GetShadowOffset();
+		Gdiplus::RectF		GetShadowOffset();
 		void		SetTextColor1(DWORD _TextColor1);
 		DWORD		GetTextColor1();
 		void		SetTextShadowColorA(DWORD _TextShadowColorA);
@@ -78,7 +66,6 @@ namespace DuiLib
 		bool		GetEnabledStroke();
 		void		SetEnabledShadow(bool _EnabledShadowe);
 		bool		GetEnabledShadow();
-#endif
 	
 	protected:
 		LPWSTR  m_pWideText;
@@ -105,11 +92,7 @@ namespace DuiLib
 		DWORD					m_dwTextShadowColorA;
 		DWORD					m_dwTextShadowColorB;
 		DWORD					m_dwStrokeColor;
-		RectF					m_ShadowOffset;
-		ULONG_PTR				m_gdiplusToken;
-#ifdef _USE_GDIPLUS
-		GdiplusStartupInput		m_gdiplusStartupInput;
-#endif
+		Gdiplus::RectF					m_ShadowOffset;
 	};
 }
 

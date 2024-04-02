@@ -1,7 +1,9 @@
 ﻿#include "StdAfx.h"
-
+#include <GdiPlus.h>
+using namespace Gdiplus;
 namespace DuiLib {
-
+ULONG_PTR				CControlUI::s_gdiplusToken = 0;
+Gdiplus::GdiplusStartupInput		CControlUI::s_gdiplusStartupInput;
 CControlUI::CControlUI() : 
 m_pManager(NULL), 
 m_pParent(NULL), 
@@ -45,6 +47,10 @@ m_nWeight(1)
     ::ZeroMemory(&m_rcPaint, sizeof(RECT));
 	::ZeroMemory(&m_rcBorderSize,sizeof(RECT));
 	m_piFloatPercent.left = m_piFloatPercent.top = m_piFloatPercent.right = m_piFloatPercent.bottom = 0.0f;
+
+    //only call once
+	if (s_gdiplusToken == 0)
+		GdiplusStartup(&s_gdiplusToken, &s_gdiplusStartupInput, NULL);
 }
 
 CControlUI::~CControlUI()
@@ -57,6 +63,8 @@ CControlUI::~CControlUI()
 	RemoveAllCustomAttribute();
     if( OnDestroy ) OnDestroy(this);
     if( m_pManager != NULL ) m_pManager->ReapObjects(this);
+
+    //GdiplusShutdown( m_gdiplusToken );
 }
 
 void CControlUI::Delete()

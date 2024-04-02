@@ -270,7 +270,7 @@ public:
 	static CDuiPtrArray* GetPaintManagers();
     static bool LoadPlugin(LPCTSTR pstrModuleName);
     static CDuiPtrArray* GetPlugins();
-
+    static bool MeasureString(HFONT hFont, LPCTSTR pstrText, size_t len, SIZE& bounds/*if val != 0 fix val*/);
 	bool IsForceUseSharedRes() const;
 	void SetForceUseSharedRes(bool bForce);
 
