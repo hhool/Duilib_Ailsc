@@ -46,7 +46,7 @@ namespace DuiLib
 		void SetVisible(bool bVisible);
 		void RegisterWebEvent(IMBWenviewEvent *pIwebEvnet);
 		virtual void SetAttribute(LPCTSTR pstrName, LPCTSTR pstrValue);
-		
+		virtual void Delete();
 
 		//web 常用事件,这里仅仅封装常用的web事件，更多可参考wek.h 
 		//如果在其他模块(exe)调用wke函数需要初始化wke INIT_MB

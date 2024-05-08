@@ -1836,13 +1836,23 @@ HRESULT CRichEditUI::TxSendMessage(UINT msg, WPARAM wparam, LPARAM lparam, LRESU
         }
         else if (msg == WM_CHAR)
         {
-            if (m_pInputControl && m_pInputControl(this, wparam, LOWORD(lparam)))
+            if (m_pInputControl && m_pInputControl(this, wparam, lparam,false))
                 return S_OK;
                 
             if (m_bNumberOnly && (wparam < _T('0') || wparam >_T('9')))
             {
                 return S_OK;
             }
+        }
+        else if (msg == WM_IME_CHAR)
+        {
+			if (m_pInputControl && m_pInputControl(this, wparam, lparam, true))
+				return S_OK;
+
+			if (m_bNumberOnly && (wparam < _T('0') || wparam >_T('9')))
+			{
+				return S_OK;
+			}
         }
         return m_pTwh->GetTextServices()->TxSendMessage(msg, wparam, lparam, plresult);
     }

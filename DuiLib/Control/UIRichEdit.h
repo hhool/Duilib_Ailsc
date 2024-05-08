@@ -7,7 +7,8 @@ namespace DuiLib {
 
 class CTxtWinHost;
 class CRichEditUI;
-typedef bool(*PRICHEDITCONTROLINPUT)(const CRichEditUI* pEdit, TCHAR c, UINT nRepCnt);
+//handle WM_IME_CHAR WM_CHAR 
+typedef bool(*PRICHEDITCONTROLINPUT)(const CRichEditUI* pEdit, WPARAM wparam,LPARAM lparam,BOOL bImChar);
 class DUILIB_API CRichEditUI : public CContainerUI, public IMessageFilterUI
 {
 public:

@@ -55,6 +55,14 @@ namespace DuiLib
 
 	}
 
+	void CMbWebBrowserUI::Delete()
+	{
+		if (m_hWnd && m_bDieWithControl && IsWindow(m_hWnd))
+		{
+			::PostMessage(m_hWnd, WM_CLOSE, 0, 0);
+			Detach();
+		}
+	}
 	void CMbWebBrowserUI::SetHomePage(LPCWSTR lpszUrl)
 	{
 		m_sHomePage = lpszUrl;
