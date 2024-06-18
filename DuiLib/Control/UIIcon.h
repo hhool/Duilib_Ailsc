@@ -26,12 +26,10 @@ namespace DuiLib
 		bool DrawImage(HDC hDC, TDrawInfo& drawInfo);
 		RECT GetIconRect();
 		void SetCursorFlagUsed(bool bUse);
-
-		static CDuiStringPtrMap m_IconData;
 	private:
 		RECT m_rtIconPadding;
 		Gdiplus::Image *m_pImage;
-		bool m_isFromHicon;
+		CDuiString m_strBkImage;
 		bool m_bSetCursor;
 		bool m_bCircleMode;//Ô²½ÇÄ£Ê½
 	};

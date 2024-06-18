@@ -2,7 +2,6 @@
 #define __UIMANAGER_H__
 
 #pragma once
-
 namespace DuiLib {
 /////////////////////////////////////////////////////////////////////////////////////
 //
@@ -88,7 +87,7 @@ typedef struct DUILIB_API tagTFontInfo
     HFONT hFont;
     CDuiString sFontName;
     int iSize;
-    bool bBold;
+    int iWeight;
     bool bUnderline;
     bool bItalic;
     TEXTMETRIC tm;
@@ -106,13 +105,6 @@ typedef struct DUILIB_API tagTImageInfo
     CDuiString sResType;
     DWORD dwMask;
 } TImageInfo;
-
-typedef struct DUILIB_API tagTImageData
-{
-	unsigned int size;
-	void *pdata;
-	void Clear();
-} TImageData;
 
 typedef struct DUILIB_API tagTDrawInfo
 {
@@ -286,13 +278,13 @@ public:
     void SetDefaultSelectedBkColor(DWORD dwColor, bool bShared = false);
 
     TFontInfo* GetDefaultFontInfo();
-    void SetDefaultFont(LPCTSTR pStrFontName, int nSize, bool bBold, bool bUnderline, bool bItalic, bool bShared = false);
+    void SetDefaultFont(LPCTSTR pStrFontName, int nSize, int nWeight,bool bUnderline, bool bItalic, bool bShared = false);
     DWORD GetCustomFontCount(bool bShared = false) const;
-    HFONT AddFont(int id, LPCTSTR pStrFontName, int nSize, bool bBold, bool bUnderline, bool bItalic, bool bShared = false);
+    HFONT AddFont(int id, LPCTSTR pStrFontName, int nSize, int nWeitht,bool bUnderline, bool bItalic,bool bShared = false);
     HFONT GetFont(int id);
-    HFONT GetFont(LPCTSTR pStrFontName, int nSize, bool bBold, bool bUnderline, bool bItalic);
+    HFONT GetFont(LPCTSTR pStrFontName, int nSize, int nWeight, bool bUnderline, bool bItalic);
 	int GetFontIndex(HFONT hFont, bool bShared = false);
-	int GetFontIndex(LPCTSTR pStrFontName, int nSize, bool bBold, bool bUnderline, bool bItalic, bool bShared = false);
+	int GetFontIndex(LPCTSTR pStrFontName, int nSize, int nWeight, bool bUnderline, bool bItalic, bool bShared = false);
     void RemoveFont(HFONT hFont, bool bShared = false);
     void RemoveFont(int id, bool bShared = false);
     void RemoveAllFonts(bool bShared = false);

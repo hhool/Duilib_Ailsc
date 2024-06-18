@@ -1250,7 +1250,7 @@ void CRichEditUI::SetFont(int index)
     }
 }
 
-void CRichEditUI::SetFont(LPCTSTR pStrFontName, int nSize, bool bBold, bool bUnderline, bool bItalic)
+void CRichEditUI::SetFont(LPCTSTR pStrFontName, int nSize, int nWeight, bool bUnderline, bool bItalic)
 {
     if( m_pTwh ) {
         LOGFONT lf = { 0 };
@@ -1258,7 +1258,8 @@ void CRichEditUI::SetFont(LPCTSTR pStrFontName, int nSize, bool bBold, bool bUnd
         _tcsncpy(lf.lfFaceName, pStrFontName, LF_FACESIZE);
         lf.lfCharSet = DEFAULT_CHARSET;
         lf.lfHeight = -nSize;
-        if( bBold ) lf.lfWeight += FW_BOLD;
+        //if( bBold ) lf.lfWeight += FW_BOLD;
+        lf.lfWeight = nWeight;
         if( bUnderline ) lf.lfUnderline = TRUE;
         if( bItalic ) lf.lfItalic = TRUE;
         HFONT hFont = ::CreateFontIndirect(&lf);

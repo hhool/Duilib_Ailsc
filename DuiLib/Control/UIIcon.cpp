@@ -6,11 +6,8 @@
 
 namespace DuiLib
 {
-	CDuiStringPtrMap CIconUI::m_IconData;
-
 	CIconUI::CIconUI()
 	{
-		m_isFromHicon = false;
 		m_bCircleMode = false;
 		m_pImage = nullptr;
 		m_bSetCursor = true;
@@ -20,7 +17,7 @@ namespace DuiLib
 
 	CIconUI::~CIconUI()
 	{
-		if (m_isFromHicon)
+		if (m_pImage)
 			delete m_pImage;
 		m_pImage = nullptr;
 	}
@@ -89,49 +86,39 @@ namespace DuiLib
 
 	void CIconUI::AttachIcon(HICON hicon)
 	{
-		if (m_isFromHicon)
+		if (m_pImage)
 			delete m_pImage;
 		m_pImage = nullptr;
-
-		m_isFromHicon = true;
 		m_pImage = Bitmap::FromHICON(hicon);
 		Invalidate();
 	}
 
 	void CIconUI::SetBkImage(LPCTSTR pStrImage)
 	{
-		if (m_isFromHicon)
-			delete m_pImage;
-		m_pImage = nullptr;
-		m_isFromHicon = false;
+		if (pStrImage == nullptr) return;
 
-		//这里可以不校验ico格式文件，但是会多增加一次缓存
-		if (pStrImage && IsIcoFile(pStrImage))
+		if (m_strBkImage != pStrImage)
 		{
-			m_pImage = static_cast<Image*>(m_IconData.Find(pStrImage));
-			if (m_pImage == nullptr)
+			m_strBkImage = pStrImage;
+			if (m_pImage)
+				delete m_pImage;
+			m_pImage = nullptr;
+		}
+		
+		if (m_pImage == nullptr)
+		{
+			std::vector<BYTE> res_data = CRenderEngine::LoadResData(pStrImage);
+			if (!res_data.empty())
 			{
-				TImageData*pdata = CRenderEngine::LoadImageData(pStrImage);
-				if (pdata)
+				IStream* stream = SHCreateMemStream((BYTE*)(&res_data[0]), res_data.size());
+				if (stream)
 				{
-					IStream* stream = SHCreateMemStream((BYTE *)pdata->pdata, pdata->size);
-					if (stream)
-					{
-						m_pImage = Image::FromStream(stream);
-						stream->Release();
-					}
-					if (m_pImage)
-						m_IconData.Insert(pStrImage, m_pImage);
-					pdata->Clear();
-					delete pdata;
+					m_pImage = Image::FromStream(stream);
+					stream->Release();
 				}
 			}
-			__super::SetBkImage(_T(""));
 		}
-		else
-		{
-			__super::SetNormalImage(pStrImage);
-		}
+		
 		Invalidate();
 	}
 
@@ -189,10 +176,12 @@ namespace DuiLib
 		RECT rt = GetIconRect();
 		if (isCircleMode())
 		{
-			Bitmap b(m_pImage->GetWidth(), m_pImage->GetHeight());
+			//计算圆形图片剪切位置，防止图片被压缩变形
+			int nwidth = m_pImage->GetWidth() <= m_pImage->GetHeight() ? m_pImage->GetWidth() : m_pImage->GetHeight();
+			Bitmap b(nwidth, nwidth);
 			Graphics g(&b);
 			g.SetSmoothingMode(SmoothingModeHighSpeed);
-			g.FillEllipse(&TextureBrush(m_pImage), 0, 0, m_pImage->GetWidth(), m_pImage->GetHeight());
+			g.FillEllipse(&TextureBrush(m_pImage, WrapModeClamp, (m_pImage->GetWidth() - nwidth)/2, (m_pImage->GetHeight() - nwidth) / 2, nwidth, nwidth), 0, 0, nwidth, nwidth);
 
 			Graphics gg(hDC);
 			gg.SetSmoothingMode(SmoothingModeHighSpeed);

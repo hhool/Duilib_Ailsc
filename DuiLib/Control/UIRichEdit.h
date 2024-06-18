@@ -40,7 +40,7 @@ public:
     void SetWordWrap(bool bWordWrap = true);
     int GetFont();
     void SetFont(int index);
-    void SetFont(LPCTSTR pStrFontName, int nSize, bool bBold, bool bUnderline, bool bItalic);
+    void SetFont(LPCTSTR pStrFontName, int nSize, int nWeight, bool bUnderline, bool bItalic);
     LONG GetWinStyle();
     void SetWinStyle(LONG lStyle);
     DWORD GetTextColor();

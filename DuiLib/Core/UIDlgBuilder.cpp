@@ -83,11 +83,12 @@ CControlUI* CDialogBuilder::Create(IDialogBuilderCallback* pCallback, CPaintMana
 				int id = -1;
                 LPCTSTR pFontName = NULL;
                 int size = 12;
-                bool bold = false;
+                //bool bold = false;
                 bool underline = false;
                 bool italic = false;
                 bool defaultfont = false;
 				bool shared = false;
+                long weight = FW_NORMAL;
                 for( int i = 0; i < nAttributes; i++ ) {
                     pstrName = node.GetAttributeName(i);
                     pstrValue = node.GetAttributeValue(i);
@@ -100,8 +101,13 @@ CControlUI* CDialogBuilder::Create(IDialogBuilderCallback* pCallback, CPaintMana
                     else if( _tcsicmp(pstrName, _T("size")) == 0 ) {
                         size = _tcstol(pstrValue, &pstr, 10);
                     }
+					else if (_tcsicmp(pstrName, _T("weight")) == 0) {
+                        weight = _tcstol(pstrValue, &pstr, 10);
+					}
                     else if( _tcsicmp(pstrName, _T("bold")) == 0 ) {
-                        bold = (_tcsicmp(pstrValue, _T("true")) == 0);
+                        //¼æÈÝÀÏ°æ±¾ÊôÐÔ
+                        if(_tcsicmp(pstrValue, _T("true")) == 0)
+                            weight = FW_BOLD;
                     }
                     else if( _tcsicmp(pstrName, _T("underline")) == 0 ) {
                         underline = (_tcsicmp(pstrValue, _T("true")) == 0);
@@ -117,8 +123,8 @@ CControlUI* CDialogBuilder::Create(IDialogBuilderCallback* pCallback, CPaintMana
 					}
                 }
                 if( id >= 0 && pFontName ) {
-                    pManager->AddFont(id, pFontName, size, bold, underline, italic, shared);
-                    if( defaultfont ) pManager->SetDefaultFont(pFontName, size, bold, underline, italic, shared);
+                    pManager->AddFont(id, pFontName, size, weight, underline, italic, shared);
+                    if( defaultfont ) pManager->SetDefaultFont(pFontName, size, weight, underline, italic, shared);
                 }
             }
             else if( _tcsicmp(pstrClass, _T("Default")) == 0 ) {

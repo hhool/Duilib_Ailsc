@@ -893,10 +893,10 @@ void CListUI::ResizeVirtualItemBuffer()
 		}
 
 		int nItemCount = m_pList->GetCount();
-		///> 采取七舍八入的原则
-		int nReverse = 0;
-		if ( m_pList->GetHeight() % m_nVirtualItemHeight > m_nVirtualItemHeight*0.8)
-			nReverse = 1;
+		///> 采取进1原则
+		int nReverse = (m_pList->GetHeight() % m_nVirtualItemHeight != 0) ? 1:0;
+		//if ( m_pList->GetHeight() % m_nVirtualItemHeight > m_nVirtualItemHeight*0.8)
+		//	nReverse = 1;
 
 		int nItemSize = m_pList->GetHeight()/ m_nVirtualItemHeight + nReverse;
 		m_nMaxShowCount = nItemSize;

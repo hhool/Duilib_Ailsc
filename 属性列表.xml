@@ -53,6 +53,7 @@ eg:X之后开始布局，X随便命名。可以参考Default的xml
 		<Attribute name="id" default="-1" type="int" comment="字体的id，must必须指定"/>
 		<Attribute name="name" default="系统默认字体" type="STRING" comment="字体名称 eg(宋体)"/>
 		<Attribute name="size" default="12" type="INT" comment="字体大小"/>
+		<Attribute name="weight" default="400" type="INT" comment="字体重量，bold=700" >
 		<Attribute name="bold" default="false" type="BOOL" comment="字体是否加粗"/>
 		<Attribute name="underline" default="false" type="BOOL" comment="是否下划线"/>
 		<Attribute name="italic" default="false" type="BOOL" comment="是否为斜体"/>
