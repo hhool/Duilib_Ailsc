@@ -681,6 +681,11 @@ void CListUI::DoEvent(TEventUI& event)
 		if (!m_bEnableMouseWhell && ::PtInRect(&m_rcItem, event.ptMouse))
 			m_bEnableMouseWhell = true;
 	}
+    if (event.Type == UIEVENT_MOUSEENTER)
+    {
+        m_bEnableMouseWhell = true;
+    }
+
 	if (event.Type == UIEVENT_MOUSELEAVE)
 	{
 		if (m_bEnableMouseWhell && !::PtInRect(&m_rcItem, event.ptMouse))
