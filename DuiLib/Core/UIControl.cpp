@@ -1,5 +1,9 @@
 ﻿#include "StdAfx.h"
 #include <GdiPlus.h>
+#include <tchar.h>
+#include <io.h>
+#include "ImgCache.h"
+#include "StringUtil.h"
 using namespace Gdiplus;
 namespace DuiLib {
 ULONG_PTR				CControlUI::s_gdiplusToken = 0;
@@ -82,8 +86,8 @@ CDuiString CControlUI::GetName() const
 void CControlUI::SetName(LPCTSTR pstrName)
 {
 	if (m_sName != pstrName) {
-		m_sName = pstrName;
 		if (m_pManager != NULL) m_pManager->RenameControl(this, pstrName);
+        m_sName = pstrName;
 	}
 }
 
@@ -223,6 +227,48 @@ void CControlUI::SetBkColor3(DWORD dwBackColor)
 LPCTSTR CControlUI::GetBkImage()
 {
     return m_diBk.sDrawString;
+}
+
+LPCTSTR CControlUI::GetImageUrl()
+{
+    return m_sUrl;
+}
+
+LPCTSTR CControlUI::GetImageUrlFilePath()
+{
+    return m_sUrlPath;
+}
+
+void CControlUI::SetImageUrl(LPCTSTR pStrUrl)
+{
+	if (m_sUrl != pStrUrl)
+    {
+		if (m_pManager != NULL) m_pManager->ReUrlControl(this, pStrUrl);
+        m_sUrl = pStrUrl;
+        if (m_sUrl.IsEmpty())
+        {
+            m_sUrlPath.Empty();
+            return;
+        }
+        std::string strUrl;
+#ifdef _UNICODE
+		m_sUrlPath = A2WCSTR(CImgCache::instance().getFileFullPath(W2ACSTR(m_sUrl.GetData())));
+        strUrl = W2ACSTR(m_sUrlPath.GetData());
+		
+#else
+		m_sUrlPath = CImgCache::instance().getFileFullPath(m_sUrl.GetData()).c_str();
+        strUrl = pStrUrl;
+#endif // _UNICODE
+
+        if (_taccess(m_sUrlPath, 00) == 0)
+        {
+            SetBkImage(m_sUrlPath);
+        }
+        else
+        {
+            CImgCache::instance().addUrl(strUrl);
+        }
+	}
 }
 
 void CControlUI::SetBkImage(LPCTSTR pStrImage)
@@ -1094,6 +1140,7 @@ void CControlUI::SetAttribute(LPCTSTR pstrName, LPCTSTR pstrValue)
         SetRoundCorner(cxyRound);
     }
     else if( _tcscmp(pstrName, _T("bkimage")) == 0 ) SetBkImage(pstrValue);
+    else if (_tcscmp(pstrName, _T("urlimage")) == 0) SetImageUrl(pstrValue);
     else if (_tcscmp(pstrName, _T("bkdirect")) == 0) SetBkColorDirect(_tcsncmp(_T("horizon"), pstrValue, 7) != 0);
 	else if (_tcscmp(pstrName, _T("mousetransparent")) == 0) SetMouseTransparent(_tcscmp(_T("true"), pstrValue) == 0);
     else if( _tcscmp(pstrName, _T("width")) == 0 ) SetFixedWidth(_ttoi(pstrValue));

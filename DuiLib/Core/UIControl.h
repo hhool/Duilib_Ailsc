@@ -39,6 +39,11 @@ public:
     virtual void SetText(LPCTSTR pstrText);
    
     // 图形相关
+    //设置网络图片地址，图片下载完成之后，发送UM_URL_IMAGE_UPDATE消息，wparm=true or false
+	LPCTSTR GetImageUrl();
+    LPCTSTR GetImageUrlFilePath();
+	void SetImageUrl(LPCTSTR pStrUrl);
+
     DWORD GetBkColor() const;
     void SetBkColor(DWORD dwBackColor);
     DWORD GetBkColor2() const;
@@ -227,6 +232,8 @@ protected:
 	TPercentInfo m_piFloatPercent;
     bool m_bSetPos; // 防止SetPos循环调用
 
+    CDuiString m_sUrl;//url img 地址
+    CDuiString m_sUrlPath;//url图片生成地址
     CDuiString m_sText;
     CDuiString m_sToolTip;
     TCHAR m_chShortcut;

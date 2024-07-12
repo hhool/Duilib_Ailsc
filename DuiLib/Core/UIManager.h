@@ -1,14 +1,13 @@
 #ifndef __UIMANAGER_H__
 #define __UIMANAGER_H__
-
 #pragma once
+#include <map>
+#include <set>
 namespace DuiLib {
 /////////////////////////////////////////////////////////////////////////////////////
 //
 
 class CControlUI;
-
-
 /////////////////////////////////////////////////////////////////////////////////////
 //
 
@@ -184,8 +183,11 @@ public:
 /////////////////////////////////////////////////////////////////////////////////////
 //
 typedef CControlUI* (*LPCREATECONTROL)(LPCTSTR pstrType);
-
-
+/*
+用于web下载图片，下载中间过程，建议使用temp文件，下载完成之后再改名为path指定文件
+可以参考 hv requests::downloadFile
+*/
+typedef bool(*PDuiDownloadFile)(const char* szurl, const char* szfile_path);
 class DUILIB_API CPaintManagerUI
 {
 public:
@@ -249,6 +251,7 @@ public:
     static const CDuiString& GetResourceZip();
     static bool IsCachedResourceZip();
     static HANDLE GetResourceZipHandle();
+    static void SetDownloadFileHandler(PDuiDownloadFile download_file);
     static void SetInstance(HINSTANCE hInst);
     static void SetCurrentPath(LPCTSTR pStrPath);
     static void SetResourceDll(HINSTANCE hInst);
@@ -327,6 +330,7 @@ public:
     bool AttachDialog(CControlUI* pControl);
     bool InitControls(CControlUI* pControl, CControlUI* pParent = NULL);
 	bool RenameControl(CControlUI* pControl, LPCTSTR pstrName);
+    bool ReUrlControl(CControlUI* pControl, LPCTSTR pstrUrl);
     void ReapObjects(CControlUI* pControl);
 
     bool AddOptionGroup(LPCTSTR pStrGroupName, CControlUI* pControl);
@@ -384,6 +388,7 @@ public:
     CControlUI* GetRoot() const;
     CControlUI* FindControl(POINT pt) const;
     CControlUI* FindControl(LPCTSTR pstrName) const;
+    std::set<LPVOID> FindControlByUrl (LPCTSTR pstrUrl);
     CControlUI* FindSubControlByPoint(CControlUI* pParent, POINT pt) const;
     CControlUI* FindSubControlByName(CControlUI* pParent, LPCTSTR pstrName) const;
     CControlUI* FindSubControlByClass(CControlUI* pParent, LPCTSTR pstrClass, int iIndex = 0);
@@ -479,6 +484,7 @@ private:
     CDuiStringPtrMap m_mNameHash;
 	CDuiStringPtrMap m_mWindowAttrHash;
     CDuiStringPtrMap m_mOptionGroup;
+    std::map<CDuiString, std::set<LPVOID> > m_mUrlControls;
 
     //
 	bool m_bForceUseSharedRes;

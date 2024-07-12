@@ -2,6 +2,7 @@
 #include <zmouse.h>
 #include <stdlib.h>
 #include "StringUtil.h"
+#include "ImgCache.h"
 
 DECLARE_HANDLE(HZIP);	// An HZIP identifies a zip file that has been opened
 typedef DWORD ZRESULT;
@@ -275,6 +276,11 @@ bool CPaintManagerUI::IsCachedResourceZip()
 HANDLE CPaintManagerUI::GetResourceZipHandle()
 {
     return m_hResourceZip;
+}
+
+void CPaintManagerUI::SetDownloadFileHandler(PDuiDownloadFile download_file)
+{
+    CImgCache::SetDownloadFileHandler(download_file);
 }
 
 void CPaintManagerUI::SetInstance(HINSTANCE hInst)
@@ -1711,13 +1717,32 @@ bool CPaintManagerUI::InitControls(CControlUI* pControl, CControlUI* pParent /*=
 bool CPaintManagerUI::RenameControl(CControlUI* pControl, LPCTSTR pstrName)
 {
 	ASSERT(pControl);
-	if( pControl == NULL || pControl->GetManager() != this || pstrName == NULL || *pstrName == _T('\0')) return false;
+	if(pControl == NULL || pControl->GetManager() != this || pstrName == NULL ) return false;
 	if (pControl->GetName() == pstrName) return true;
-	if (NULL != FindControl(pstrName)) return false;
+	if (NULL != FindControl(pstrName)) return true;
 	m_mNameHash.Remove(pControl->GetName());
-	bool bResult = m_mNameHash.Insert(pstrName, pControl);
-	if (bResult) pControl->SetName(pstrName);
-	return bResult;
+    if(*pstrName != _T('\0'))
+	    m_mNameHash.Insert(pstrName, pControl);
+	return true;
+}
+
+bool CPaintManagerUI::ReUrlControl(CControlUI* pControl, LPCTSTR pstrUrl)
+{
+	ASSERT(pControl);
+	if (pControl == NULL || pControl->GetManager() != this || pstrUrl == NULL) return false;
+	if (pControl->GetImageUrl() == pstrUrl) return true;
+
+    //删除之前的control
+    if (m_mUrlControls.count(pControl->GetImageUrl()))
+    {
+        m_mUrlControls[pControl->GetImageUrl()].erase(pControl);
+		if (m_mUrlControls[pControl->GetImageUrl()].empty())
+			m_mUrlControls.erase(pControl->GetImageUrl());
+    }
+    //更新control
+    if(*pstrUrl != _T('\0'))
+        m_mUrlControls[pstrUrl].insert(pControl);
+    return true;
 }
 
 void CPaintManagerUI::ReapObjects(CControlUI* pControl)
@@ -1727,6 +1752,13 @@ void CPaintManagerUI::ReapObjects(CControlUI* pControl)
     if( pControl == m_pEventHover ) m_pEventHover = NULL;
     if( pControl == m_pEventClick ) m_pEventClick = NULL;
     if( pControl == m_pFocus ) m_pFocus = NULL;
+    if (m_mUrlControls.count(pControl->GetImageUrl()))
+    {
+        m_mUrlControls[pControl->GetImageUrl()].erase(pControl);
+        if (m_mUrlControls[pControl->GetImageUrl()].empty())
+            m_mUrlControls.erase(pControl->GetImageUrl());
+    }
+
     KillTimer(pControl);
     const CDuiString& sName = pControl->GetName();
     if( !sName.IsEmpty() ) {
@@ -3433,8 +3465,17 @@ CControlUI* CPaintManagerUI::FindControl(POINT pt) const
 
 CControlUI* CPaintManagerUI::FindControl(LPCTSTR pstrName) const
 {
-    ASSERT(m_pRoot);
     return static_cast<CControlUI*>(m_mNameHash.Find(pstrName));
+}
+
+std::set<LPVOID> CPaintManagerUI::FindControlByUrl(LPCTSTR pstrUrl)
+{
+    std::set<LPVOID> ret;
+    ASSERT(m_pRoot);
+    CDuiString strUrl = pstrUrl;
+    if (m_mUrlControls.count(strUrl))
+        ret = m_mUrlControls[strUrl];
+    return ret;
 }
 
 CControlUI* CPaintManagerUI::FindSubControlByPoint(CControlUI* pParent, POINT pt) const

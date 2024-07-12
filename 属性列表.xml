@@ -89,6 +89,9 @@ eg:X之后开始布局，X随便命名。可以参考Default的xml
 		<Attribute name="bottombordersize" default="0" type="INT" comment="底部边框大小，如(1)，设置该值大于0，则将忽略bordersize属性的设置"/>
 		<Attribute name="borderstyle" default="0" type="INT" comment="边框样式的设置,数值范围0-5"/>
 		<Attribute name="borderround" default="0,0" type="SIZE" comment="边框圆角半径,如(2,2)"/>
+		<!--duilib本身并不支持net,如果希望使用urlimage，需要在初始化的时候调用CPaintManagerUI::SetDownloadFile-->
+		<!--当图片下载完成之后会触发WindowImplBase::OnUrlImageUpdate-->
+		<Attribute name="urlimage" default="" type="STRING" comment="背景图片url" />
 		<Attribute name="bkimage" default="" type="STRING" comment="背景图片,如(bk.bmp或file='aaa.jpg' res='' restype='0' dest='0,0,0,0' source='0,0,0,0' corner='0,0,0,0' mask='#FF0000' fade='255' hole='false' xtiled='false' ytiled='false')"/>
 		<Attribute name="width" default="0" type="INT" comment="控件预设的宽度，如(100)"/>
 		<Attribute name="height" default="0" type="INT" comment="控件预设的高度，如(30)"/>

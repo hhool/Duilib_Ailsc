@@ -1,4 +1,5 @@
 #include "stdafx.h"
+#include "StringUtil.h"
 
 namespace DuiLib
 {
@@ -60,7 +61,7 @@ CControlUI* WindowImplBase::CreateControl(LPCTSTR pstrClass)
 	return NULL;
 }
 
-LRESULT WindowImplBase::MessageHandler(UINT uMsg, WPARAM wParam, LPARAM /*lParam*/, bool& bHandled)
+LRESULT WindowImplBase::MessageHandler(UINT uMsg, WPARAM wParam, LPARAM lParam, bool& bHandled)
 {
 	if (uMsg == WM_KEYDOWN)
 	{
@@ -72,6 +73,13 @@ LRESULT WindowImplBase::MessageHandler(UINT uMsg, WPARAM wParam, LPARAM /*lParam
 		default:
 			break;
 		}
+	}
+	else if (uMsg == UM_URL_IMAGE_UPDATE)
+	{
+		BOOL bTempHandle = false;
+		LRESULT lres = OnUrlImageUpdate(uMsg, wParam, lParam, bTempHandle);
+		bHandled = bTempHandle;
+		return lres;
 	}
 	return FALSE;
 }
@@ -85,6 +93,27 @@ LRESULT WindowImplBase::OnClose(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lPara
 LRESULT WindowImplBase::OnDestroy(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& bHandled)
 {
 	bHandled = FALSE;
+	return 0;
+}
+
+LRESULT WindowImplBase::OnUrlImageUpdate(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled)
+{
+	bHandled = FALSE;
+	bool bdownok = wParam;
+	const char* url = (const char *)lParam;
+	if (!bdownok || url == nullptr) return 0;
+#ifdef _UNICODE
+	std::set<LPVOID> controls = m_PaintManager.FindControlByUrl(A2WCSTR(url));
+#else
+	std::set<LPVOID> controls = m_PaintManager.FindControlByUrl(url);
+#endif // _UNICODE
+
+	
+	for (auto &item: controls)
+	{
+		CControlUI* pControl = static_cast<CControlUI*>(item);
+		pControl->SetBkImage(pControl->GetImageUrlFilePath());
+	}
 	return 0;
 }
 
@@ -472,8 +501,9 @@ LRESULT WindowImplBase::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
 
 LRESULT WindowImplBase::HandleCustomMessage(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled)
 {
+	LRESULT lRes = 0;
 	bHandled = FALSE;
-	return 0;
+	return lRes;
 }
 
 LONG WindowImplBase::GetStyle()

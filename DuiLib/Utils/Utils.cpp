@@ -672,6 +672,10 @@ namespace DuiLib
 	bool CDuiString::operator >= (LPCTSTR str) const { return (Compare(str) >= 0); };
 	bool CDuiString::operator >  (LPCTSTR str) const { return (Compare(str) >  0); };
 
+	bool operator <(const CDuiString& val0, const CDuiString& val1)
+	{
+		return val0.Compare(val1.GetData()) < 0;
+	}
 	void CDuiString::SetAt(int nIndex, TCHAR ch)
 	{
 		ASSERT(nIndex>=0 && nIndex<GetLength());

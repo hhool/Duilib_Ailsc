@@ -62,7 +62,7 @@
 #define MAX max
 #define MIN min
 #define CLAMP(x,a,b) (MIN(b,MAX(a,x)))
-
+const UINT UM_URL_IMAGE_UPDATE = ::RegisterWindowMessage(_T("url_image_update"));//wparam bool
 #pragma comment(lib,"shlwapi.lib")
 //{{AFX_INSERT_LOCATION}}
 // Microsoft Visual C++ will insert additional declarations immediately before the previous line.
