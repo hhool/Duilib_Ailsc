@@ -1101,7 +1101,7 @@ void CTxtWinHost::SetParaFormat(PARAFORMAT2 &p)
 //
 
 CRichEditUI::CRichEditUI() : m_pTwh(NULL), m_bVScrollBarFixing(false), m_bWantTab(true), m_bWantReturn(true), 
-    m_bWantCtrlReturn(true), m_bTransparent(true), m_bRich(true), m_bReadOnly(false), m_bEnablePaste(true), m_bNumberOnly(false), m_bWordWrap(false), m_dwTextColor(0), m_iFont(-1),
+    m_bWantCtrlReturn(true), m_bPassMode(false), m_bTransparent(true), m_bRich(true), m_bReadOnly(false), m_bEnablePaste(true), m_bNumberOnly(false), m_bWordWrap(false), m_dwTextColor(0), m_iFont(-1),
 	m_iLimitText(cInitTextMax), m_lTwhStyle(ES_MULTILINE), m_bDrawCaret(true), m_bInited(false), m_dwPlaceholderTexeColor(0xff000000)
 {
     m_pInputControl = NULL;
@@ -1223,6 +1223,7 @@ void CRichEditUI::SetEnablePaste(bool bEnablePaste)
 }
 void CRichEditUI::SetPasswordMode(bool bPassWord)
 {
+    m_bPassMode = bPassWord;
 	if (m_pTwh) m_pTwh->SetPasswordMode(bPassWord);
 }
 
@@ -1365,7 +1366,7 @@ CDuiString CRichEditUI::GetText() const
 void CRichEditUI::SetText(LPCTSTR pstrText)
 {
     m_sText = pstrText;
-    if( !m_pTwh ) return;
+    if( !m_pTwh) return;
 	SetTextColor(m_dwTextColor);
     SetSel(0, -1);
     ReplaceSel(pstrText, FALSE);
@@ -1374,7 +1375,7 @@ void CRichEditUI::SetText(LPCTSTR pstrText)
 void CRichEditUI::SetPlaceholderText(LPCTSTR pstrText)
 {
 	m_sPlaceholderText = pstrText;
-	if (!m_pTwh) return;
+	if (!m_pTwh || !m_sText.IsEmpty()) return;
 	SetSel(0, -1);
 	ReplaceSel(pstrText, FALSE);
 }
@@ -1813,11 +1814,12 @@ void CRichEditUI::DoInit()
         if( m_bTransparent ) m_pTwh->SetTransparent(TRUE);
         LRESULT lResult;
         m_pTwh->GetTextServices()->TxSendMessage(EM_SETLANGOPTIONS, 0, 0, &lResult);
+        if (m_sText.IsEmpty() && !m_sPlaceholderText.IsEmpty())
+            m_pTwh->SetPasswordMode(FALSE);
         m_pTwh->OnTxInPlaceActivate(NULL);
         m_pManager->AddMessageFilter(this);
 		if( m_pManager->IsLayered() ) m_pManager->SetTimer(this, DEFAULT_TIMERID, ::GetCaretBlinkTime());
     }
-
 	m_bInited= true;
 }
 
@@ -2041,7 +2043,7 @@ void CRichEditUI::DoEvent(TEventUI& event)
 			{
 				SetText(_T(""));
 			}
-			
+            m_pTwh->SetPasswordMode(m_bPassMode);
 			m_pTwh->SetColor(m_dwTextColor);
             m_pTwh->OnTxInPlaceActivate(NULL);
             m_pTwh->GetTextServices()->TxSendMessage(WM_SETFOCUS, 0, 0, 0);
@@ -2062,6 +2064,7 @@ void CRichEditUI::DoEvent(TEventUI& event)
 				{
 					m_sText = _T("");
 					SetPlaceholderText(m_sPlaceholderText);
+                    m_pTwh->SetPasswordMode(FALSE);
 					m_pTwh->SetColor(m_dwPlaceholderTexeColor);
 				}				
 			}
@@ -2406,7 +2409,8 @@ void CRichEditUI::SetAttribute(LPCTSTR pstrName, LPCTSTR pstrValue)
 	}
     else if (_tcscmp(pstrName, _T("maxchar")) == 0) SetLimitText(_ttoi(pstrValue));
     else if( _tcscmp(pstrName, _T("password")) == 0 ) {
-        if( _tcscmp(pstrValue, _T("true")) == 0 ) m_lTwhStyle |= ES_PASSWORD;
+        //if () //m_lTwhStyle |= ES_PASSWORD;
+            SetPasswordMode(_tcscmp(pstrValue, _T("true")) == 0);
     }
     else if( _tcscmp(pstrName, _T("align")) == 0 ) {
         if( _tcsstr(pstrValue, _T("left")) != NULL ) {

@@ -161,6 +161,7 @@ protected:
     bool m_bNumberOnly;
     bool m_bWordWrap;
     bool m_bEnablePaste;
+    bool m_bPassMode;
     DWORD m_dwTextColor;
     int m_iFont;
     int m_iLimitText;

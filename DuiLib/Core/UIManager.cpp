@@ -1700,7 +1700,7 @@ bool CPaintManagerUI::AttachDialog(CControlUI* pControl)
     // Go ahead...
     m_bUpdateNeeded = true;
     m_bFirstLayout = true;
-    m_bFocusNeeded = true;
+    //m_bFocusNeeded = true;
     // Initiate all control
     return InitControls(pControl);
 }

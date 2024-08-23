@@ -66,7 +66,7 @@ namespace DuiLib
 #else
 			m_QrCode = QrCode::encodeText(StringUtil::Easy_AnsiToUtf8(strText.GetData()).c_str(), m_errCorLvl);
 #endif // _UNICODE
-
+			Invalidate();
 			
 		}
 	}
@@ -76,6 +76,7 @@ namespace DuiLib
 		if (!data.empty())
 		{
 			m_QrCode = QrCode::encodeBinary(data, m_errCorLvl);
+			Invalidate();
 		}
 	}
 	
