@@ -1,28 +1,28 @@
 #pragma once
 /*
 add by jefcat 20170315
-not:Ä£·ÂQQÁÄÌì¼ÇÂ¼ÖĞµÄ ÈÕÆÚ¿Ø¼ş
+not:æ¨¡ä»¿QQèŠå¤©è®°å½•ä¸­çš„ æ—¥æœŸæ§ä»¶
 */
 class CDateUI :public CUIFunctionalLayout
 {
 public:
 	CDateUI();
 	virtual void Notify(TNotifyUI& msg);
-	//Ê¹ÓÃPopupUIµÄ×Ö·û´®³õÊ¼»¯CChildLayoutUI2017-3-14
+	//ä½¿ç”¨PopupUIçš„å­—ç¬¦ä¸²åˆå§‹åŒ–CChildLayoutUI2017-3-14
 	virtual void initUIData(CControlUI *m_pOowner);
-	//½«CChildLayoutUI ¸ñÊ½»¯£¬ĞÎ³É×Ö·û¸øPopupUI
+	//å°†CChildLayoutUI æ ¼å¼åŒ–ï¼Œå½¢æˆå­—ç¬¦ç»™PopupUI
 	virtual CDuiString FormatStringToPopUI();
 
 private:
-	///> ¸üĞÂUIÊı¾İ
+	///> æ›´æ–°UIæ•°æ®
 	void UpDateUI();
-	///> »ñÈ¡µ±ÌìĞÇÆÚ¼¸ 0 - 6 ĞÇÆÚÒ»-ĞÇÆÚÈÕ
+	///> è·å–å½“å¤©æ˜ŸæœŸå‡  0 - 6 æ˜ŸæœŸä¸€-æ˜ŸæœŸæ—¥
 	int GetWeek(int yera, int mounth, int day);
-	///> »ñÈ¡µ±ÔÂµÄ×îºóÒ»Ìì
+	///> è·å–å½“æœˆçš„æœ€åä¸€å¤©
 	int GetMounthLastDay(int yera, int mounth);
 private:
-	CLabelUI *m_pLabel_date;//ÈÕÆÚ£¬¸ñÊ½ 3ÔÂ 2017
+	CLabelUI *m_pLabel_date;//æ—¥æœŸï¼Œæ ¼å¼ 3æœˆ 2017
 	SYSTEMTIME m_time;
-	CPopupUI *m_pOowner;//PopËùÊô´°¿Ú
+	CPopupUI *m_pOowner;//Popæ‰€å±çª—å£
 };
 

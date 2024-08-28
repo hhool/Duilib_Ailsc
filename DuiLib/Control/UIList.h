@@ -11,8 +11,8 @@ namespace DuiLib {
 
 typedef int (CALLBACK *PULVCompareFunc)(UINT_PTR, UINT_PTR, UINT_PTR);
 
-////////////////////////////////////#lilei 20160627 ĞéÄâÁĞ±í½Ó¿Ú/////////////////////////////////////////////////
-//PULVirtualPrepareItem Î´ĞéÄâÁĞ±í×¼±¸ĞĞÊı¾İĞĞÎª£¨¸ñÊ½£©
+////////////////////////////////////#lilei 20160627 è™šæ‹Ÿåˆ—è¡¨æ¥å£/////////////////////////////////////////////////
+//PULVirtualPrepareItem æœªè™šæ‹Ÿåˆ—è¡¨å‡†å¤‡è¡Œæ•°æ®è¡Œä¸ºï¼ˆæ ¼å¼ï¼‰
 typedef CControlUI* (* PULVirtualItemFormat)();
 
 class CListHeaderUI;
@@ -33,7 +33,7 @@ struct DUICopyItem
 typedef struct tagTListInfoUI
 {
     int nColumns;
-	BOOL bUsedHeaderContain[UILIST_MAX_COLUMNS];//ÓÃÓÚ¸´ºÏ±íÍ·±ê¼Ç¸Ã±íÍ·ÏîÊÇ·ñ×÷Îª±íÍ·ÏîµÄÈİÆ÷Ê¹ÓÃ
+	BOOL bUsedHeaderContain[UILIST_MAX_COLUMNS];//ç”¨äºå¤åˆè¡¨å¤´æ ‡è®°è¯¥è¡¨å¤´é¡¹æ˜¯å¦ä½œä¸ºè¡¨å¤´é¡¹çš„å®¹å™¨ä½¿ç”¨
     RECT rcColumn[UILIST_MAX_COLUMNS];
     UINT uFixedHeight; 
     int nFont;
@@ -113,7 +113,7 @@ class CListBodyUI;
 class CListHeaderUI;
 class CListHeaderItemUI;
 //support virtual list
-//support composite header£¬example see listHeaderui decalre
+//support composite headerï¼Œexample see listHeaderui decalre
 class DUILIB_API CListUI : public CVerticalLayoutUI, public IListUI
 {
 public:
@@ -121,38 +121,38 @@ public:
     LPCTSTR GetClass() const;
     UINT GetControlFlags() const;
     LPVOID GetInterface(LPCTSTR pstrName);
-	///////////////////////////////ĞéÄâÁĞ±í½Ó¿Ú #liulei 20160627/////////////////////////////////////////
-	//Èç¹ûÊ¹ÓÃÁËĞéÄâÁĞ±íÔòÍâ²¿µ÷ÓÃRmove,RemoveAt,Add,AddAt,RemoveAll ÎŞĞ§
-	//> ÉèÖÃĞé±íĞĞµÄÊı¾İ¸ñÊ½,ĞèÒªÖ¸¶¨ĞĞ¸ß£¨Ô­ÀíÀàËÆÓÚMFCµÄĞé±í£©
+	///////////////////////////////è™šæ‹Ÿåˆ—è¡¨æ¥å£ #liulei 20160627/////////////////////////////////////////
+	//å¦‚æœä½¿ç”¨äº†è™šæ‹Ÿåˆ—è¡¨åˆ™å¤–éƒ¨è°ƒç”¨Rmove,RemoveAt,Add,AddAt,RemoveAll æ— æ•ˆ
+	//> è®¾ç½®è™šè¡¨è¡Œçš„æ•°æ®æ ¼å¼,éœ€è¦æŒ‡å®šè¡Œé«˜ï¼ˆåŸç†ç±»ä¼¼äºMFCçš„è™šè¡¨ï¼‰
 	void SetVirtualItemFormat(PULVirtualItemFormat vrtualitemfroamt);
-	//> ÉèÖÃÊÇ·ñÎªĞé±íÏÔÊ¾Êı¾İ
+	//> è®¾ç½®æ˜¯å¦ä¸ºè™šè¡¨æ˜¾ç¤ºæ•°æ®
 	void SetVirtual(bool bUse = false);
-	//> ÉèÖÃĞé±íÊı¾İ¸öÊı
+	//> è®¾ç½®è™šè¡¨æ•°æ®ä¸ªæ•°
 	void SetVirtualItemCount(int nCountItem);
 	bool IsUseVirtualList() const;
-	//> »ñÈ¡Ğé±íµÄĞĞ¸ß¶È£¨Ğé±íĞĞ¸ß±ØĞë±£³ÖÒ»ÖÂ£¬²»Ö§³Ö¶¯Ì¬ĞĞ¸ß£©
+	//> è·å–è™šè¡¨çš„è¡Œé«˜åº¦ï¼ˆè™šè¡¨è¡Œé«˜å¿…é¡»ä¿æŒä¸€è‡´ï¼Œä¸æ”¯æŒåŠ¨æ€è¡Œé«˜ï¼‰
 	int GetVirtualItemHeight();
-	//> »ñÈ¡Ğé±íÊı¾İ¸öÊı
+	//> è·å–è™šè¡¨æ•°æ®ä¸ªæ•°
 	int GetVirtualItemCount() const;
-	//> »ñÈ¡ÈİÆ÷¿ÉÒÔÏÔÊ¾µÄ×î´ó¸öÊı,²ÉÈ¡µÄ7Éá8ÈëÔ­Ôò
+	//> è·å–å®¹å™¨å¯ä»¥æ˜¾ç¤ºçš„æœ€å¤§ä¸ªæ•°,é‡‡å–çš„7èˆ8å…¥åŸåˆ™
 	int GetShowMaxItemCount() const;
-	//> »ñÈ¥´ÓÄÄÒ»ĞĞ¿ªÊ¼»æ»­µÄ
+	//> è·å»ä»å“ªä¸€è¡Œå¼€å§‹ç»˜ç”»çš„
 	int GetDrawStartIndex() const;
-	//> »ñÈ¥×îºó»æ»­µÄ¿Ø¼şĞĞÏÂ±ê£¬ÓÃÓÚ»æ»­»ã×Ü×îºóÒ»ĞĞ
+	//> è·å»æœ€åç»˜ç”»çš„æ§ä»¶è¡Œä¸‹æ ‡ï¼Œç”¨äºç»˜ç”»æ±‡æ€»æœ€åä¸€è¡Œ
 	int GetDrawLastIndex() const;
-	//> ¸´ÖÆListÊı¾İµ½¼ôÇĞ°å,ĞèÒªÏìÓ¦ DUI_MSGTYPE_COPYITEM ÊÂ¼ş nMaxRowItemData ±ê¼ÇÎªItemµÄ×é³ÉµÄ×î´óText
-	//>  bUserDefine ÊÇ·ñÎªÓÃ»§×Ô¶¨ÒåÊı¾İ£¬¶ÔÓÚ¸´ÔÓµÄÊı¾İ½á¹¹£¬copy²»ÄÜÃ¤×ã£¬ĞèÒªÓÃ»§×Ô¶¨ÒåCopy
-	//> bUserDefine Èç¹ûÎªTRUE Ôò»á´¥·¢ DUI_MSGTYPE_COPYITEM Wparam ÎªListItem Lparam ÎªDUICopyItemĞèÒª·µ»ØÊı¾İµÄµØÖ·£¬
+	//> å¤åˆ¶Listæ•°æ®åˆ°å‰ªåˆ‡æ¿,éœ€è¦å“åº” DUI_MSGTYPE_COPYITEM äº‹ä»¶ nMaxRowItemData æ ‡è®°ä¸ºItemçš„ç»„æˆçš„æœ€å¤§Text
+	//>  bUserDefine æ˜¯å¦ä¸ºç”¨æˆ·è‡ªå®šä¹‰æ•°æ®ï¼Œå¯¹äºå¤æ‚çš„æ•°æ®ç»“æ„ï¼Œcopyä¸èƒ½ç›²è¶³ï¼Œéœ€è¦ç”¨æˆ·è‡ªå®šä¹‰Copy
+	//> bUserDefine å¦‚æœä¸ºTRUE åˆ™ä¼šè§¦å‘ DUI_MSGTYPE_COPYITEM Wparam ä¸ºListItem Lparam ä¸ºDUICopyIteméœ€è¦è¿”å›æ•°æ®çš„åœ°å€ï¼Œ
 	BOOL Copy(int nMaxRowItemData = 1024,bool bUserDefine = false);
 
 	INT64 GetSelectControlTag();
-	///> ÊÇ·ñÆôÓÃĞé±íÌî³äÊı¾İÓÅ»¯£¨ÓÅ»¯£ºÌî³äĞé±íÊı¾İµÄÊ±ºòItem²»¿É¼û£¬Ìî³äÍê±ÏÖ®ºó»Ö¸´×´Ì¬£¬¼õÉÙË¢ĞÂ´ÎÊı£©
-	///> Ä¬ÈÏ¿ªÆô, Èç¹ûº¬ÓĞItem º¬ÓĞ combo  Ôò±ØĞë¹Ø±ÕÓÅ»¯£¬·ñÔòcomboÏÔÊ¾ÓĞÎÊÌâ
+	///> æ˜¯å¦å¯ç”¨è™šè¡¨å¡«å……æ•°æ®ä¼˜åŒ–ï¼ˆä¼˜åŒ–ï¼šå¡«å……è™šè¡¨æ•°æ®çš„æ—¶å€™Itemä¸å¯è§ï¼Œå¡«å……å®Œæ¯•ä¹‹åæ¢å¤çŠ¶æ€ï¼Œå‡å°‘åˆ·æ–°æ¬¡æ•°ï¼‰
+	///> é»˜è®¤å¼€å¯, å¦‚æœå«æœ‰Item å«æœ‰ combo  åˆ™å¿…é¡»å…³é—­ä¼˜åŒ–ï¼Œå¦åˆ™comboæ˜¾ç¤ºæœ‰é—®é¢˜
 	void EnableVirtualOptimize(bool bEnableVirtualO = true);
-	/////////////////////////////////////////////ÅÅĞò±ê¼Ç½Ó¿Ú #liulei 20161107//////////////////////////////////////////////////////
+	/////////////////////////////////////////////æ’åºæ ‡è®°æ¥å£ #liulei 20161107//////////////////////////////////////////////////////
 	void SetSort(int nIndex, ESORT esort, bool bTriggerEvent = false);
 	CListHeaderItemUI*GetSortHeaderItem();
-	////////////////////////////////////////////////¸¡¶¯´°¿ÚµÄÊôĞÔ½Ó¿Ú #liulei 20161109///////////////////////////////////////////////////////
+	////////////////////////////////////////////////æµ®åŠ¨çª—å£çš„å±æ€§æ¥å£ #liulei 20161109///////////////////////////////////////////////////////
 	void SetPanelHeight(int nHeight);
 	void SetPanelPos(EPANELPOS ePanelPos);
 	void SetPanelOffset(int nPanelOffset);
@@ -160,11 +160,11 @@ public:
 	void SetPanelAttributeList(LPCTSTR pstrList);
 	void SetPanelVisible(bool bVisible = true);
 	CChildLayoutUI *GetFloatPanel();
-	///> Ö»ÓĞÊó±êµ¥»÷Ö®ºó²ÅÄÜÏìÓ¦MouseWhellÏûÏ¢
+	///> åªæœ‰é¼ æ ‡å•å‡»ä¹‹åæ‰èƒ½å“åº”MouseWhellæ¶ˆæ¯
 	bool IsEnableMouseWhell();
 	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-	//Ö§³ÖÉèÖÃ×ÓÏîÄ£°å
+	//æ”¯æŒè®¾ç½®å­é¡¹æ¨¡æ¿
 	void SetItemTemplateXml(CDuiString xml);
 
     bool GetScrollSelect();
@@ -177,7 +177,7 @@ public:
     bool SetItemIndex(CControlUI* pControl, int iIndex);
     bool SetMultiItemIndex(CControlUI* pStartControl, int iCount, int iNewStartIndex);
     int GetCount() const;
-	int GetItemCount() const;//»ñÈ¡Êµ¼ÊItemµÄ¸öÊı
+	int GetItemCount() const;//è·å–å®é™…Itemçš„ä¸ªæ•°
     bool Add(CControlUI* pControl);
     bool AddAt(CControlUI* pControl, int iIndex);
 	CControlUI* AddTemplate();
@@ -185,7 +185,7 @@ public:
     bool Remove(CControlUI* pControl, bool bDoNotDestroy=false);
     bool RemoveAt(int iIndex, bool bDoNotDestroy=false);
     void RemoveAll();
-	void ResetSortStatus();//ÖØÖÃËùÓĞ±íÍ·ÅÅĞò×´Ì¬
+	void ResetSortStatus();//é‡ç½®æ‰€æœ‰è¡¨å¤´æ’åºçŠ¶æ€
     void EnsureVisible(int iIndex);
     void Scroll(int dx, int dy);
 
@@ -256,9 +256,9 @@ public:
     SIZE GetScrollPos() const;
     SIZE GetScrollRange() const;
     void SetScrollPos(SIZE szPos);
-	///>@param pControl		ĞèÒª»æ»­µÄµ±Ç°¿Ø¼ş
-	///>@param nDrawRow		µ±Ç°¿Ø¼şËùÔÚµÄĞĞ
-	///>@param nStartDrwRow ´ÓÄÄÒ»ĞĞ¿ªÊ¼»æ»­µÄ
+	///>@param pControl		éœ€è¦ç»˜ç”»çš„å½“å‰æ§ä»¶
+	///>@param nDrawRow		å½“å‰æ§ä»¶æ‰€åœ¨çš„è¡Œ
+	///>@param nStartDrwRow ä»å“ªä¸€è¡Œå¼€å§‹ç»˜ç”»çš„
 	void DrawVirtualItem(CControlUI *pControl, int nDrawRow,int nStartDrwRow);
     void LineUp();
     void LineDown();
@@ -278,10 +278,10 @@ public:
     bool SortItems(PULVCompareFunc pfnCompare, UINT_PTR dwData);
 
 private:
-	///> Ğé±íµÄÊ±ºòÉèÖÃÑ¡ÖĞĞĞµÄ±ê¼Ç,Õâ¸ö±ê¼Ç¸ù¾İItemµÄTagÀ´±ê¼Ç
+	///> è™šè¡¨çš„æ—¶å€™è®¾ç½®é€‰ä¸­è¡Œçš„æ ‡è®°,è¿™ä¸ªæ ‡è®°æ ¹æ®Itemçš„Tagæ¥æ ‡è®°
 	void SetSelectControlTag(INT64 iControlTag);
 
-	void ResizeVirtualItemBuffer();//¶¯Ì¬µ÷ÕûĞéÄâ±íµÄ»º³åÇø
+	void ResizeVirtualItemBuffer();//åŠ¨æ€è°ƒæ•´è™šæ‹Ÿè¡¨çš„ç¼“å†²åŒº
 	bool AddVirtualItem(CControlUI* pControl);
 	void CalcPanelPos();
 	CControlUI *CreateTemplateControl();
@@ -289,26 +289,26 @@ protected:
 	INT64 m_iSelectControlTag;
 	bool m_bUseVirtualList;
     bool m_bScrollSelect;
-	bool m_bEnableVirtualO;//ÊÇ·ñÆôÓÃĞé±íÓÅ»¯
+	bool m_bEnableVirtualO;//æ˜¯å¦å¯ç”¨è™šè¡¨ä¼˜åŒ–
     int m_iCurSel;
     int m_iExpandedItem;
     IListCallbackUI* m_pCallback;
     CListBodyUI* m_pList;
     CListHeaderUI* m_pHeader;
-	//#liulei ÊÇ·ñÔÊĞíÊ¹ÓÃÊó±ê¹ö¶¯£¬
-	//Ö»ÓĞÔÚÊó±êµã»÷Ö®ºó²Å¿ÉÒÔÊ¹ÓÃ
+	//#liulei æ˜¯å¦å…è®¸ä½¿ç”¨é¼ æ ‡æ»šåŠ¨ï¼Œ
+	//åªæœ‰åœ¨é¼ æ ‡ç‚¹å‡»ä¹‹åæ‰å¯ä»¥ä½¿ç”¨
 	bool m_bEnableMouseWhell;
-	//#liulei 20161109 Ôö¼ÓlistÖĞµÄ¸¡¶¯Panel£¬ÀàËÆÓÚ¿á¹·µÄËÑË÷
-	CChildLayoutUI *m_pFloatPanel;//listÖĞ¸¡¶¯µÄPanel
-	EPANELPOS		m_ePanelPos;//PanelµÄÎ»ÖÃ£¬Ä¿Ç°½ö½öÖ§³ÖÉÏÏÂ
-	int				m_nPanelHeight;//Panel¸ß¶È
-	int				m_nPanelOffset;//panelµÄÎ»ÖÃ±ãÒËÁ¿
+	//#liulei 20161109 å¢åŠ listä¸­çš„æµ®åŠ¨Panelï¼Œç±»ä¼¼äºé…·ç‹—çš„æœç´¢
+	CChildLayoutUI *m_pFloatPanel;//listä¸­æµ®åŠ¨çš„Panel
+	EPANELPOS		m_ePanelPos;//Panelçš„ä½ç½®ï¼Œç›®å‰ä»…ä»…æ”¯æŒä¸Šä¸‹
+	int				m_nPanelHeight;//Panelé«˜åº¦
+	int				m_nPanelOffset;//panelçš„ä½ç½®ä¾¿å®œé‡
     TListInfoUI m_ListInfo;
-	PULVirtualItemFormat  m_pVirutalItemFormat;//ĞéÄâÊı¾İ¸ñÊ½Ö¸Õë
+	PULVirtualItemFormat  m_pVirutalItemFormat;//è™šæ‹Ÿæ•°æ®æ ¼å¼æŒ‡é’ˆ
 	int m_nVirtualItemHeight;
 	int m_nVirtualItemCount;
 	int	m_nMaxShowCount;
-	int	m_nDrawStartIndex;//´ÓÄÄÒ»ĞĞ¿ªÊ¼»æ»­µÄ£¬´Ó0¿ªÊ¼
+	int	m_nDrawStartIndex;//ä»å“ªä¸€è¡Œå¼€å§‹ç»˜ç”»çš„ï¼Œä»0å¼€å§‹
 	CDuiString m_ItemtemplateXml;
 };
 
@@ -353,7 +353,7 @@ public:
     SIZE EstimateSize(SIZE szAvailable);
 
 private:
-	CListHeaderItemUI	  *m_pSortHeaderItem;//ÅÅĞòItem
+	CListHeaderItemUI	  *m_pSortHeaderItem;//æ’åºItem
 };
 
 
@@ -396,7 +396,7 @@ public:
     LPCTSTR GetSepImage() const;
     void SetSepImage(LPCTSTR pStrImage);
 
-	/// Ôö¼Ó±íÍ·ÅÅĞòÍ¼±ê//////////////////////////////////////////////
+	/// å¢åŠ è¡¨å¤´æ’åºå›¾æ ‡//////////////////////////////////////////////
 	void SetEnabledSort(bool bEnableSort);
 	void SetSort(ESORT esort, bool bTriggerEvent = true);
 	ESORT GetSort();
@@ -469,7 +469,7 @@ public:
     bool IsExpanded() const;
     bool Expand(bool bExpand = true);
 
-    void Invalidate(); // Ö±½ÓCControl::Invalidate»áµ¼ÖÂ¹ö¶¯ÌõË¢ĞÂ£¬ÖØĞ´¼õÉÙË¢ĞÂÇøÓò
+    void Invalidate(); // ç›´æ¥CControl::Invalidateä¼šå¯¼è‡´æ»šåŠ¨æ¡åˆ·æ–°ï¼Œé‡å†™å‡å°‘åˆ·æ–°åŒºåŸŸ
     bool Activate();
 
     void DoEvent(TEventUI& event);
@@ -586,7 +586,7 @@ public:
     bool IsExpanded() const;
     bool Expand(bool bExpand = true);
 
-    void Invalidate(); // Ö±½ÓCControl::Invalidate»áµ¼ÖÂ¹ö¶¯ÌõË¢ĞÂ£¬ÖØĞ´¼õÉÙË¢ĞÂÇøÓò
+    void Invalidate(); // ç›´æ¥CControl::Invalidateä¼šå¯¼è‡´æ»šåŠ¨æ¡åˆ·æ–°ï¼Œé‡å†™å‡å°‘åˆ·æ–°åŒºåŸŸ
     bool Activate();
 
     void DoEvent(TEventUI& event);

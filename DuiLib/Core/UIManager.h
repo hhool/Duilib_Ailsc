@@ -184,8 +184,8 @@ public:
 //
 typedef CControlUI* (*LPCREATECONTROL)(LPCTSTR pstrType);
 /*
-сцсзwebобтьм╪ф╛ё╛обтьжп╪Д╧ЩЁлё╛╫╗рИй╧сцtempнд╪Чё╛обтьмЙЁиж╝╨Сты╦дцШн╙pathж╦╤╗нд╪Ч
-©ирт╡н©╪ hv requests::downloadFile
+Г■╗Д╨▌webД╦▀Х╫╫Е⌡╬Г┴┤О╪▄Д╦▀Х╫╫Д╦╜И≈╢Х©┤Г╗▀О╪▄Е╩╨Х╝╝Д╫©Г■╗tempФ√┤Д╩╤О╪▄Д╦▀Х╫╫Е╝▄Ф┬░Д╧▀Е░▌Е├█Ф■╧Е░█Д╦╨pathФ▄┤Е╝ Ф√┤Д╩╤
+Е▐╞Д╩╔Е▐┌Х─┐ hv requests::downloadFile
 */
 typedef bool(*PDuiDownloadFile)(const char* szurl, const char* szfile_path);
 class DUILIB_API CPaintManagerUI

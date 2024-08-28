@@ -68,7 +68,7 @@ bool CComboBodyUI::DoPaint(HDC hDC, const RECT& rcPaint, CControlUI* pStopContro
                         iDrawIndex += 1;
                     }
                     if (pListInfo && pListInfo->iHLineSize > 0) {
-                        // ÒòÎªÃ»ÓĞÎª×îºóÒ»¸öÔ¤Áô·Ö¸îÌõ³¤¶È£¬Èç¹ûlistÆÌÂú£¬×îºóÒ»Ìõ²»»áÏÔÊ¾
+                        // å› ä¸ºæ²¡æœ‰ä¸ºæœ€åä¸€ä¸ªé¢„ç•™åˆ†å‰²æ¡é•¿åº¦ï¼Œå¦‚æœlisté“ºæ»¡ï¼Œæœ€åä¸€æ¡ä¸ä¼šæ˜¾ç¤º
                         RECT rcPadding = pControl->GetPadding();
                         const RECT& rcPos = pControl->GetPos();
                         RECT rcBottomLine = { rcPos.left, rcPos.bottom + rcPadding.bottom, rcPos.right, rcPos.bottom + rcPadding.bottom + pListInfo->iHLineSize };
@@ -153,9 +153,9 @@ void CComboWnd::Init(CComboUI* pOwner)
     SIZE szDrop = m_pOwner->GetDropBoxSize();
     RECT rcOwner = pOwner->GetPos();
     RECT rc = rcOwner;
-    rc.top = rc.bottom;		// ¸¸´°¿Úleft¡¢bottomÎ»ÖÃ×÷Îªµ¯³ö´°¿ÚÆğµã
-    rc.bottom = rc.top + szDrop.cy;	// ¼ÆËãµ¯³ö´°¿Ú¸ß¶È
-    if( szDrop.cx > 0 ) rc.right = rc.left + szDrop.cx;	// ¼ÆËãµ¯³ö´°¿Ú¿í¶È
+    rc.top = rc.bottom;		// çˆ¶çª—å£leftã€bottomä½ç½®ä½œä¸ºå¼¹å‡ºçª—å£èµ·ç‚¹
+    rc.bottom = rc.top + szDrop.cy;	// è®¡ç®—å¼¹å‡ºçª—å£é«˜åº¦
+    if( szDrop.cx > 0 ) rc.right = rc.left + szDrop.cx;	// è®¡ç®—å¼¹å‡ºçª—å£å®½åº¦
 
     SIZE szAvailable = { rc.right - rc.left, rc.bottom - rc.top };
     int cyFixed = 0;
@@ -165,7 +165,7 @@ void CComboWnd::Init(CComboUI* pOwner)
         SIZE sz = pControl->EstimateSize(szAvailable);
         cyFixed += sz.cy;
     }
-    cyFixed += 4; // CVerticalLayoutUI Ä¬ÈÏµÄInset µ÷Õû
+    cyFixed += 4; // CVerticalLayoutUI é»˜è®¤çš„Inset è°ƒæ•´
     rc.bottom = rc.top + MIN(cyFixed, szDrop.cy);
 
     ::MapWindowRect(pOwner->GetManager()->GetPaintWindow(), HWND_DESKTOP, &rc);
@@ -225,7 +225,7 @@ LRESULT CComboWnd::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
 		LPCTSTR pDefaultVSrcollbarAttributes = m_pOwner->GetManager()->GetDefaultAttributeList(_T("VScrollBar"));
 		LPCTSTR pDefaultHSrcollbarAttributes = m_pOwner->GetManager()->GetDefaultAttributeList(_T("HScrollBar"));
 
-		//#liulei ĞŞÕıcomboµÄ¹ö¶¯ÌõÏÔÊ¾ÎÊÌâ£¬20160530
+		//#liulei ä¿®æ­£comboçš„æ»šåŠ¨æ¡æ˜¾ç¤ºé—®é¢˜ï¼Œ20160530
 		CComboUI *pComUI = static_cast<CComboUI *>(m_pOwner->GetInterface(DUI_CTR_COMBO));
 		ASSERT(pComUI);
 		if (pComUI)
@@ -494,7 +494,7 @@ bool CComboUI::SelectItem(int iIndex, bool bTakeFocus, bool bTriggerEvent)
     if( m_items.GetSize() == 0 ) return false;
     if( iIndex >= m_items.GetSize() ) iIndex = m_items.GetSize() - 1;
     CControlUI* pControl = static_cast<CControlUI*>(m_items[iIndex]);
-	//#liulei ĞŞ¸´ComboÔÚ²»¿É¼ûµÄÊ±ºòÎŞ·¨½øĞĞselect²Ù×÷£¬ĞèÒª±£´æselect×´Ì¬
+	//#liulei ä¿®å¤Comboåœ¨ä¸å¯è§çš„æ—¶å€™æ— æ³•è¿›è¡Œselectæ“ä½œï¼Œéœ€è¦ä¿å­˜selectçŠ¶æ€
     if( !pControl /*|| !pControl->IsVisible() */|| !pControl->IsEnabled() ) return false;
     IListItemUI* pListItem = static_cast<IListItemUI*>(pControl->GetInterface(DUI_CTR_ILISTITEM));
     if( pListItem == NULL ) return false;

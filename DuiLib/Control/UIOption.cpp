@@ -93,11 +93,11 @@ namespace DuiLib
 
 	bool COptionUI::Activate()
 	{
-		//#liulei ÐÞ¸´ÊÂ¼þÏÈºóË³ÐòCButtonUI::Activate()
+		//#liulei ä¿®å¤äº‹ä»¶å…ˆåŽé¡ºåºCButtonUI::Activate()
 		if( !CControlUI::Activate() ) return false;
 		if( !m_sGroupName.IsEmpty() ) Selected(true);
 		else Selected(!m_bSelected);
-		//#liulei ÐÞ¸´ÊÂ¼þÏÈºóË³Ðò Add
+		//#liulei ä¿®å¤äº‹ä»¶å…ˆåŽé¡ºåº Add
 		if( m_pManager != NULL ) m_pManager->SendNotify(this, DUI_MSGTYPE_CLICK);
 		return true;
 	}

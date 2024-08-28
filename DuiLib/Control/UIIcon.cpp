@@ -168,7 +168,7 @@ namespace DuiLib
 		if ((m_uButtonState & UISTATE_HOT) && !(m_uButtonState & UISTATE_DISABLED) && m_dwHotBkColor != 0) {
 			CRenderEngine::DrawColor(hDC, m_rcPaint, GetAdjustColor(m_dwHotBkColor));
 		}
-		//ÓÅÏÈIcon
+		//ä¼˜å…ˆIcon
 		if (m_pImage == nullptr)
 		{
 			return __super::PaintStatusImage(hDC);
@@ -176,7 +176,7 @@ namespace DuiLib
 		RECT rt = GetIconRect();
 		if (isCircleMode())
 		{
-			//¼ÆËãÔ²ĞÎÍ¼Æ¬¼ôÇĞÎ»ÖÃ£¬·ÀÖ¹Í¼Æ¬±»Ñ¹Ëõ±äĞÎ
+			//è®¡ç®—åœ†å½¢å›¾ç‰‡å‰ªåˆ‡ä½ç½®ï¼Œé˜²æ­¢å›¾ç‰‡è¢«å‹ç¼©å˜å½¢
 			int nwidth = m_pImage->GetWidth() <= m_pImage->GetHeight() ? m_pImage->GetWidth() : m_pImage->GetHeight();
 			Bitmap b(nwidth, nwidth);
 			Graphics g(&b);
@@ -207,7 +207,7 @@ namespace DuiLib
 			return CRenderEngine::DrawImage(hDC, m_pManager, m_rcItem, m_rcPaint, drawInfo);
 		}
 
-		//Ìî³äpImageInfoĞÅÏ¢
+		//å¡«å……pImageInfoä¿¡æ¯
 		if (drawInfo.pImageInfo == nullptr)
 		{
 			RECT rtItem = { -1, -1, 0, 0 };

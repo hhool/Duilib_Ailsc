@@ -74,9 +74,9 @@ namespace DuiLib
 		int		m_iFont;
 		UINT	m_uTextStyle;
 		RECT	m_rcTextPadding;
-		int		m_nTextRenderingHint;//×ÖÌåÓÅ»¯
+		int		m_nTextRenderingHint;//å­—ä½“ä¼˜åŒ–
 		bool	m_bShowHtml;
-		bool	m_bEstimate;//ÊÇ·ñÏñContainÒ»Ñù×Ô¼ºÊÊÎ»ÖÃ´óĞ¡£¬¶ø²»ÊÇ¸ù¾İÎ»ÖÃµ÷Õû
+		bool	m_bEstimate;//æ˜¯å¦åƒContainä¸€æ ·è‡ªå·±é€‚ä½ç½®å¤§å°ï¼Œè€Œä¸æ˜¯æ ¹æ®ä½ç½®è°ƒæ•´
         SIZE    m_szAvailableLast;
         SIZE    m_cxyFixedLast;
         bool    m_bNeedEstimateSize;

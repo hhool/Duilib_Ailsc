@@ -61,7 +61,7 @@ namespace DuiLib
 		SendMessage(EM_SETMARGINS, EC_LEFTMARGIN | EC_RIGHTMARGIN, MAKELPARAM(0, 0));
 		Edit_Enable(m_hWnd, m_pOwner->IsEnabled() == true);
 
-		///> #liulei 20160715Ö»ÔÊĞíĞ¡ÊıµãÊäÈëºÍNumOnly»¥³â
+		///> #liulei 20160715åªå…è®¸å°æ•°ç‚¹è¾“å…¥å’ŒNumOnlyäº’æ–¥
 		if (!m_pOwner->IsDecimal())
 			Edit_SetReadOnly(m_hWnd, m_pOwner->IsReadOnly() == true);
 
@@ -157,7 +157,7 @@ namespace DuiLib
 		}
 		else if( (uMsg == WM_SYSKEYDOWN || uMsg == WM_KEYDOWN) && TCHAR(wParam) != VK_RETURN)
 		{
-			///> Èç¹ûÍâ²¿¿ØÖÆÁËÊäÈëÔòÊäÈë½øĞĞ¿ØÖÆ,Èç¹ûÍâ²¿´¦ÀíÁËÔò²»ÔÚ´¦Àí
+			///> å¦‚æœå¤–éƒ¨æ§åˆ¶äº†è¾“å…¥åˆ™è¾“å…¥è¿›è¡Œæ§åˆ¶,å¦‚æœå¤–éƒ¨å¤„ç†äº†åˆ™ä¸åœ¨å¤„ç†
 			TCHAR c = (TCHAR)wParam;
 			if (m_pOwner->m_pInputControl)
 			{
@@ -174,7 +174,7 @@ namespace DuiLib
 			TCHAR c = (TCHAR)wParam;
 			if (m_pOwner->IsDecimal())
 			{
-				//#liulei »ñÈ¡¹â±êµÄÆğÊ¼Î»ÖÃ
+				//#liulei è·å–å…‰æ ‡çš„èµ·å§‹ä½ç½®
 				DWORD dwRet = Edit_GetSel(m_hWnd);
 				int nLastPos = HIWORD(dwRet);
 				int nStartPos = LOWORD(dwRet);
@@ -182,7 +182,7 @@ namespace DuiLib
 				{
 					if (c == '.' && m_pOwner->IsTextHavePoint())
 						bHandled = TRUE;
-					///> nLastPos == nStartPos Ã»ÓĞÑ¡ÖĞÁË¶àĞĞ²ÅĞèÒªÅĞ¶ÏÊäÈëµãºÍĞ¡ÊıµãÖ®¼äµÄÎ»ÖÃ¹ØÏµ
+					///> nLastPos == nStartPos æ²¡æœ‰é€‰ä¸­äº†å¤šè¡Œæ‰éœ€è¦åˆ¤æ–­è¾“å…¥ç‚¹å’Œå°æ•°ç‚¹ä¹‹é—´çš„ä½ç½®å…³ç³»
 					else if (nLastPos == nStartPos && m_pOwner->m_nDigits > 0 && c != '.' && c != VK_BACK &&
 						m_pOwner->GetTextDigits(nLastPos) >= m_pOwner->m_nDigits)
 						bHandled = TRUE;
@@ -227,7 +227,7 @@ namespace DuiLib
 		else if( uMsg == WM_PRINT ) {
 			if (m_pOwner->GetManager()->IsLayered()) {
 				lRes = CWindowWnd::HandleMessage(uMsg, wParam, lParam);
-				if( m_pOwner->IsEnabled() && m_bDrawCaret ) { // todo:ÅĞ¶ÏÊÇ·ñenabled
+				if( m_pOwner->IsEnabled() && m_bDrawCaret ) { // todo:åˆ¤æ–­æ˜¯å¦enabled
 					RECT rcClient;
 					::GetClientRect(m_hWnd, &rcClient);
 					POINT ptCaret;
@@ -492,13 +492,13 @@ namespace DuiLib
 	int CEditUI::GetTextDigits(int nSelPos)
 	{
 		if (m_sText.GetLength() <= 0) return 0;
-		bool bLastPoint = false;//Src ×îºóÒ»Î»ÊÇ·ñÎªĞ¡Êıµã
+		bool bLastPoint = false;//Src æœ€åä¸€ä½æ˜¯å¦ä¸ºå°æ•°ç‚¹
 		nSelPos = min(nSelPos, m_sText.GetLength()-1);
 		nSelPos += 1;
 		TCHAR szSrc[64] = _T("");
 		int nLen = min(nSelPos, 64);
 		lstrcpyn(szSrc, m_sText.GetData(), nLen);
-		///> ¼ì²âĞ¡ÊıµãÊÇ·ñÔÚ×îºóÒ»Î»
+		///> æ£€æµ‹å°æ•°ç‚¹æ˜¯å¦åœ¨æœ€åä¸€ä½
 		nLen = lstrlen(szSrc);
 		if (nLen > 0 && szSrc[nLen - 1] == '.')
 			bLastPoint = true;
@@ -506,11 +506,11 @@ namespace DuiLib
 		TCHAR *nexttoken = NULL;
 		TCHAR *psz = _tcstok_s(szSrc, _T("."), &nexttoken);
 
-		///> ±êÃ÷¹â±êÔÚĞ¡ÊıµãÖ®Ç°
+		///> æ ‡æ˜å…‰æ ‡åœ¨å°æ•°ç‚¹ä¹‹å‰
 		if (psz == NULL) return 0;
 		if (lstrcmp(nexttoken, _T("")) == 0 &&(!bLastPoint)) return 0;
 
-		///> ·ñÔòÓĞĞ¡Êıµã
+		///> å¦åˆ™æœ‰å°æ•°ç‚¹
 		_stprintf_s(szSrc, 63, _T("%s"),m_sText.GetData());
 		_tcstok_s(szSrc, _T("."), &nexttoken);
 		return lstrlen(nexttoken);

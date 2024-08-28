@@ -192,7 +192,7 @@ namespace DuiLib
 
 	void CLabelUI::SetTextPadding(RECT rc)
 	{
-		//#liulei Èç¹ûÃ»ÓĞ¸Ä±äÔò²»ĞèÒª¸³Öµ
+		//#liulei å¦‚æœæ²¡æœ‰æ”¹å˜åˆ™ä¸éœ€è¦èµ‹å€¼
 		if (m_rcTextPadding.left == rc.left &&
 			m_rcTextPadding.top == rc.top &&
 			m_rcTextPadding.right == rc.right &&

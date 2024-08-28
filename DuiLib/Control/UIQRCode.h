@@ -20,7 +20,7 @@ namespace DuiLib
 		virtual void PaintBkImage(HDC hDC);
 	private:
 		QrCode m_QrCode;//isempty
-		QrCode::Ecc m_errCorLvl;//ÈÝ´íÂÊ
+		QrCode::Ecc m_errCorLvl;//å®¹é”™çŽ‡
 		DWORD m_dwQRColor;
 		DWORD m_dwQRBkColor;
 	};

@@ -372,7 +372,7 @@ public:
         else if( msg.sType == _T("click") ) {
             if( msg.pSender->GetName() == _T("insertimagebtn") ) {
                 CLabelUI* pLabel = dynamic_cast<CLabelUI*>(msg.pSender);
-                std::string str = "ÎÒ\r\nÊÇÖÐ¹úÈË¼Ó·ÆÃ¨Hellow word";
+                std::string str = "æˆ‘\r\næ˜¯ä¸­å›½äººåŠ è²çŒ«Hellow word";
                 SIZE size = { 50,0 };
                 pLabel->MeasureString(str.c_str(), str.size(), size);
                 CRichEditUI* pRich = static_cast<CRichEditUI*>(m_pm.FindControl(_T("testrichedit")));
@@ -450,7 +450,7 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE /*hPrevInstance*/, LPSTR /*l
 
     CFrameWindowWnd* pFrame = new CFrameWindowWnd();
     if( pFrame == NULL ) return 0;
-    pFrame->Create(NULL, _T("ÕâÊÇÒ»¸ö×î¼òµ¥µÄ²âÊÔÓÃexe£¬ÐÞ¸Ätest1.xml¾Í¿ÉÒÔ¿´µ½Ð§¹û"), UI_WNDSTYLE_FRAME|WS_CLIPCHILDREN, WS_EX_WINDOWEDGE);
+    pFrame->Create(NULL, _T("è¿™æ˜¯ä¸€ä¸ªæœ€ç®€å•çš„æµ‹è¯•ç”¨exeï¼Œä¿®æ”¹test1.xmlå°±å¯ä»¥çœ‹åˆ°æ•ˆæžœ"), UI_WNDSTYLE_FRAME|WS_CLIPCHILDREN, WS_EX_WINDOWEDGE);
     pFrame->CenterWindow();
     pFrame->ShowWindow(true);
     CPaintManagerUI::MessageLoop();

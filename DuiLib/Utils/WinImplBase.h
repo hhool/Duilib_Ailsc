@@ -6,13 +6,13 @@ namespace DuiLib
 
 	enum UILIB_RESOURCETYPE
 	{
-		UILIB_FILE=1,				// À´×Ô´ÅÅÌÎÄ¼ş
-		UILIB_ZIP,						// À´×Ô´ÅÅÌzipÑ¹Ëõ°ü
-		UILIB_RESOURCE,			// À´×Ô×ÊÔ´
-		UILIB_ZIPRESOURCE,	// À´×Ô×ÊÔ´µÄzipÑ¹Ëõ°ü
+		UILIB_FILE=1,				// æ¥è‡ªç£ç›˜æ–‡ä»¶
+		UILIB_ZIP,						// æ¥è‡ªç£ç›˜zipå‹ç¼©åŒ…
+		UILIB_RESOURCE,			// æ¥è‡ªèµ„æº
+		UILIB_ZIPRESOURCE,	// æ¥è‡ªèµ„æºçš„zipå‹ç¼©åŒ…
 	};
 
-	///> ²»ÄÜÔÙÕâÀïÖØĞ´OnTimer·ñÔò¹ö¶¯Ìõ²»ÄÜÓÃ£¨²»ÖªµÀÎªÂï£©
+	///> ä¸èƒ½å†è¿™é‡Œé‡å†™OnTimerå¦åˆ™æ»šåŠ¨æ¡ä¸èƒ½ç”¨ï¼ˆä¸çŸ¥é“ä¸ºå˜›ï¼‰
 	class DUILIB_API WindowImplBase
 		: public CWindowWnd
 		, public CNotifyPump

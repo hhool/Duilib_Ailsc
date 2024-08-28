@@ -4,7 +4,7 @@
 #include "stdafx.h"
 #include "DateUI.h"
 /*
-ÊµÏÖDateUI¿Ø¼þË¼Ïë
+å®žçŽ°DateUIæŽ§ä»¶æ€æƒ³
 
 */
 CUIFunctionalLayout *CreatePopupUI()
@@ -54,19 +54,19 @@ public:
 		m_pWebUI->SetHomePage(L"file:///F:/project/CefDemo/x64/Debug/test.html");
 		if(m_pPupUI)
 		{
-			///> ÉèÖÃÐèÒª´¦ÀíPopUIµÄÊÂ¼þ¶ÔÏó£¬¹¦ÄÜÐÔÊÂ¼þ´¦Àí·â×°ÔÚCDateUI
+			///> è®¾ç½®éœ€è¦å¤„ç†PopUIçš„äº‹ä»¶å¯¹è±¡ï¼ŒåŠŸèƒ½æ€§äº‹ä»¶å¤„ç†å°è£…åœ¨CDateUI
 			m_pPupUI->SetCreatePopupUI(CreatePopupUI);
-			///> ³õÊ¼»¯ÊÂ¼þ
+			///> åˆå§‹åŒ–äº‹ä»¶
 			SYSTEMTIME ltime;
 			GetLocalTime(&ltime);
-			///> ¸ñÊ½Ô¼¶¨ºÍCDateUI±£³ÖÒ»ÖÂ
+			///> æ ¼å¼çº¦å®šå’ŒCDateUIä¿æŒä¸€è‡´
 			CDuiString str;
 			str.Format(_T("%d-%d-%d"),ltime.wYear,ltime.wMonth,ltime.wDay);
 			m_pPupUI->SetText(str);
 		}
 
 		
-		//²âÊÔAttach´°¿Ú
+		//æµ‹è¯•Attachçª—å£
 		CMbWebBrowserUI *pWenUI = new CMbWebBrowserUI(CMbWebBrowserUI::CreateWebWindow(WKE_WINDOW_TYPE_POPUP, NULL, 0, 0, 800, 600));
 		pWenUI->LoadUrl(L"https://www.baidu.com");
 		pWenUI->SetInternVisible(true);
@@ -98,7 +98,7 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE /*hPrevInstance*/, LPSTR /*l
 
     CFrameWindowWnd* pFrame = new CFrameWindowWnd();
     if( pFrame == NULL ) return 0;
-    pFrame->Create(NULL, _T("ÕâÊÇÒ»¸ö×î¼òµ¥µÄ²âÊÔÓÃexe£¬ÐÞ¸Ätest1.xml¾Í¿ÉÒÔ¿´µ½Ð§¹û"), UI_WNDSTYLE_FRAME|WS_CLIPCHILDREN, WS_EX_WINDOWEDGE);
+    pFrame->Create(NULL, _T("è¿™æ˜¯ä¸€ä¸ªæœ€ç®€å•çš„æµ‹è¯•ç”¨exeï¼Œä¿®æ”¹test1.xmlå°±å¯ä»¥çœ‹åˆ°æ•ˆæžœ"), UI_WNDSTYLE_FRAME|WS_CLIPCHILDREN, WS_EX_WINDOWEDGE);
     pFrame->CenterWindow();
     pFrame->ShowModal();
     ::CoUninitialize();

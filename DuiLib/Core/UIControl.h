@@ -34,12 +34,12 @@ public:
     virtual CControlUI* GetParent() const;
     virtual CControlUI* GetCover() const;
     virtual void SetCover(CControlUI *pControl);
-    // ÎÄ±¾Ïà¹Ø
+    // æ–‡æœ¬ç›¸å…³
     virtual CDuiString GetText() const;
     virtual void SetText(LPCTSTR pstrText);
    
-    // Í¼ĞÎÏà¹Ø
-    //ÉèÖÃÍøÂçÍ¼Æ¬µØÖ·£¬Í¼Æ¬ÏÂÔØÍê³ÉÖ®ºó£¬·¢ËÍUM_URL_IMAGE_UPDATEÏûÏ¢£¬wparm=true or false
+    // å›¾å½¢ç›¸å…³
+    //è®¾ç½®ç½‘ç»œå›¾ç‰‡åœ°å€ï¼Œå›¾ç‰‡ä¸‹è½½å®Œæˆä¹‹åï¼Œå‘é€UM_URL_IMAGE_UPDATEæ¶ˆæ¯ï¼Œwparm=true or false
 	LPCTSTR GetImageUrl();
     LPCTSTR GetImageUrlFilePath();
 	void SetImageUrl(LPCTSTR pStrUrl);
@@ -58,21 +58,21 @@ public:
     void SetColorHSL(bool bColorHSL);
     SIZE GetRoundCorner() const;
     void SetRoundCorner(SIZE cxyRound);
-	// ÊÇ·ñÏÔÊ¾±³¾°Í¼
+	// æ˜¯å¦æ˜¾ç¤ºèƒŒæ™¯å›¾
 	void SetShowBkImg(bool bShowImg);
 	void SetShowStatusImg(bool bShowImg);
 
-    //ÉèÖÃ½¥±äÉ«·½Ïò
+    //è®¾ç½®æ¸å˜è‰²æ–¹å‘
     void SetBkColorDirect(bool isVertical);
     bool IsBkColorVertical();
 
-	//±³¾°ÊÇ·ñ´©Í¸
+	//èƒŒæ™¯æ˜¯å¦ç©¿é€
 	bool IsMouseTransparent();
 	void SetMouseTransparent(bool istrans);
 
     virtual bool DrawImage(HDC hDC, TDrawInfo& drawInfo);
 
-	//±ß¿òÏà¹Ø
+	//è¾¹æ¡†ç›¸å…³
 	DWORD GetBorderColor() const;
 	void SetBorderColor(DWORD dwBorderColor);
 	RECT GetBorderSize() const;
@@ -81,11 +81,11 @@ public:
 	int GetBorderStyle() const;
 	void SetBorderStyle(int nStyle);
 
-    // Î»ÖÃÏà¹Ø
+    // ä½ç½®ç›¸å…³
     virtual const RECT& GetPos() const;
-	virtual RECT GetRelativePos() const; // Ïà¶Ô(¸¸¿Ø¼ş)Î»ÖÃ
-	virtual RECT GetClientPos() const; // ¿Í»§ÇøÓò£¨³ıÈ¥scrollbarºÍinset£©
-	// Ö»ÓĞ¿Ø¼şÎªfloatµÄÊ±ºò£¬Íâ²¿µ÷ÓÃSetPosºÍMove²ÅÊÇÓĞĞ§µÄ£¬Î»ÖÃ²ÎÊıÊÇÏà¶Ô¸¸¿Ø¼şµÄÎ»ÖÃ
+	virtual RECT GetRelativePos() const; // ç›¸å¯¹(çˆ¶æ§ä»¶)ä½ç½®
+	virtual RECT GetClientPos() const; // å®¢æˆ·åŒºåŸŸï¼ˆé™¤å»scrollbarå’Œinsetï¼‰
+	// åªæœ‰æ§ä»¶ä¸ºfloatçš„æ—¶å€™ï¼Œå¤–éƒ¨è°ƒç”¨SetPoså’ŒMoveæ‰æ˜¯æœ‰æ•ˆçš„ï¼Œä½ç½®å‚æ•°æ˜¯ç›¸å¯¹çˆ¶æ§ä»¶çš„ä½ç½®
     virtual void SetPos(RECT rc, bool bNeedInvalidate = true);
 	virtual void Move(SIZE szOffset, bool bNeedInvalidate = true);
     virtual int GetWidth() const;
@@ -95,15 +95,15 @@ public:
     virtual int GetX() const;
     virtual int GetY() const;
     virtual RECT GetPadding() const;
-    virtual void SetPadding(RECT rcPadding); // ÉèÖÃÍâ±ß¾à£¬ÓÉÉÏ²ã´°¿Ú»æÖÆ
-    virtual SIZE GetFixedXY() const;         // Êµ¼Ê´óĞ¡Î»ÖÃÊ¹ÓÃGetPos»ñÈ¡£¬ÕâÀïµÃµ½µÄÊÇÔ¤ÉèµÄ²Î¿¼Öµ
-    virtual void SetFixedXY(SIZE szXY);      // ½öfloatÎªtrueÊ±ÓĞĞ§
+    virtual void SetPadding(RECT rcPadding); // è®¾ç½®å¤–è¾¹è·ï¼Œç”±ä¸Šå±‚çª—å£ç»˜åˆ¶
+    virtual SIZE GetFixedXY() const;         // å®é™…å¤§å°ä½ç½®ä½¿ç”¨GetPosè·å–ï¼Œè¿™é‡Œå¾—åˆ°çš„æ˜¯é¢„è®¾çš„å‚è€ƒå€¼
+    virtual void SetFixedXY(SIZE szXY);      // ä»…floatä¸ºtrueæ—¶æœ‰æ•ˆ
 	virtual TPercentInfo GetFloatPercent() const;
 	virtual void SetFloatPercent(TPercentInfo piFloatPercent);
-    virtual int GetFixedWidth() const;       // Êµ¼Ê´óĞ¡Î»ÖÃÊ¹ÓÃGetPos»ñÈ¡£¬ÕâÀïµÃµ½µÄÊÇÔ¤ÉèµÄ²Î¿¼Öµ
-    virtual void SetFixedWidth(int cx);      // Ô¤ÉèµÄ²Î¿¼Öµ
-    virtual int GetFixedHeight() const;      // Êµ¼Ê´óĞ¡Î»ÖÃÊ¹ÓÃGetPos»ñÈ¡£¬ÕâÀïµÃµ½µÄÊÇÔ¤ÉèµÄ²Î¿¼Öµ
-    virtual void SetFixedHeight(int cy);     // Ô¤ÉèµÄ²Î¿¼Öµ
+    virtual int GetFixedWidth() const;       // å®é™…å¤§å°ä½ç½®ä½¿ç”¨GetPosè·å–ï¼Œè¿™é‡Œå¾—åˆ°çš„æ˜¯é¢„è®¾çš„å‚è€ƒå€¼
+    virtual void SetFixedWidth(int cx);      // é¢„è®¾çš„å‚è€ƒå€¼
+    virtual int GetFixedHeight() const;      // å®é™…å¤§å°ä½ç½®ä½¿ç”¨GetPosè·å–ï¼Œè¿™é‡Œå¾—åˆ°çš„æ˜¯é¢„è®¾çš„å‚è€ƒå€¼
+    virtual void SetFixedHeight(int cy);     // é¢„è®¾çš„å‚è€ƒå€¼
     virtual int GetMinWidth() const;
     virtual void SetMinWidth(int cx);
     virtual int GetMaxWidth() const;
@@ -113,31 +113,31 @@ public:
     virtual int GetMaxHeight() const;
     virtual void SetMaxHeight(int cy);
 
-    // Êó±êÌáÊ¾
+    // é¼ æ ‡æç¤º
     virtual CDuiString GetToolTip() const;
     virtual void SetToolTip(LPCTSTR pstrText);
 	virtual void SetToolTipWidth(int nWidth);
-	virtual int	  GetToolTipWidth(void);	// ¶àĞĞToolTipµ¥ĞĞ×î³¤¿í¶È
+	virtual int	  GetToolTipWidth(void);	// å¤šè¡ŒToolTipå•è¡Œæœ€é•¿å®½åº¦
 
-    // ¿ì½İ¼ü
+    // å¿«æ·é”®
     virtual TCHAR GetShortcut() const;
     virtual void SetShortcut(TCHAR ch);
 
-    // ²Ëµ¥
+    // èœå•
     virtual bool IsContextMenuUsed() const;
     virtual void SetContextMenuUsed(bool bMenuUsed);
 
-    // ÓÃ»§ÊôĞÔ
-    virtual const CDuiString& GetUserData(); // ¸¨Öúº¯Êı£¬¹©ÓÃ»§Ê¹ÓÃ
-    virtual void SetUserData(LPCTSTR pstrText); // ¸¨Öúº¯Êı£¬¹©ÓÃ»§Ê¹ÓÃ
-	//#liulei 32Î»¿ÉÄÜ²»¹»ÓÃÀ©Õ¹µ½64Î»
-	virtual UINT64 GetTag() const; // ¸¨Öúº¯Êı£¬¹©ÓÃ»§Ê¹ÓÃ
-	virtual void SetTag(UINT64 pTag); // ¸¨Öúº¯Êı£¬¹©ÓÃ»§Ê¹ÓÃ
+    // ç”¨æˆ·å±æ€§
+    virtual const CDuiString& GetUserData(); // è¾…åŠ©å‡½æ•°ï¼Œä¾›ç”¨æˆ·ä½¿ç”¨
+    virtual void SetUserData(LPCTSTR pstrText); // è¾…åŠ©å‡½æ•°ï¼Œä¾›ç”¨æˆ·ä½¿ç”¨
+	//#liulei 32ä½å¯èƒ½ä¸å¤Ÿç”¨æ‰©å±•åˆ°64ä½
+	virtual UINT64 GetTag() const; // è¾…åŠ©å‡½æ•°ï¼Œä¾›ç”¨æˆ·ä½¿ç”¨
+	virtual void SetTag(UINT64 pTag); // è¾…åŠ©å‡½æ•°ï¼Œä¾›ç”¨æˆ·ä½¿ç”¨
 
-    // Ò»Ğ©ÖØÒªµÄÊôĞÔ
+    // ä¸€äº›é‡è¦çš„å±æ€§
     virtual bool IsVisible() const;
     virtual void SetVisible(bool bVisible = true);
-    virtual void SetInternVisible(bool bVisible = true); // ½ö¹©ÄÚ²¿µ÷ÓÃ£¬ÓĞĞ©UIÓµÓĞ´°¿Ú¾ä±ú£¬ĞèÒªÖØĞ´´Ëº¯Êı
+    virtual void SetInternVisible(bool bVisible = true); // ä»…ä¾›å†…éƒ¨è°ƒç”¨ï¼Œæœ‰äº›UIæ‹¥æœ‰çª—å£å¥æŸ„ï¼Œéœ€è¦é‡å†™æ­¤å‡½æ•°
     virtual bool IsEnabled() const;
     virtual void SetEnabled(bool bEnable = true);
     virtual bool IsMouseEnabled() const;
@@ -148,9 +148,9 @@ public:
     virtual void SetFocus();
     virtual bool IsFloat() const;
     virtual void SetFloat(bool bFloat = true);
-	virtual bool IsKillPopup();//Èç¹û¿Ø¼şÊôÓÚCombo£¬ÄÇÃ´µã»÷Ö®ºóComboÊÇ·ñÏûÊ§
+	virtual bool IsKillPopup();//å¦‚æœæ§ä»¶å±äºComboï¼Œé‚£ä¹ˆç‚¹å‡»ä¹‹åComboæ˜¯å¦æ¶ˆå¤±
 	virtual void SetKillPupup(bool bkillcombo = true);
-	// ×Ô¶¨Òå(Î´´¦ÀíµÄ)ÊôĞÔ
+	// è‡ªå®šä¹‰(æœªå¤„ç†çš„)å±æ€§
 	void AddCustomAttribute(LPCTSTR pstrName, LPCTSTR pstrAttr);
 	LPCTSTR GetCustomAttribute(LPCTSTR pstrName) const;
 	bool RemoveCustomAttribute(LPCTSTR pstrName);
@@ -177,7 +177,7 @@ public:
 
     virtual SIZE EstimateSize(SIZE szAvailable);
 
-	virtual bool Paint(HDC hDC, const RECT& rcPaint, CControlUI* pStopControl=NULL); // ·µ»ØÒª²»Òª¼ÌĞø»æÖÆ
+	virtual bool Paint(HDC hDC, const RECT& rcPaint, CControlUI* pStopControl=NULL); // è¿”å›è¦ä¸è¦ç»§ç»­ç»˜åˆ¶
     virtual bool DoPaint(HDC hDC, const RECT& rcPaint, CControlUI* pStopControl);
     virtual void PaintBkColor(HDC hDC);
     virtual void PaintBkImage(HDC hDC);
@@ -187,12 +187,12 @@ public:
 
     virtual void DoPostPaint(HDC hDC, const RECT& rcPaint);
 
-	//ĞéÄâ´°¿Ú²ÎÊı
+	//è™šæ‹Ÿçª—å£å‚æ•°
 	void SetVirtualWnd(LPCTSTR pstrValue);
 	CDuiString GetVirtualWnd() const;
 
-	//¸¨Öú½Ó¿Ú
-	// »ñÈ¡¿Ø¼şpControlÄÚÊôÓÚszControlClassµÄ¿Ø¼ş¼¯ºÏ
+	//è¾…åŠ©æ¥å£
+	// è·å–æ§ä»¶pControlå†…å±äºszControlClassçš„æ§ä»¶é›†åˆ
 	int GetInsideControl(CDuiPtrArray &ptrAry,CControlUI *pControl,LPCTSTR szControlClass);
 	bool IsIncludeClassControl(LPCTSTR szControlClass);
 public:
@@ -228,12 +228,12 @@ protected:
     bool m_bFloat;
 	bool m_bKillCombo;
     bool m_bkColorIsVertical;
-	bool m_bMouseTransparent;//Êó±êÊÇ·ñ´©Í¸£¬ÅäºÏlayeredÊôĞÔÊ¹ÓÃ
+	bool m_bMouseTransparent;//é¼ æ ‡æ˜¯å¦ç©¿é€ï¼Œé…åˆlayeredå±æ€§ä½¿ç”¨
 	TPercentInfo m_piFloatPercent;
-    bool m_bSetPos; // ·ÀÖ¹SetPosÑ­»·µ÷ÓÃ
+    bool m_bSetPos; // é˜²æ­¢SetPoså¾ªç¯è°ƒç”¨
 
-    CDuiString m_sUrl;//url img µØÖ·
-    CDuiString m_sUrlPath;//urlÍ¼Æ¬Éú³ÉµØÖ·
+    CDuiString m_sUrl;//url img åœ°å€
+    CDuiString m_sUrlPath;//urlå›¾ç‰‡ç”Ÿæˆåœ°å€
     CDuiString m_sText;
     CDuiString m_sToolTip;
     TCHAR m_chShortcut;
@@ -250,13 +250,13 @@ protected:
     bool m_bColorHSL;
 	int m_nBorderStyle;
 	int m_nTooltipWidth;
-	int m_nWeight;//±ÈÖØ£¬Ä¬ÈÏ1
+	int m_nWeight;//æ¯”é‡ï¼Œé»˜è®¤1
     SIZE m_cxyRoundCorner;
     RECT m_rcPaint;
 	RECT m_rcBorderSize;
 	CDuiStringPtrMap m_mCustomAttrHash;
-	bool	m_bShowStatusImg;//ÊÇ·ñÏÔÊ¾StatusÍ¼Æ¬
-	bool	m_bShowBkImg;//ÊÇ·ñÏÔÊ¾BkImg
+	bool	m_bShowStatusImg;//æ˜¯å¦æ˜¾ç¤ºStatuså›¾ç‰‡
+	bool	m_bShowBkImg;//æ˜¯å¦æ˜¾ç¤ºBkImg
 private:
 	static ULONG_PTR				s_gdiplusToken;
 	static GdiplusStartupInput		s_gdiplusStartupInput;

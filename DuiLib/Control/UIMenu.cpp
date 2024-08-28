@@ -169,7 +169,7 @@ BOOL CMenuWnd::Receive(ContextMenuParam param)
 
 void CMenuWnd::Notify(TNotifyUI& msg)
 {
-	///> ¹ýÂËÒ»Ð©»ù±¾ÏûÏ¢
+	///> è¿‡æ»¤ä¸€äº›åŸºæœ¬æ¶ˆæ¯
 	if (msg.sType == DUI_MSGTYPE_WINDOWINIT 
 		|| msg.sType == DUI_MSGTYPE_SETFOCUS
 		|| msg.sType == DUI_MSGTYPE_KILLFOCUS
@@ -318,8 +318,8 @@ LRESULT CMenuWnd::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
 			LPCTSTR pDefaultAttributes = m_pOwner->GetManager()->GetDefaultAttributeList(DUI_CTR_MENU);
 			if( pDefaultAttributes ) 
 			{
-				//#liulei 20160524 ÐÞ¸´Menu´óÓÚ»òÕßµÈÓÚ3²ãµÄÊ±ºò±³¾°ÉèÖÃÎÞÐ§
-				//´ÓÕâÀï¼Ì³Ð¸¸menuµÄÄ¬ÈÏÊôÐÔ
+				//#liulei 20160524 ä¿®å¤Menuå¤§äºŽæˆ–è€…ç­‰äºŽ3å±‚çš„æ—¶å€™èƒŒæ™¯è®¾ç½®æ— æ•ˆ
+				//ä»Žè¿™é‡Œç»§æ‰¿çˆ¶menuçš„é»˜è®¤å±žæ€§
 				m_pm.AddDefaultAttributeList(DUI_CTR_MENU, pDefaultAttributes);
 				m_pMenuUI->SetAttributeList(pDefaultAttributes);
 			}
@@ -420,8 +420,8 @@ LRESULT CMenuWnd::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
 				rc.right = rcWindow.left;
 				rc.left = rc.right - cxFixed;
 
-				//#liulei 20200118 ÐÞ¸´×Ó²Ëµ¥Èç¹ûÔÚÓÒ±ßÏÔÊ¾²»ÏÂ£¬ÏÔÊ¾Î»ÖÃ²»¶Ô
-				//ÕâÀï²»Ó¦¸ÃÊÇ´°¿ÚµÄbottom,Ó¦¸ÃÊÇ¸ÃitemµÄtop
+				//#liulei 20200118 ä¿®å¤å­èœå•å¦‚æžœåœ¨å³è¾¹æ˜¾ç¤ºä¸ä¸‹ï¼Œæ˜¾ç¤ºä½ç½®ä¸å¯¹
+				//è¿™é‡Œä¸åº”è¯¥æ˜¯çª—å£çš„bottom,åº”è¯¥æ˜¯è¯¥itemçš„top
 				//rc.top = rcWindow.bottom;
 				POINT pt = { rcOwner.left, rcOwner.top };
 				ClientToScreen(m_pOwner->GetManager()->GetPaintWindow(), &pt);

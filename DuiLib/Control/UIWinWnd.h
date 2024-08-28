@@ -20,7 +20,7 @@ namespace DuiLib
 		void DieWithControl(BOOL bDieWithControl);
 	protected:
 		HWND m_hWnd;
-		BOOL m_bDieWithControl;//是否随着控件销毁的时候一起Close
+		BOOL m_bDieWithControl;//鏄惁闅忕潃鎺т欢閿�姣佺殑鏃跺�欎竴璧稢lose
 
 	};
 }

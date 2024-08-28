@@ -264,8 +264,8 @@ namespace DuiLib
 		if (_waccess(szPath, 00) != 0)
 		{
 			wchar_t szBuf[1024] = L"";
-			_snwprintf_s<1024>(szBuf, 1024, L"µ÷ÊÔ¹¤¾ß[%s]²»´æÔÚ", szPath);
-			MessageBoxW(m_pManager ? m_pManager->GetPaintWindow():NULL, szBuf, L"´íÎóÌáÊ¾", MB_OK);
+			_snwprintf_s<1024>(szBuf, 1024, L"è°ƒè¯•å·¥å…·[%s]ä¸å­˜åœ¨", szPath);
+			MessageBoxW(m_pManager ? m_pManager->GetPaintWindow():NULL, szBuf, L"é”™è¯¯æç¤º", MB_OK);
 		}
 		else
 		{
@@ -484,7 +484,7 @@ namespace DuiLib
 			pMbWebView->m_pIWebEvent->onDidCreateScriptContextCallback(webView, pMbWebView, frameId, context, extensionGroup, worldId);
 	}
 
-	// »Øµ÷£ºµã»÷ÁË¹Ø±Õ¡¢·µ»Ø true ½«Ïú»Ù´°¿Ú£¬·µ»Ø false Ê²Ã´¶¼²»×ö¡£
+	// å›è°ƒï¼šç‚¹å‡»äº†å…³é—­ã€è¿”å› true å°†é”€æ¯çª—å£ï¼Œè¿”å› false ä»€ä¹ˆéƒ½ä¸åšã€‚
 	bool WKE_CALL_TYPE handleWindowClosing(wkeWebView webWindow, void* param)
 	{
 		CMbWebBrowserUI* pMbWebView = (CMbWebBrowserUI*)param;
@@ -495,7 +495,7 @@ namespace DuiLib
 		return true;
 	}
 
-	// »Øµ÷£º´°¿ÚÒÑÏú»Ù
+	// å›è°ƒï¼šçª—å£å·²é”€æ¯
 	void WKE_CALL_TYPE handleWindowDestroy(wkeWebView webWindow, void* param)
 	{
 		CMbWebBrowserUI* pMbWebView = (CMbWebBrowserUI*)param;
@@ -504,7 +504,7 @@ namespace DuiLib
 
 	}
 
-	// »Øµ÷£ºÎÄµµ¼ÓÔØ³É¹¦
+	// å›è°ƒï¼šæ–‡æ¡£åŠ è½½æˆåŠŸ
 	void WKE_CALL_TYPE handleDocumentReady(wkeWebView webWindow, void* param)
 	{
 		CMbWebBrowserUI* pMbWebView = (CMbWebBrowserUI*)param;
@@ -512,7 +512,7 @@ namespace DuiLib
 			pMbWebView->m_pIWebEvent->handleDocumentReady(webWindow, pMbWebView);
 	}
 
-	// »Øµ÷£ºÒ³Ãæ±êÌâ¸Ä±ä
+	// å›è°ƒï¼šé¡µé¢æ ‡é¢˜æ”¹å˜
 	void WKE_CALL_TYPE handleTitleChanged(wkeWebView webWindow, void* param, const wkeString title)
 	{
 		CMbWebBrowserUI* pMbWebView = (CMbWebBrowserUI*)param;
@@ -528,7 +528,7 @@ namespace DuiLib
 		}
 	}
 
-	// »Øµ÷£º´´½¨ĞÂµÄÒ³Ãæ£¬±ÈÈçËµµ÷ÓÃÁË window.open »òÕßµã»÷ÁË <a target="_blank" .../>
+	// å›è°ƒï¼šåˆ›å»ºæ–°çš„é¡µé¢ï¼Œæ¯”å¦‚è¯´è°ƒç”¨äº† window.open æˆ–è€…ç‚¹å‡»äº† <a target="_blank" .../>
 	wkeWebView WKE_CALL_TYPE onCreateView(wkeWebView webWindow, void* param, wkeNavigationType navType, const wkeString url, const wkeWindowFeatures* features)
 	{
 		CMbWebBrowserUI* pMbWebView = (CMbWebBrowserUI*)param;

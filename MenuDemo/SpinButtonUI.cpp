@@ -25,7 +25,7 @@ void CSpinButtonUI::DoInit()
 
 void CSpinButtonUI::Notify(TNotifyUI& msg)
 {
-	//ÕâÀï°ÑÏûÏ¢´«µÝµ½¶¥²ãÍâÎ§´°¿Ú£¬ÈÃ×îÍâ²ãµÄ´°¿ÚÓÐ»ú»á´¦Àí¸ÃÏûÏ¢
+	//è¿™é‡ŒæŠŠæ¶ˆæ¯ä¼ é€’åˆ°é¡¶å±‚å¤–å›´çª—å£ï¼Œè®©æœ€å¤–å±‚çš„çª—å£æœ‰æœºä¼šå¤„ç†è¯¥æ¶ˆæ¯
 	__super::Notify(msg);
 
 	if (msg.sType == DUI_MSGTYPE_CLICK)

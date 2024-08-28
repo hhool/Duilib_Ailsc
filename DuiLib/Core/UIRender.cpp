@@ -400,7 +400,7 @@ std::vector<BYTE> CRenderEngine::LoadResData(STRINGorID bitmap, LPCTSTR type)
 
 	while (vData.empty())
 	{
-		//¶Á²»µ½Í¼Æ¬, ÔòÖ±½ÓÈ¥¶ÁÈ¡bitmap.m_lpstrÖ¸ÏòµÄÂ·¾¶
+		//è¯»ä¸åˆ°å›¾ç‰‡, åˆ™ç›´æ¥å»è¯»å–bitmap.m_lpstræŒ‡å‘çš„è·¯å¾„
 		HANDLE hFile = ::CreateFile(bitmap.m_lpstr, GENERIC_READ, FILE_SHARE_READ, NULL, OPEN_EXISTING, \
 			FILE_ATTRIBUTE_NORMAL, NULL);
 		if (hFile == INVALID_HANDLE_VALUE) break;
@@ -501,7 +501,7 @@ TImageInfo* CRenderEngine::LoadImage(STRINGorID bitmap, LPCTSTR type, DWORD mask
 
 	while (!pData)
 	{
-		//¶Á²»µ½Í¼Æ¬, ÔòÖ±½ÓÈ¥¶ÁÈ¡bitmap.m_lpstrÖ¸ÏòµÄÂ·¾¶
+		//è¯»ä¸åˆ°å›¾ç‰‡, åˆ™ç›´æ¥å»è¯»å–bitmap.m_lpstræŒ‡å‘çš„è·¯å¾„
 		HANDLE hFile = ::CreateFile(bitmap.m_lpstr, GENERIC_READ, FILE_SHARE_READ, NULL, OPEN_EXISTING, \
 			FILE_ATTRIBUTE_NORMAL, NULL);
 		if( hFile == INVALID_HANDLE_VALUE ) break;
@@ -525,7 +525,7 @@ TImageInfo* CRenderEngine::LoadImage(STRINGorID bitmap, LPCTSTR type, DWORD mask
 	}
 	if (!pData)
 	{
-		//::MessageBox(0, _T("¶ÁÈ¡Í¼Æ¬Êı¾İÊ§°Ü£¡"), _T("×¥BUG"), MB_OK);
+		//::MessageBox(0, _T("è¯»å–å›¾ç‰‡æ•°æ®å¤±è´¥ï¼"), _T("æŠ“BUG"), MB_OK);
 		return NULL;
 	}
 
@@ -535,7 +535,7 @@ TImageInfo* CRenderEngine::LoadImage(STRINGorID bitmap, LPCTSTR type, DWORD mask
         pImage = stbi_load_from_memory(pData, dwSize, &x, &y, &n, 4);
         delete[] pData;
         if( !pImage ) {
-            //::MessageBox(0, _T("½âÎöÍ¼Æ¬Ê§°Ü"), _T("×¥BUG"), MB_OK);
+            //::MessageBox(0, _T("è§£æå›¾ç‰‡å¤±è´¥"), _T("æŠ“BUG"), MB_OK);
             return NULL;
         }
     }
@@ -553,7 +553,7 @@ TImageInfo* CRenderEngine::LoadImage(STRINGorID bitmap, LPCTSTR type, DWORD mask
     LPBYTE pDest = NULL;
     HBITMAP hBitmap = ::CreateDIBSection(NULL, &bmi, DIB_RGB_COLORS, (void**)&pDest, NULL, 0);
 	if( !hBitmap ) {
-		//::MessageBox(0, _T("CreateDIBSectionÊ§°Ü"), _T("×¥BUG"), MB_OK);
+		//::MessageBox(0, _T("CreateDIBSectionå¤±è´¥"), _T("æŠ“BUG"), MB_OK);
 		return NULL;
 	}
 
@@ -1084,8 +1084,8 @@ void CRenderEngine::DrawImage(HDC hDC, HBITMAP hBitmap, const RECT& rc, const RE
 bool CRenderEngine::DrawImage(HDC hDC, CPaintManagerUI* pManager, const RECT& rcItem, const RECT& rcPaint, 
 					  TDrawInfo& drawInfo)
 {
-	// 1¡¢aaa.jpg
-	// 2¡¢file='aaa.jpg' res='' restype='0' dest='0,0,0,0' source='0,0,0,0' scale9='0,0,0,0' 
+	// 1ã€aaa.jpg
+	// 2ã€file='aaa.jpg' res='' restype='0' dest='0,0,0,0' source='0,0,0,0' scale9='0,0,0,0' 
 	// mask='#FF0000' fade='255' hole='false' xtiled='false' ytiled='false' hsl='false'
 	if( pManager == NULL ) return true;
 	if( drawInfo.pImageInfo == NULL ) {
@@ -1226,17 +1226,17 @@ void CRenderEngine::DrawColor(HDC hDC, const RECT& rc, DWORD color,SIZE rcCorner
 {
 	Graphics g(hDC);
 	GraphicsPath cornerPath;
-	// °ÑÔ²½Ç¾ØĞÎ·Ö³É°Ë¶ÎÖ±Ïß¡¢»¡µÄ×éºÏ£¬ÒÀ´Î¼Óµ½Â·¾¶ÖĞ 
+	// æŠŠåœ†è§’çŸ©å½¢åˆ†æˆå…«æ®µç›´çº¿ã€å¼§çš„ç»„åˆï¼Œä¾æ¬¡åŠ åˆ°è·¯å¾„ä¸­ 
 	INT elWid = 2 * rcCorner.cx;
 	INT elHei = 2 * rcCorner.cy;
 	INT width = rc.right - rc.left;
 	INT height = rc.bottom - rc.top;
-	cornerPath.AddArc(rc.left, rc.top, elWid, elHei, 180, 90); // ×óÉÏ½ÇÔ²»¡
-	cornerPath.AddLine(rc.left + rcCorner.cx, rc.top, rc.left + width - rcCorner.cx, rc.top); // ÉÏ±ß
-	cornerPath.AddArc(rc.left + width - elWid, rc.top, elWid, elHei, 270, 90); // ÓÒÉÏ½ÇÔ²»¡
-	cornerPath.AddLine(rc.left + width, rc.top + rcCorner.cy, rc.left + width, rc.top + height - rcCorner.cy);// ÓÒ±ß
-	cornerPath.AddArc(rc.left + width - elWid, rc.top + height - elHei, elWid, elHei, 0, 90); // ÓÒÏÂ½ÇÔ²»¡
-	cornerPath.AddLine(rc.left + width - rcCorner.cx, rc.top + height, rc.left + rcCorner.cx, rc.top + height); // ÏÂ±ß
+	cornerPath.AddArc(rc.left, rc.top, elWid, elHei, 180, 90); // å·¦ä¸Šè§’åœ†å¼§
+	cornerPath.AddLine(rc.left + rcCorner.cx, rc.top, rc.left + width - rcCorner.cx, rc.top); // ä¸Šè¾¹
+	cornerPath.AddArc(rc.left + width - elWid, rc.top, elWid, elHei, 270, 90); // å³ä¸Šè§’åœ†å¼§
+	cornerPath.AddLine(rc.left + width, rc.top + rcCorner.cy, rc.left + width, rc.top + height - rcCorner.cy);// å³è¾¹
+	cornerPath.AddArc(rc.left + width - elWid, rc.top + height - elHei, elWid, elHei, 0, 90); // å³ä¸‹è§’åœ†å¼§
+	cornerPath.AddLine(rc.left + width - rcCorner.cx, rc.top + height, rc.left + rcCorner.cx, rc.top + height); // ä¸‹è¾¹
 	cornerPath.AddArc(rc.left, rc.top + height - elHei, elWid, elHei, 90, 90);
 	cornerPath.AddLine(rc.left, rc.top + rcCorner.cy, rc.left, rc.top + height - rcCorner.cy);
 	SolidBrush brush(Color(GetAValue(color),GetBValue(color),GetGValue(color),GetRValue(color)));
@@ -1408,8 +1408,8 @@ void CRenderEngine::DrawText(HDC hDC, CPaintManagerUI* pManager, RECT& rc, LPCTS
 
 void CRenderEngine::DrawHtmlText(HDC hDC, CPaintManagerUI* pManager, RECT& rc, LPCTSTR pstrText, DWORD dwTextColor, RECT* prcLinks, CDuiString* sLinks, int& nLinkRects, int iDefaultFont, UINT uStyle)
 {
-    // ¿¼ÂÇµ½ÔÚxml±à¼­Æ÷ÖĞÊ¹ÓÃ<>·ûºÅ²»·½±ã£¬¿ÉÒÔÊ¹ÓÃ{}·ûºÅ´úÌæ
-    // Ö§³Ö±êÇ©Ç¶Ì×£¨Èç<l><b>text</b></l>£©£¬µ«ÊÇ½»²æÇ¶Ì×ÊÇÓ¦¸Ã±ÜÃâµÄ£¨Èç<l><b>text</l></b>£©
+    // è€ƒè™‘åˆ°åœ¨xmlç¼–è¾‘å™¨ä¸­ä½¿ç”¨<>ç¬¦å·ä¸æ–¹ä¾¿ï¼Œå¯ä»¥ä½¿ç”¨{}ç¬¦å·ä»£æ›¿
+    // æ”¯æŒæ ‡ç­¾åµŒå¥—ï¼ˆå¦‚<l><b>text</b></l>ï¼‰ï¼Œä½†æ˜¯äº¤å‰åµŒå¥—æ˜¯åº”è¯¥é¿å…çš„ï¼ˆå¦‚<l><b>text</l></b>ï¼‰
     // The string formatter supports a kind of "mini-html" that consists of various short tags:
     //
     //   Bold:             <b>text</b>
@@ -1506,7 +1506,7 @@ void CRenderEngine::DrawHtmlText(HDC hDC, CPaintManagerUI* pManager, RECT& rc, L
     bool bInSelected = false;
     int iLineLinkIndex = 0;
 
-    // ÅÅ°æÏ°¹ßÊÇÍ¼ÎÄµ×²¿¶ÔÆë£¬ËùÒÔÃ¿ĞĞ»æÖÆ¶¼Òª·ÖÁ½²½£¬ÏÈ¼ÆËã¸ß¶È£¬ÔÙ»æÖÆ
+    // æ’ç‰ˆä¹ æƒ¯æ˜¯å›¾æ–‡åº•éƒ¨å¯¹é½ï¼Œæ‰€ä»¥æ¯è¡Œç»˜åˆ¶éƒ½è¦åˆ†ä¸¤æ­¥ï¼Œå…ˆè®¡ç®—é«˜åº¦ï¼Œå†ç»˜åˆ¶
     CDuiPtrArray aLineFontArray;
     CDuiPtrArray aLineColorArray;
     CDuiPtrArray aLinePIndentArray;
@@ -1519,7 +1519,7 @@ void CRenderEngine::DrawHtmlText(HDC hDC, CPaintManagerUI* pManager, RECT& rc, L
 	int cxLineWidth = 0;
     int cyLineHeight = 0;
 	int cxOffset = 0;
-    bool bLineDraw = false; // ĞĞµÄµÚ¶ş½×¶Î£º»æÖÆ
+    bool bLineDraw = false; // è¡Œçš„ç¬¬äºŒé˜¶æ®µï¼šç»˜åˆ¶
     while( *pstrText != _T('\0') ) {
         if( pt.x >= rc.right || *pstrText == _T('\n') || bLineEnd ) {
             if( *pstrText == _T('\n') ) pstrText++;
@@ -1652,7 +1652,7 @@ void CRenderEngine::DrawHtmlText(HDC hDC, CPaintManagerUI* pManager, RECT& rc, L
                     while( *pstrText > _T('\0') && *pstrText <= _T(' ') ) pstrText = ::CharNext(pstrText);
                     LPCTSTR pstrTemp = pstrText;
                     int iFont = (int) _tcstol(pstrText, const_cast<LPTSTR*>(&pstrText), 10);
-                    //if( isdigit(*pstrText) ) { // debug°æ±¾»áÒıÆğÒì³£
+                    //if( isdigit(*pstrText) ) { // debugç‰ˆæœ¬ä¼šå¼•èµ·å¼‚å¸¸
                     if( pstrTemp != pstrText ) {
                         TFontInfo* pFontInfo = pManager->GetFontInfo(iFont);
                         aFontArray.Add(pFontInfo);
@@ -1983,7 +1983,7 @@ void CRenderEngine::DrawHtmlText(HDC hDC, CPaintManagerUI* pManager, RECT& rc, L
                     if( pTm->tmItalic && pFontInfo->bItalic == false ) {
                         ABC abc;
                         ::GetCharABCWidths(hDC, _T(' '), _T(' '), &abc);
-                        pt.x += abc.abcC / 2; // ¼òµ¥ĞŞÕıÒ»ÏÂĞ±Ìå»ìÅÅµÄÎÊÌâ, ÕıÈ·×ö·¨Ó¦¸ÃÊÇhttp://support.microsoft.com/kb/244798/en-us
+                        pt.x += abc.abcC / 2; // ç®€å•ä¿®æ­£ä¸€ä¸‹æ–œä½“æ··æ’çš„é—®é¢˜, æ­£ç¡®åšæ³•åº”è¯¥æ˜¯http://support.microsoft.com/kb/244798/en-us
 					}
                     pTm = &pFontInfo->tm;
                     ::SelectObject(hDC, pFontInfo->hFont);

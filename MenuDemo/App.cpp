@@ -3,12 +3,12 @@
 
 #include "stdafx.h"
 #include "SpinButtonUI.h"
-/*Duilib ²Ëµ¥Ê¹ÓÃ
-1.new CMenuWnd ´´½¨Ò»¸öMenu´°¿Ú
-2.ÖÆ¶¨MenuµÄÄÚÈÝºÍÎ»ÖÃ£ºInit
-Èç¹ûInitÖ®ºóÐèÒª¶¯Ì¬ÐÞ¸ÄÄÚÈÝÔòÐèÒªÏÈGetMenuUI£¬È»ºó¶ÔMenuUI²Ù×÷¼´¿É
-3.ÏÔÊ¾menu ShowWindow
-4.MenuÊÂ¼þ´¦Àí£¬ÏìÓ¦itemclickÏûÏ¢£¬´¦ÀíÍêÖ®ºóreturn£¬²»ÐèÒª½»¸øµ×²ã´¦Àí
+/*Duilib èœå•ä½¿ç”¨
+1.new CMenuWnd åˆ›å»ºä¸€ä¸ªMenuçª—å£
+2.åˆ¶å®šMenuçš„å†…å®¹å’Œä½ç½®ï¼šInit
+å¦‚æžœInitä¹‹åŽéœ€è¦åŠ¨æ€ä¿®æ”¹å†…å®¹åˆ™éœ€è¦å…ˆGetMenuUIï¼Œç„¶åŽå¯¹MenuUIæ“ä½œå³å¯
+3.æ˜¾ç¤ºmenu ShowWindow
+4.Menuäº‹ä»¶å¤„ç†ï¼Œå“åº”itemclickæ¶ˆæ¯ï¼Œå¤„ç†å®Œä¹‹åŽreturnï¼Œä¸éœ€è¦äº¤ç»™åº•å±‚å¤„ç†
 */
 
 CUIFunctionalLayout *CreatePopupUI()
@@ -59,20 +59,20 @@ public:
 			CMenuWnd* pMenu = new CMenuWnd(&m_PaintManager, m_hWnd);
 			CDuiPoint point = msg.ptMouse;
 			ClientToScreen(m_hWnd, &point);
-			///> DefaultMenuÖÐ½ö½öÖÆ¶¨ÁËMenuµÄÑùÊ½£¬¾ßÌåÄÚÈÝÐèÒª¶¯Ì¬Ôö¼Ó
-			///> µ±È»Èç¹ûDefaultMenu ÖÆ¶¨ÁËmenuµÄ¾ßÌåÏîÔò²»ÐèÒª¶¯Ì¬Ôö¼Ó
+			///> DefaultMenuä¸­ä»…ä»…åˆ¶å®šäº†Menuçš„æ ·å¼ï¼Œå…·ä½“å†…å®¹éœ€è¦åŠ¨æ€å¢žåŠ 
+			///> å½“ç„¶å¦‚æžœDefaultMenu åˆ¶å®šäº†menuçš„å…·ä½“é¡¹åˆ™ä¸éœ€è¦åŠ¨æ€å¢žåŠ 
 			STRINGorID xml(_T("skin/Menu/DefaultMenu.xml"));
 			if (pMenu->Init(point, xml))
 			{
-				///> Ö§³Ö¶¯Ì¬ÐÞ¸Ä
+				///> æ”¯æŒåŠ¨æ€ä¿®æ”¹
 				CMenuUI *pMenuUI = pMenu->GetMenuUI();
 				CMenuElementUI *pEditMenuElement = new CMenuElementUI;
-				pEditMenuElement->SetText(_T("  ±à¼­  "));
+				pEditMenuElement->SetText(_T("  ç¼–è¾‘  "));
 				CMenuElementUI *pModMenuElement = new CMenuElementUI;
-				pModMenuElement->SetText(_T("  ÐÞ¸Ä  "));
+				pModMenuElement->SetText(_T("  ä¿®æ”¹  "));
 				pModMenuElement->SetName(_T("modProj"));
 				CMenuElementUI *pDelMenuElement = new CMenuElementUI;
-				pDelMenuElement->SetText(_T("  É¾³ý  "));
+				pDelMenuElement->SetText(_T("  åˆ é™¤  "));
 				pDelMenuElement->SetName(_T("delProj"));
 				pEditMenuElement->Add(pModMenuElement);
 				pEditMenuElement->Add(pDelMenuElement);
@@ -80,19 +80,19 @@ public:
 			}
 			pMenu->ShowWindow();
 		}
-		///> ÏìÓ¦²Ëµ¥ÏûÏ¢
+		///> å“åº”èœå•æ¶ˆæ¯
 		else if(msg.sType == DUI_MSGTYPE_ITEMCLICK && msg.pSender->GetInterface(DUI_CTR_MENUELEMENT))
 		{
 			if (msg.pSender->GetName() == _T("modProj"))
 			{
-				MessageBox(NULL,_T("ÐÞ¸Ä"),_T("²Ù×÷ÌáÊ¾"),MB_OK);
+				MessageBox(NULL,_T("ä¿®æ”¹"),_T("æ“ä½œæç¤º"),MB_OK);
 			}
-			///> Menu ÖÐµÄÉèÖÃ·ç¿Ø
+			///> Menu ä¸­çš„è®¾ç½®é£ŽæŽ§
 			else if (msg.pSender->GetName() == _T("delProj"))
 			{
-				MessageBox(NULL,_T("É¾³ý"),_T("²Ù×÷ÌáÊ¾"),MB_OK);
+				MessageBox(NULL,_T("åˆ é™¤"),_T("æ“ä½œæç¤º"),MB_OK);
 			}
-			return;//ÐèÒªReturn·ñÔò¿ÉÄÜ±ÀÀ££¬ÒòÎª´ËÊ±pSenderÒÑ¾­Ïú»Ù£¬²»ÐèÒª´«µ½µ×²ã
+			return;//éœ€è¦Returnå¦åˆ™å¯èƒ½å´©æºƒï¼Œå› ä¸ºæ­¤æ—¶pSenderå·²ç»é”€æ¯ï¼Œä¸éœ€è¦ä¼ åˆ°åº•å±‚
 		}
 		else if (msg.sType == DUI_MSGTYPE_CLICK  && msg.pSender->GetInterface(DUI_CTR_BUTTON))
 		{
@@ -152,7 +152,7 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE /*hPrevInstance*/, LPSTR /*l
 
     CFrameWindowWnd* pFrame = new CFrameWindowWnd();
     if( pFrame == NULL ) return 0;
-    pFrame->Create(NULL, _T("ÕâÊÇÒ»¸ö×î¼òµ¥µÄ²âÊÔÓÃexe£¬ÐÞ¸Ätest1.xml¾Í¿ÉÒÔ¿´µ½Ð§¹û"), UI_WNDSTYLE_FRAME|WS_CLIPCHILDREN, WS_EX_WINDOWEDGE);
+    pFrame->Create(NULL, _T("è¿™æ˜¯ä¸€ä¸ªæœ€ç®€å•çš„æµ‹è¯•ç”¨exeï¼Œä¿®æ”¹test1.xmlå°±å¯ä»¥çœ‹åˆ°æ•ˆæžœ"), UI_WNDSTYLE_FRAME|WS_CLIPCHILDREN, WS_EX_WINDOWEDGE);
     pFrame->CenterWindow();
     pFrame->ShowModal();
     ::CoUninitialize();

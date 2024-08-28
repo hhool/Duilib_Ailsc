@@ -6,8 +6,8 @@
 #include <direct.h>
 #include <io.h>
 /*
-»º´æurlÎÄ¼ş£¬Ö§³Ö²¢·¢ÊıÁ¿3Ïß³Ì
-»º´æÎÄ¼şÄ¬ÈÏ±£´æÔÚµ±Ç°Ä¿Â¼iconsÄ¿Â¼
+ç¼“å­˜urlæ–‡ä»¶ï¼Œæ”¯æŒå¹¶å‘æ•°é‡3çº¿ç¨‹
+ç¼“å­˜æ–‡ä»¶é»˜è®¤ä¿å­˜åœ¨å½“å‰ç›®å½•iconsç›®å½•
 */
 namespace DuiLib
 {
@@ -22,7 +22,7 @@ CImgCache::CImgCache()
 	m_files_dir = szFile;
 	_mkdir(m_files_dir.c_str());
 
-	//¿ªÆôÈı¸öÏß³ÌÍ¬Ê±ÏÂÔØ
+	//å¼€å¯ä¸‰ä¸ªçº¿ç¨‹åŒæ—¶ä¸‹è½½
 	for (int i = 0;i < 3;++i)
 	{
 		std::thread t(&CImgCache::_work, this);
@@ -45,7 +45,7 @@ void CImgCache::SetDownloadFileHandler(PDuiDownloadFile download_file)
 
 void CImgCache::addUrl(const std::string& url)
 {
-	//ÉèÖÃÖ®Ç°±ØĞë³õÊ¼»¯m_download_file
+	//è®¾ç½®ä¹‹å‰å¿…é¡»åˆå§‹åŒ–m_download_file
 	_ASSERT(m_download_file != nullptr);
 	if (m_download_file == nullptr || url.empty()) return;
 	m_task_que.add(url);
@@ -57,7 +57,7 @@ void CImgCache::_work()
 	if (!url.empty())
 	{
 		int nret = syncDoCache(url.c_str(), getFileFullPath(url.c_str()));
-		//ÖØÊÔ
+		//é‡è¯•
 		if (nret == -1)
 		{
 			addUrl(url);
@@ -117,26 +117,26 @@ int CImgCache::syncDoCache(const char* url, __out std::string& file_path)
 			return 2;
 		}
 
-		//Èç¹ûÒÑ¾­»º´æÖĞÔòÖ±½Ó·µ»Ø
+		//å¦‚æœå·²ç»ç¼“å­˜ä¸­åˆ™ç›´æ¥è¿”å›
 		if (data->status == eimg_cache_status_ing)
 		{
 			return 1;
 		}
 
-		//¼ì²é»º´æÊÇ·ñ´æÔÚ,Èç¹û´æÔÚÔòÖ±½Ó·µ»Ø
+		//æ£€æŸ¥ç¼“å­˜æ˜¯å¦å­˜åœ¨,å¦‚æœå­˜åœ¨åˆ™ç›´æ¥è¿”å›
 		if (_access(data->file_path.c_str(), 00) == 0)
 		{
 			data->status = eimg_cache_status_ok;
 			return 0;
 		}
 
-		//±ê¼ÇÎª»º´æÖĞ
+		//æ ‡è®°ä¸ºç¼“å­˜ä¸­
 		data->status = eimg_cache_status_ing;
 		temp_try_count = ++data->try_count;
 	}
 
 
-	//Èç¹û»º´æ²»´æÔÚÔòÏÂÔØÎÄ¼ş,ÏÂÔØÍê³ÉÖ®ºó±ê¼Ç×´Ì¬ÎªÍê³É²»¹Ü³É¹¦ºÍÊ§°Ü
+	//å¦‚æœç¼“å­˜ä¸å­˜åœ¨åˆ™ä¸‹è½½æ–‡ä»¶,ä¸‹è½½å®Œæˆä¹‹åæ ‡è®°çŠ¶æ€ä¸ºå®Œæˆä¸ç®¡æˆåŠŸå’Œå¤±è´¥
 	bool bret = m_download_file ? m_download_file(url, file_path.c_str()) : false;
 	//(requests::downloadFile(url, file_path.c_str()) > 0);
 	{

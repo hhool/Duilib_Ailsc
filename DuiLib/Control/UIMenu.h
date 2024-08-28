@@ -56,7 +56,7 @@ public:
 	void SetAttribute(LPCTSTR pstrName, LPCTSTR pstrValue);
 
 public:
-	CPaintManagerUI *m_pNotifyPm;//¶¥²ã½ÓÊÜÏûÏ¢µÄPaintManager
+	CPaintManagerUI *m_pNotifyPm;//é¡¶å±‚æŽ¥å—æ¶ˆæ¯çš„PaintManager
 };
 
 /////////////////////////////////////////////////////////////////////////////////////
@@ -66,12 +66,12 @@ class DUILIB_API CMenuWnd : public CWindowWnd, public ContextMenuReceiver,public
 
 {
 public:
-	CMenuWnd(CPaintManagerUI *pParentPm, HWND hParent = NULL,UINT uDestrotyNotifyMessage = 0/*MenuÏú»ÙµÄÊ±ºòÊÇ·ñÍ¨Öª´°¿Ú*/);
+	CMenuWnd(CPaintManagerUI *pParentPm, HWND hParent = NULL,UINT uDestrotyNotifyMessage = 0/*Menué”€æ¯çš„æ—¶å€™æ˜¯å¦é€šçŸ¥çª—å£*/);
 	/*
-	@param point ²Ëµ¥Î»ÖÃ
-	@param pOwner ÊÇÊôÓÚÄÄ¸ö²Ëµ¥µÄ×Ó²Ëµ¥£¬Èç¹û²»ÊÇÔòÌîNULL
-	@param xml xmlÎÄ¼þ¿ÉÊÇÊÇ×ÊÔ´xmlÒ²¿ÉÒÔÊÇÎÄ¼þxml
-	@param pSkinType ×ÊÔ´ÎÄ¼þÀàÐÍ _T("xml")
+	@param point èœå•ä½ç½®
+	@param pOwner æ˜¯å±žäºŽå“ªä¸ªèœå•çš„å­èœå•ï¼Œå¦‚æžœä¸æ˜¯åˆ™å¡«NULL
+	@param xml xmlæ–‡ä»¶å¯æ˜¯æ˜¯èµ„æºxmlä¹Ÿå¯ä»¥æ˜¯æ–‡ä»¶xml
+	@param pSkinType èµ„æºæ–‡ä»¶ç±»åž‹ _T("xml")
 	*/
 	bool Init(POINT point, STRINGorID xml, LPCTSTR pSkinType = NULL, CMenuElementUI* pOwner = NULL);
 	void ShowWindow();
@@ -90,7 +90,7 @@ public:
     CPaintManagerUI m_pm;
     CMenuElementUI* m_pOwner;
     CMenuUI* m_pMenuUI;
-	CPaintManagerUI *m_pNotifyPm;//ParentµÄPM ÓÃÓÚÏûÏ¢´«µÝµ½Íâ²¿
+	CPaintManagerUI *m_pNotifyPm;//Parentçš„PM ç”¨äºŽæ¶ˆæ¯ä¼ é€’åˆ°å¤–éƒ¨
 };
 
 class CListContainerElementUI;

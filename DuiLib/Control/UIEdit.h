@@ -19,12 +19,12 @@ namespace DuiLib
 		UINT GetControlFlags() const;
 		HWND GetNativeWindow() const;
 
-		///> EditµÄÊäÈë¿ØÖÆ
+		///> Editçš„è¾“å…¥æ§åˆ¶
 		void SetControlInput(PCONTROLINPUT inputcontrol,LPVOID param);
 		void SetEnabled(bool bEnable = true);
-		void SetDecimal(bool bDecimal = false);//ÊÇ·ñÖ»ÔÊĞíÊäÈë´øÓĞĞ¡ÊıµãµÄÊı×Öeg:3.14
+		void SetDecimal(bool bDecimal = false);//æ˜¯å¦åªå…è®¸è¾“å…¥å¸¦æœ‰å°æ•°ç‚¹çš„æ•°å­—eg:3.14
 		bool IsDecimal();
-		void SetDigits(int ndigits);//ºóÃæ±£ÁôÎ»Êı
+		void SetDigits(int ndigits);//åé¢ä¿ç•™ä½æ•°
 		int GetDigits();
 		void SetText(LPCTSTR pstrText);
 		void SetPlaceholderText(LPCTSTR pstrText);
@@ -74,8 +74,8 @@ namespace DuiLib
 		void PaintStatusImage(HDC hDC);
 		void PaintText(HDC hDC);
 	private:
-		bool IsTextHavePoint();//µ±Ç°Êı¾İÊÇ·ñÓĞĞ¡Êıµã
-		int GetTextDigits(int nSelPos);//»ñÈ¡µ±Ç°¹â±êÖ®Ç°µÄÊı¾İĞ¡Êıµã¸öÊı
+		bool IsTextHavePoint();//å½“å‰æ•°æ®æ˜¯å¦æœ‰å°æ•°ç‚¹
+		int GetTextDigits(int nSelPos);//è·å–å½“å‰å…‰æ ‡ä¹‹å‰çš„æ•°æ®å°æ•°ç‚¹ä¸ªæ•°
 	protected:
 		PCONTROLINPUT m_pInputControl;
 		LPVOID m_pInputControlParam;

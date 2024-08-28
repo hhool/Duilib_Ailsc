@@ -3,7 +3,7 @@
 
 #pragma once
 /*
-´øÓĞ¶¯»­Ğ§¹ûµÄTabLayout
+å¸¦æœ‰åŠ¨ç”»æ•ˆæœçš„TabLayout
 */
 
 namespace DuiLib
@@ -36,8 +36,8 @@ namespace DuiLib
 		RECT        m_rcCurPos;
 		RECT        m_rcNextPos;
 
-		CControlUI* m_pCurPage;			// ±£´æµ±Ç°ÏÔÊ¾µÄÒ³Ãæ
-		CControlUI* m_pNextPage;		// ±£´æÏÂÒ»Ò³Ãæ
+		CControlUI* m_pCurPage;			// ä¿å­˜å½“å‰æ˜¾ç¤ºçš„é¡µé¢
+		CControlUI* m_pNextPage;		// ä¿å­˜ä¸‹ä¸€é¡µé¢
 
 		enum
 		{

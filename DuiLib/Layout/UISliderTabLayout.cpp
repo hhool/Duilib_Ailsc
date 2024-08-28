@@ -55,7 +55,7 @@ bool CSliderTabLayoutUI::SelectItem(int iIndex)
     m_rcCurPos.bottom -= rcInset.bottom;
     m_rcNextPos = m_rcCurPos;
 
-    if(!m_bIsVertical)    //ºáÏò
+    if(!m_bIsVertical)    //æ¨ªå‘
     {
         m_rcNextPos.left = m_rcCurPos.left - (m_rcCurPos.right - m_rcCurPos.left) * m_nPositiveDirection;
         m_rcNextPos.right = m_rcCurPos.right - (m_rcCurPos.right - m_rcCurPos.left) * m_nPositiveDirection;
@@ -127,16 +127,16 @@ void CSliderTabLayoutUI::SetPos(RECT rc, bool bNeedInvalidate)
     {
         int iStepLen = 0;
 
-        if(!m_bIsVertical)    //ºáÏò
+        if(!m_bIsVertical)    //æ¨ªå‘
         {
             iStepLen = (rc.right - rc.left) * m_nPositiveDirection / ANIMATION_FRAME_COUNT;
 
             if(m_iCurFrame != ANIMATION_FRAME_COUNT)
             {
-                //µ±Ç°´°ÌåÎ»ÖÃ
+                //å½“å‰çª—ä½“ä½ç½®
                 ::OffsetRect(&m_rcCurPos, iStepLen, 0);
                 m_pCurPage->SetPos(m_rcCurPos,false);
-                //ÏÂÒ»¸ö´°ÌåÎ»ÖÃ
+                //ä¸‹ä¸€ä¸ªçª—ä½“ä½ç½®
                 ::OffsetRect(&m_rcNextPos, iStepLen, 0);
                 m_pNextPage->SetPos(m_rcNextPos,false);
             }
@@ -148,16 +148,16 @@ void CSliderTabLayoutUI::SetPos(RECT rc, bool bNeedInvalidate)
                 m_pNextPage->SetPos(rc);
             }
         }
-        else //ÊúÏò
+        else //ç«–å‘
         {
             iStepLen = (rc.bottom - rc.top) * m_nPositiveDirection / ANIMATION_FRAME_COUNT;
 
             if(m_iCurFrame != ANIMATION_FRAME_COUNT)
             {
-                //µ±Ç°´°ÌåÎ»ÖÃ
+                //å½“å‰çª—ä½“ä½ç½®
                 ::OffsetRect(&m_rcCurPos, 0, iStepLen);
                 m_pCurPage->SetPos(m_rcCurPos,false);
-                //ÏÂÒ»¸ö´°ÌåÎ»ÖÃ
+                //ä¸‹ä¸€ä¸ªçª—ä½“ä½ç½®
                 ::OffsetRect(&m_rcNextPos, 0, iStepLen);
                 m_pNextPage->SetPos(m_rcNextPos,false);
             }

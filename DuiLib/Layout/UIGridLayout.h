@@ -3,7 +3,7 @@
 
 #pragma once
 /*
-ÀàÍø¸ñGrid²¼¾Ö£¬ĞèÒªÖ¸¶¨ÁĞÊıºÍitem´óĞ¡
+ç±»ç½‘æ ¼Gridå¸ƒå±€ï¼Œéœ€è¦æŒ‡å®šåˆ—æ•°å’Œitemå¤§å°
 */
 namespace DuiLib
 {
@@ -25,7 +25,7 @@ namespace DuiLib
 		void SetFixedColumns(int iColums);
 		int GetChildVPadding() const;
 		void SetChildVPadding(int iPadding);
-		//Èç¹û×Ö·û´®ÒÔ<¿ªÍ·ÔòÈÏÎªÊÇxml×Ö·û´®£¬·ñÔòÈÏÎªÊÇÎÄ¼ş
+		//å¦‚æœå­—ç¬¦ä¸²ä»¥<å¼€å¤´åˆ™è®¤ä¸ºæ˜¯xmlå­—ç¬¦ä¸²ï¼Œå¦åˆ™è®¤ä¸ºæ˜¯æ–‡ä»¶
 		void SetItemTemplateXml(CDuiString xml);
 
 		SIZE GetItemSize() const;

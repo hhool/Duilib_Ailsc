@@ -1,8 +1,8 @@
 #include "stdafx.h"
 #include "DateUI.h"
 
-static TCHAR g_Mounth[12][12] = { _T("Ò»ÔÂ"), _T("¶şÔÂ"), _T("ÈıÔÂ"), _T("ËÄÔÂ"), _T("ÎåÔÂ"), _T("ÁùÔÂ"),
-									_T("ÆßÔÂ"), _T("°ËÔÂ"), _T("¾ÅÔÂ"), _T("Ê®ÔÂ"), _T("Ê®Ò»ÔÂ"), _T("Ê®¶şÔÂ") };
+static TCHAR g_Mounth[12][12] = { _T("ä¸€æœˆ"), _T("äºŒæœˆ"), _T("ä¸‰æœˆ"), _T("å››æœˆ"), _T("äº”æœˆ"), _T("å…­æœˆ"),
+									_T("ä¸ƒæœˆ"), _T("å…«æœˆ"), _T("ä¹æœˆ"), _T("åæœˆ"), _T("åä¸€æœˆ"), _T("åäºŒæœˆ") };
 CDateUI::CDateUI()
 {
 	m_pOowner = NULL;
@@ -69,7 +69,7 @@ void CDateUI::Notify(TNotifyUI& msg)
 		}
 	}
 }
-//Ê¹ÓÃPopupUIµÄ×Ö·û´®³õÊ¼»¯CChildLayoutUI2017-3-14
+//ä½¿ç”¨PopupUIçš„å­—ç¬¦ä¸²åˆå§‹åŒ–CChildLayoutUI2017-3-14
 void CDateUI::initUIData( CControlUI *pOowner)
 {
 	if (pOowner == NULL) return;
@@ -98,7 +98,7 @@ void CDateUI::initUIData( CControlUI *pOowner)
 
 int CDateUI::GetWeek(int yera, int mounth, int day)
 {
-	if (mounth == 1 || mounth == 2) //°ÑÒ»ÔÂºÍ¶şÔÂ»»Ëã³ÉÉÏÒ»ÄêµÄÊ®ÈıÔÂºÍÊÇËÄÔÂ  
+	if (mounth == 1 || mounth == 2) //æŠŠä¸€æœˆå’ŒäºŒæœˆæ¢ç®—æˆä¸Šä¸€å¹´çš„åä¸‰æœˆå’Œæ˜¯å››æœˆ  
 	{
 		mounth += 12;
 		yera--;
@@ -131,7 +131,7 @@ int CDateUI::GetMounthLastDay(int year, int mounth)
 	}
 }
 
-//½«CChildLayoutUI ¸ñÊ½»¯£¬ĞÎ³É×Ö·û¸øPopupUI
+//å°†CChildLayoutUI æ ¼å¼åŒ–ï¼Œå½¢æˆå­—ç¬¦ç»™PopupUI
 CDuiString CDateUI::FormatStringToPopUI()
 {
 	CDuiString strTime;
@@ -142,14 +142,14 @@ CDuiString CDateUI::FormatStringToPopUI()
 
 void CDateUI::UpDateUI()
 {
-	///> ¸üĞÂ¿Ø¼şÊı¾İ
+	///> æ›´æ–°æ§ä»¶æ•°æ®
 	int nWeek = GetWeek(m_time.wYear, m_time.wMonth, 1);
 	int nTotalDay = GetMounthLastDay(m_time.wYear, m_time.wMonth);
 
 	nWeek = (nWeek + 1) % 7;
 	CDuiString strDay = _T("");
-	///> Ã»ÓĞÈÕÆÚµÄµØ·½Òş²ØÈÕÆÚ°´Å¥
-	///> Òş²Ø¿ªÊ¼Î»ÖÃ°´Å¥
+	///> æ²¡æœ‰æ—¥æœŸçš„åœ°æ–¹éšè—æ—¥æœŸæŒ‰é’®
+	///> éšè—å¼€å§‹ä½ç½®æŒ‰é’®
 	for (int i = 0; i < nWeek; ++i)
 	{
 		strDay.Format(_T("day%d"), i);
@@ -161,7 +161,7 @@ void CDateUI::UpDateUI()
 			pDay->SetText(_T(""));
 		}
 	}
-	///> Òş²ØÄ©Î²Î»ÖÃ°´Å¥
+	///> éšè—æœ«å°¾ä½ç½®æŒ‰é’®
 	for (int i = nTotalDay + nWeek; i < 42; ++i)
 	{
 		strDay.Format(_T("day%d"), i);
@@ -173,7 +173,7 @@ void CDateUI::UpDateUI()
 			pDay->SetText(_T(""));
 		}
 	}
-	///> ¸üĞÂÈÕÀú
+	///> æ›´æ–°æ—¥å†
 	for (int nIndex = 0; nIndex < nTotalDay; ++nIndex)
 	{
 		strDay.Format(_T("day%d"), nWeek + nIndex);
@@ -189,7 +189,7 @@ void CDateUI::UpDateUI()
 
 	}
 
-	///> ¸üĞÂÈÕÆÚ
+	///> æ›´æ–°æ—¥æœŸ
 	if (m_pLabel_date)
 	{
 		strDay.Format(_T("%s %d"), g_Mounth[m_time.wMonth - 1], m_time.wYear);

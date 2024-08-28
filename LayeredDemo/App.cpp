@@ -2,12 +2,12 @@
 //
 
 #include "stdafx.h"
-/*Duilib ²Ëµ¥Ê¹ÓÃ
-1.new CMenuWnd ´´½¨Ò»¸öMenu´°¿Ú
-2.ÖÆ¶¨MenuµÄÄÚÈÝºÍÎ»ÖÃ£ºInit
-Èç¹ûInitÖ®ºóÐèÒª¶¯Ì¬ÐÞ¸ÄÄÚÈÝÔòÐèÒªÏÈGetMenuUI£¬È»ºó¶ÔMenuUI²Ù×÷¼´¿É
-3.ÏÔÊ¾menu ShowWindow
-4.MenuÊÂ¼þ´¦Àí£¬ÏìÓ¦itemclickÏûÏ¢£¬´¦ÀíÍêÖ®ºóreturn£¬²»ÐèÒª½»¸øµ×²ã´¦Àí
+/*Duilib èœå•ä½¿ç”¨
+1.new CMenuWnd åˆ›å»ºä¸€ä¸ªMenuçª—å£
+2.åˆ¶å®šMenuçš„å†…å®¹å’Œä½ç½®ï¼šInit
+å¦‚æžœInitä¹‹åŽéœ€è¦åŠ¨æ€ä¿®æ”¹å†…å®¹åˆ™éœ€è¦å…ˆGetMenuUIï¼Œç„¶åŽå¯¹MenuUIæ“ä½œå³å¯
+3.æ˜¾ç¤ºmenu ShowWindow
+4.Menuäº‹ä»¶å¤„ç†ï¼Œå“åº”itemclickæ¶ˆæ¯ï¼Œå¤„ç†å®Œä¹‹åŽreturnï¼Œä¸éœ€è¦äº¤ç»™åº•å±‚å¤„ç†
 */
 
 
@@ -42,7 +42,7 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE /*hPrevInstance*/, LPSTR /*l
 
     CFrameWindowWnd* pFrame = new CFrameWindowWnd();
     if( pFrame == NULL ) return 0;
-    pFrame->Create(NULL, _T("ÕâÊÇÒ»¸ö×î¼òµ¥µÄ²âÊÔÓÃexe£¬ÐÞ¸Ätest1.xml¾Í¿ÉÒÔ¿´µ½Ð§¹û"), UI_WNDSTYLE_FRAME|WS_CLIPCHILDREN, WS_EX_WINDOWEDGE);
+    pFrame->Create(NULL, _T("è¿™æ˜¯ä¸€ä¸ªæœ€ç®€å•çš„æµ‹è¯•ç”¨exeï¼Œä¿®æ”¹test1.xmlå°±å¯ä»¥çœ‹åˆ°æ•ˆæžœ"), UI_WNDSTYLE_FRAME|WS_CLIPCHILDREN, WS_EX_WINDOWEDGE);
     pFrame->CenterWindow();
     pFrame->ShowModal();
     ::CoUninitialize();

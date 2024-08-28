@@ -5,15 +5,15 @@
 /*
 add by jefcat
 date:20170315
-note:ÊµÏÖ¶à¹¦ÄÜÐü¸¡´°¿Ú£¬ÐèÒªÉèÖÃµ¯³ö´°¿ÚµÄ´óÐ¡ÒÔ¼°µ¯³ö´°¿ÚÐèÒªµÄxml
-ÓÉÓÚµ¯³ö´°¿ÚÑùÊ½ÒÔ¼°¹¦ÄÜµÄ²»È·¶¨ÐÔ£¬ËùÒÔÐèÒªÓÉÍâ²¿´ÓCCompositeLayoutUIÅÉÉú¿Ø¼þ£¬¿ØÖÆÊÂ¼þ´¦Àí¡£
-CPopupUI£º£ºSetCreatePopupUIÉèÖÃ´´½¨µÄ¶ÔÏó,·ñÔòÄ¬ÈÏ´´½¨ChildLayoutUI
-µ¯³ö´°¿ÚËùÓÐµÄÊÂ¼þ¶¼ÔÚÅÉÉúÀïÃæ´¦Àí£¬»òÕßÍâ²¿´°¿Ú´¦Àí
+note:å®žçŽ°å¤šåŠŸèƒ½æ‚¬æµ®çª—å£ï¼Œéœ€è¦è®¾ç½®å¼¹å‡ºçª—å£çš„å¤§å°ä»¥åŠå¼¹å‡ºçª—å£éœ€è¦çš„xml
+ç”±äºŽå¼¹å‡ºçª—å£æ ·å¼ä»¥åŠåŠŸèƒ½çš„ä¸ç¡®å®šæ€§ï¼Œæ‰€ä»¥éœ€è¦ç”±å¤–éƒ¨ä»ŽCCompositeLayoutUIæ´¾ç”ŸæŽ§ä»¶ï¼ŒæŽ§åˆ¶äº‹ä»¶å¤„ç†ã€‚
+CPopupUIï¼šï¼šSetCreatePopupUIè®¾ç½®åˆ›å»ºçš„å¯¹è±¡,å¦åˆ™é»˜è®¤åˆ›å»ºChildLayoutUI
+å¼¹å‡ºçª—å£æ‰€æœ‰çš„äº‹ä»¶éƒ½åœ¨æ´¾ç”Ÿé‡Œé¢å¤„ç†ï¼Œæˆ–è€…å¤–éƒ¨çª—å£å¤„ç†
 
 xml:
 eg:<Popup name="DateTime" popboxsize="177,192"  popxml="skin/popup/DateUI/DateTime.xml" direct="bottom" />
 
-¾ßÌåDemo£ºsee PopupUIDemo ·â×°µÄÈÕÆÚ¿Ø¼þ
+å…·ä½“Demoï¼šsee PopupUIDemo å°è£…çš„æ—¥æœŸæŽ§ä»¶
 */
 namespace DuiLib {
 /////////////////////////////////////////////////////////////////////////////////////
@@ -33,15 +33,15 @@ public:
     UINT GetControlFlags() const;
 	bool Activate();
 	void SetAttribute(LPCTSTR pstrName, LPCTSTR pstrValue);
-	///>ÉèÖÃ¶¯Ì¬´´½¨PopupUI¶ÔÏó
+	///>è®¾ç½®åŠ¨æ€åˆ›å»ºPopupUIå¯¹è±¡
 	void SetCreatePopupUI(CRETAE_POPUP_UI pCreateUI);
-	//ÉèÖÃµ¯³ö´°¿ÚµÄ´óÐ¡
+	//è®¾ç½®å¼¹å‡ºçª—å£çš„å¤§å°
 	SIZE GetPopBoxSize();
 	void SetPopBoxSize(SIZE szDropBoxSize);
-	//ÉèÖÃµ¯³ö´°¿Ú¼ÓÔØµÄxml
+	//è®¾ç½®å¼¹å‡ºçª—å£åŠ è½½çš„xml
 	void SetPopupXml(const CDuiString &strXml);
 	const CDuiString GetPopupXml();
-	//ÉèÖÃµ¯³ö´°¿ÚµÄÊ×Òªµ¯³ö·½Ïò
+	//è®¾ç½®å¼¹å‡ºçª—å£çš„é¦–è¦å¼¹å‡ºæ–¹å‘
 	void SetDirect(bool bTop);
 	bool IsTopDirect();
 
@@ -51,7 +51,7 @@ private:
 	CPopupWnd *m_pWindow;
 	SIZE m_szDropBoxSize;//(200,100)
 	CDuiString m_strPopXml;
-	bool m_bTopDirect;//ÊÇ·ñÒÔÏòÉÏµ¯³öÎªÊ×ÒªÎ»ÖÃ
+	bool m_bTopDirect;//æ˜¯å¦ä»¥å‘ä¸Šå¼¹å‡ºä¸ºé¦–è¦ä½ç½®
 	CRETAE_POPUP_UI m_pPopUICreate;
 };
 

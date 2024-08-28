@@ -1,4 +1,4 @@
-// ToolBoxWnd.cpp : 实现文件
+// ToolBoxWnd.cpp : 瀹炵幇鏂囦欢
 //
 
 #include "stdafx.h"
@@ -27,7 +27,7 @@ END_MESSAGE_MAP()
 
 
 
-// CToolBoxWnd 消息处理程序
+// CToolBoxWnd 娑堟伅澶勭悊绋嬪簭
 
 int CToolBoxWnd::OnCreate(LPCREATESTRUCT lpCreateStruct)
 {
@@ -70,8 +70,8 @@ void CToolBoxWnd::AdjustLayout()
 
 void CToolBoxWnd::InitToolList()
 {
-	CToolElement* pControlTab=new CToolElement(_T("控件"));
-	pControlTab->AddSubTool(new CToolElement(_T("指针"),classPointer,IDI_TOOLBOX_POINTER));
+	CToolElement* pControlTab=new CToolElement(_T("鎺т欢"));
+	pControlTab->AddSubTool(new CToolElement(_T("鎸囬拡"),classPointer,IDI_TOOLBOX_POINTER));
 	pControlTab->AddSubTool(new CToolElement(_T("Control"),classControl,IDI_TOOLBOX_CONTROL));
 	pControlTab->AddSubTool(new CToolElement(_T("Label"),classLabel,IDI_TOOLBOX_LABEL));
 	pControlTab->AddSubTool(new CToolElement(_T("Text"),classText,IDI_TOOLBOX_TEXT));
@@ -85,7 +85,7 @@ void CToolBoxWnd::InitToolList()
 	pControlTab->AddSubTool(new CToolElement(_T("ActiveX"),classActiveX,IDI_TOOLBOX_ACTIVE));
 	m_ctlToolList.AddToolTab(pControlTab);
 
-	CToolElement* pLayoutTab=new CToolElement(_T("布局"));
+	CToolElement* pLayoutTab=new CToolElement(_T("甯冨眬"));
 	pLayoutTab->AddSubTool(new CToolElement(_T("Container"),classContainer,IDI_TOOLBOX_CONTAINER));
 	pLayoutTab->AddSubTool(new CToolElement(_T("VerticalLayout"),classVerticalLayout,IDI_TOOLBOX_VERTICAL_LAYOUT));
 	pLayoutTab->AddSubTool(new CToolElement(_T("HorizontalLayout"),classHorizontalLayout,IDI_TOOLBOX_HORIZONTAL_LAYOUT));

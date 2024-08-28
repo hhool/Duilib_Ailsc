@@ -79,7 +79,7 @@ namespace DuiLib
 		
 		//complete
 		//void complete(int err_code,file_name,void *ptr)
-		//0-OK -1-download failed,-2-param invalid ,1-cache ing 2-ÏÂÔØÊ§°Ü£¬²»ÔÚ³¢ÊÔ
+		//0-OK -1-download failed,-2-param invalid ,1-cache ing 2-ä¸‹è½½å¤±è´¥ï¼Œä¸åœ¨å°è¯•
 		int syncDoCache(const char* url, __out std::string& file_path);
 
 		void _work();

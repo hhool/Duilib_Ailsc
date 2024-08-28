@@ -22,7 +22,7 @@ public:
     CPaintManagerUI m_pm;
 	CPopupUI* m_pOwner;
 	CUIFunctionalLayout* m_pLayout;
-	bool m_bNotKillWnd;//是否应该关闭窗口
+	bool m_bNotKillWnd;//鏄惁搴旇鍏抽棴绐楀彛
 };
 
 
@@ -36,12 +36,12 @@ void CPopupWnd::Init(CPopupUI* pOwner)
 	SIZE szDrop = m_pOwner->GetPopBoxSize();
 	RECT rcOwner = pOwner->GetPos();
 	RECT rc = rcOwner;
-	///> 首要弹出位置向下
+	///> 棣栬寮瑰嚭浣嶇疆鍚戜笅
 	if (!m_pOwner->IsTopDirect())
 	{
-		rc.top = rc.bottom;		// 父窗口left、bottom位置作为弹出窗口起点
-		rc.bottom = rc.top + szDrop.cy;	// 计算弹出窗口高度
-		if (szDrop.cx > 0) rc.right = rc.left + szDrop.cx;	// 计算弹出窗口宽度
+		rc.top = rc.bottom;		// 鐖剁獥鍙eft銆乥ottom浣嶇疆浣滀负寮瑰嚭绐楀彛璧风偣
+		rc.bottom = rc.top + szDrop.cy;	// 璁＄畻寮瑰嚭绐楀彛楂樺害
+		if (szDrop.cx > 0) rc.right = rc.left + szDrop.cx;	// 璁＄畻寮瑰嚭绐楀彛瀹藉害
 
 		::MapWindowRect(pOwner->GetManager()->GetPaintWindow(), HWND_DESKTOP, &rc);
 
@@ -60,9 +60,9 @@ void CPopupWnd::Init(CPopupUI* pOwner)
 	}
 	else
 	{
-		rc.bottom = rc.top;		// 父窗口left、bottom位置作为弹出窗口起点
-		rc.top = rc.bottom - szDrop.cy;	// 计算弹出窗口高度
-		if (szDrop.cx > 0) rc.right = rc.left + szDrop.cx;	// 计算弹出窗口宽度
+		rc.bottom = rc.top;		// 鐖剁獥鍙eft銆乥ottom浣嶇疆浣滀负寮瑰嚭绐楀彛璧风偣
+		rc.top = rc.bottom - szDrop.cy;	// 璁＄畻寮瑰嚭绐楀彛楂樺害
+		if (szDrop.cx > 0) rc.right = rc.left + szDrop.cx;	// 璁＄畻寮瑰嚭绐楀彛瀹藉害
 
 		::MapWindowRect(pOwner->GetManager()->GetPaintWindow(), HWND_DESKTOP, &rc);
 
@@ -167,7 +167,7 @@ LRESULT CPopupWnd::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
             HWND hWnd = ::GetFocus();
             HWND hParentWnd = NULL;
             bool bIsChildFocus = false;
-			//获取焦点的窗口可能是自己也可能是自己的child
+			//鑾峰彇鐒︾偣鐨勭獥鍙ｅ彲鑳芥槸鑷繁涔熷彲鑳芥槸鑷繁鐨刢hild
 			if (hWnd == m_hWnd)
 			{
 				bIsChildFocus = true;

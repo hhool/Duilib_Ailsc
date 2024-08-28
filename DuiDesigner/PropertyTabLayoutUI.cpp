@@ -143,7 +143,7 @@ BOOL CPropertyTabLayoutUI::OnInitDialog()
 
 void CPropertyTabLayoutUI::OnBnClickedButtonTabLayoutUIAdd()
 {
-	// TODO: 在此添加控件通知处理程序代码
+	// TODO: 鍦ㄦ娣诲姞鎺т欢閫氱煡澶勭悊绋嬪簭浠ｇ爜
 	int nClass;
 	switch(m_btnAdd.m_nMenuResult)
 	{
@@ -214,7 +214,7 @@ void CPropertyTabLayoutUI::OnBnClickedButtonTabLayoutUIAdd()
 
 void CPropertyTabLayoutUI::OnBnClickedOk()
 {
-	// TODO: 在此添加控件通知处理程序代码
+	// TODO: 鍦ㄦ娣诲姞鎺т欢閫氱煡澶勭悊绋嬪簭浠ｇ爜
 	for(int i=0;i<m_lstTab.GetCount();i++)
 	{
 		int nCheck=m_lstTab.GetCheck(i);

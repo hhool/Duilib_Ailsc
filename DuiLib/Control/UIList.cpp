@@ -3,7 +3,7 @@
 namespace DuiLib {
 /////////////////////////////////////////////////////////////////////////////////////
 //
-#define VIR_ITEM_HEIGHT 30//Ğé±íÏîµÄÄ¬ÈÏ¸ß¶È
+#define VIR_ITEM_HEIGHT 30//è™šè¡¨é¡¹çš„é»˜è®¤é«˜åº¦
 
 class CListBodyUI : public CVerticalLayoutUI
 {
@@ -37,9 +37,9 @@ CListUI::CListUI() : m_pCallback(NULL), m_bScrollSelect(false), m_iCurSel(-1), m
 	m_nVirtualItemHeight = VIR_ITEM_HEIGHT;
 	m_nVirtualItemCount = 0;
 	m_pVirutalItemFormat = NULL;
-	m_ePanelPos = E_PANELBOTTOM;//PanelµÄÎ»ÖÃ£¬Ä¿Ç°½ö½öÖ§³ÖÉÏÏÂ
-	m_nPanelHeight = 20;//Panel¸ß¶È
-	m_nPanelOffset =  0;//Ä¬ÈÏÆ«ÒÆ10
+	m_ePanelPos = E_PANELBOTTOM;//Panelçš„ä½ç½®ï¼Œç›®å‰ä»…ä»…æ”¯æŒä¸Šä¸‹
+	m_nPanelHeight = 20;//Panelé«˜åº¦
+	m_nPanelOffset =  0;//é»˜è®¤åç§»10
     m_pList = new CListBodyUI(this);
     m_pHeader = new CListHeaderUI;
 	m_pFloatPanel = new CChildLayoutUI;
@@ -186,7 +186,7 @@ bool CListUI::Add(CControlUI* pControl)
             CVerticalLayoutUI::Remove(m_pHeader);
             m_pHeader = static_cast<CListHeaderUI*>(pControl);
         }
-		//¼ÆËã¸´ºÏ±íÍ·Êµ¼Ê±íÍ·ÏîµÄÊıÁ¿
+		//è®¡ç®—å¤åˆè¡¨å¤´å®é™…è¡¨å¤´é¡¹çš„æ•°é‡
 		CDuiPtrArray ptrAry;
 		GetInsideControl(ptrAry, m_pHeader, DUI_CTR_LISTHEADERITEM);
         //m_ListInfo.nColumns = MIN(m_pHeader->GetCount(), UILIST_MAX_COLUMNS);
@@ -196,14 +196,14 @@ bool CListUI::Add(CControlUI* pControl)
     // We also need to recognize header sub-items
 	if (pControl && _tcsstr(pControl->GetClass(), DUI_CTR_LISTHEADERITEM) != NULL) {
         bool ret = m_pHeader->Add(pControl);
-		//¼ÆËã¸´ºÏ±íÍ·Êµ¼Ê±íÍ·ÏîµÄÊıÁ¿
+		//è®¡ç®—å¤åˆè¡¨å¤´å®é™…è¡¨å¤´é¡¹çš„æ•°é‡
 		CDuiPtrArray ptrAry;
 		GetInsideControl(ptrAry, m_pHeader, DUI_CTR_LISTHEADERITEM);
 		//m_ListInfo.nColumns = MIN(m_pHeader->GetCount(), UILIST_MAX_COLUMNS);
 		m_ListInfo.nColumns = MIN(ptrAry.GetSize(), UILIST_MAX_COLUMNS);
         return ret;
     }
-	//Èç¹ûÊÇĞéÄâÁĞ±íÔò²»ÔÊĞí²Ù×÷,±íÍ·³ıÍâ
+	//å¦‚æœæ˜¯è™šæ‹Ÿåˆ—è¡¨åˆ™ä¸å…è®¸æ“ä½œ,è¡¨å¤´é™¤å¤–
 	if (IsUseVirtualList())
 	{
 		return false;
@@ -250,7 +250,7 @@ bool CListUI::AddAt(CControlUI* pControl, int iIndex)
             CVerticalLayoutUI::Remove(m_pHeader);
             m_pHeader = static_cast<CListHeaderUI*>(pControl);
         }
-		//¼ÆËã¸´ºÏ±íÍ·Êµ¼Ê±íÍ·ÏîµÄÊıÁ¿
+		//è®¡ç®—å¤åˆè¡¨å¤´å®é™…è¡¨å¤´é¡¹çš„æ•°é‡
 		CDuiPtrArray ptrAry;
 		GetInsideControl(ptrAry, m_pHeader, DUI_CTR_LISTHEADERITEM);
 		//m_ListInfo.nColumns = MIN(m_pHeader->GetCount(), UILIST_MAX_COLUMNS);
@@ -260,7 +260,7 @@ bool CListUI::AddAt(CControlUI* pControl, int iIndex)
     // We also need to recognize header sub-items
 	if (pControl&&_tcsstr(pControl->GetClass(), DUI_CTR_LISTHEADERITEM) != NULL) {
         bool ret = m_pHeader->AddAt(pControl, iIndex);
-		//¼ÆËã¸´ºÏ±íÍ·Êµ¼Ê±íÍ·ÏîµÄÊıÁ¿
+		//è®¡ç®—å¤åˆè¡¨å¤´å®é™…è¡¨å¤´é¡¹çš„æ•°é‡
 		CDuiPtrArray ptrAry;
 		GetInsideControl(ptrAry, m_pHeader, DUI_CTR_LISTHEADERITEM);
 		//m_ListInfo.nColumns = MIN(m_pHeader->GetCount(), UILIST_MAX_COLUMNS);
@@ -268,7 +268,7 @@ bool CListUI::AddAt(CControlUI* pControl, int iIndex)
         return ret;
     }
 
-	//Èç¹ûÊÇĞéÄâÁĞ±íÔò²»ÔÊĞí²Ù×÷,±íÍ·³ıÍâ
+	//å¦‚æœæ˜¯è™šæ‹Ÿåˆ—è¡¨åˆ™ä¸å…è®¸æ“ä½œ,è¡¨å¤´é™¤å¤–
 	if (IsUseVirtualList())
 	{
 		return false;
@@ -316,7 +316,7 @@ bool CListUI::AddAt(CControlUI* pControl, int iIndex)
 CControlUI* CListUI::AddTemplate()
 {
 	CControlUI *pControl = NULL;
-	//Èç¹ûÊÇĞéÄâÁĞ±íÔò²»ÔÊĞí²Ù×÷,±íÍ·³ıÍâ
+	//å¦‚æœæ˜¯è™šæ‹Ÿåˆ—è¡¨åˆ™ä¸å…è®¸æ“ä½œ,è¡¨å¤´é™¤å¤–
 	if (IsUseVirtualList() || m_ItemtemplateXml.IsEmpty())
 	{
 		return pControl;
@@ -346,7 +346,7 @@ CControlUI* CListUI::AddTemplate()
 CControlUI* CListUI::AddTemplateAt(int iIndex)
 {
 	CControlUI *pControl = NULL;
-	//Èç¹ûÊÇĞéÄâÁĞ±íÔò²»ÔÊĞí²Ù×÷,±íÍ·³ıÍâ
+	//å¦‚æœæ˜¯è™šæ‹Ÿåˆ—è¡¨åˆ™ä¸å…è®¸æ“ä½œ,è¡¨å¤´é™¤å¤–
 	if (IsUseVirtualList() || m_ItemtemplateXml.IsEmpty())
 	{
 		return pControl;
@@ -396,7 +396,7 @@ bool CListUI::AddVirtualItem(CControlUI* pControl)
 			CVerticalLayoutUI::Remove(m_pHeader);
 			m_pHeader = static_cast<CListHeaderUI*>(pControl);
 		}
-		//¼ÆËã¸´ºÏ±íÍ·Êµ¼Ê±íÍ·ÏîµÄÊıÁ¿
+		//è®¡ç®—å¤åˆè¡¨å¤´å®é™…è¡¨å¤´é¡¹çš„æ•°é‡
 		CDuiPtrArray ptrAry;
 		GetInsideControl(ptrAry, m_pHeader, DUI_CTR_LISTHEADERITEM);
 		//m_ListInfo.nColumns = MIN(m_pHeader->GetCount(), UILIST_MAX_COLUMNS);
@@ -406,7 +406,7 @@ bool CListUI::AddVirtualItem(CControlUI* pControl)
 	// We also need to recognize header sub-items
 	if (_tcsstr(pControl->GetClass(), DUI_CTR_LISTHEADERITEM) != NULL) {
 		bool ret = m_pHeader->Add(pControl);
-		//¼ÆËã¸´ºÏ±íÍ·Êµ¼Ê±íÍ·ÏîµÄÊıÁ¿
+		//è®¡ç®—å¤åˆè¡¨å¤´å®é™…è¡¨å¤´é¡¹çš„æ•°é‡
 		CDuiPtrArray ptrAry;
 		GetInsideControl(ptrAry, m_pHeader, DUI_CTR_LISTHEADERITEM);
 		//m_ListInfo.nColumns = MIN(m_pHeader->GetCount(), UILIST_MAX_COLUMNS);
@@ -424,7 +424,7 @@ bool CListUI::AddVirtualItem(CControlUI* pControl)
 }
 bool CListUI::Remove(CControlUI* pControl, bool bDoNotDestroy)
 {
-	//Èç¹ûÊÇĞéÄâÁĞ±íÔò²»ÔÊĞí²Ù×÷
+	//å¦‚æœæ˜¯è™šæ‹Ÿåˆ—è¡¨åˆ™ä¸å…è®¸æ“ä½œ
 	if (IsUseVirtualList())
 	{
 		return false;
@@ -458,7 +458,7 @@ bool CListUI::Remove(CControlUI* pControl, bool bDoNotDestroy)
 
 bool CListUI::RemoveAt(int iIndex, bool bDoNotDestroy)
 {
-	//Èç¹ûÊÇĞéÄâÁĞ±íÔò²»ÔÊĞí²Ù×÷
+	//å¦‚æœæ˜¯è™šæ‹Ÿåˆ—è¡¨åˆ™ä¸å…è®¸æ“ä½œ
 	if (IsUseVirtualList())
 	{
 		return false;
@@ -483,7 +483,7 @@ bool CListUI::RemoveAt(int iIndex, bool bDoNotDestroy)
 
 void CListUI::RemoveAll()
 {
-	//Èç¹ûÊÇĞéÄâÁĞ±íÔò²»ÔÊĞí²Ù×÷
+	//å¦‚æœæ˜¯è™šæ‹Ÿåˆ—è¡¨åˆ™ä¸å…è®¸æ“ä½œ
 	if (IsUseVirtualList())
 	{
 		return ;
@@ -505,16 +505,16 @@ void CListUI::ResetSortStatus()
 
 void CListUI::SetPos(RECT rc, bool bNeedInvalidate)
 {
-	//Î»ÖÃ·¢Éú¸Ä±äµÄÊ±ºòµ±Ç°¹ö¶¯ÌõÎ»ÖÃiOffsetNow
-	//Î»ÖÃ·¢Éú¸Ä±äÖ®ºó¶¯ÌõÖØĞÂ¼ÆËãÎ»ÖÃiResizeOffset
+	//ä½ç½®å‘ç”Ÿæ”¹å˜çš„æ—¶å€™å½“å‰æ»šåŠ¨æ¡ä½ç½®iOffsetNow
+	//ä½ç½®å‘ç”Ÿæ”¹å˜ä¹‹ååŠ¨æ¡é‡æ–°è®¡ç®—ä½ç½®iResizeOffset
 	int iOffsetNow = 0, iResizeOffset = 0;
-	//¼ÆËã¸´ºÏ±íÍ·Êµ¼Ê±íÍ·ÏîµÄÊıÁ¿
+	//è®¡ç®—å¤åˆè¡¨å¤´å®é™…è¡¨å¤´é¡¹çš„æ•°é‡
 	CDuiPtrArray ptrAry;
 	GetInsideControl(ptrAry, m_pHeader, DUI_CTR_LISTHEADERITEM);
 	m_ListInfo.nColumns = MIN(ptrAry.GetSize(), UILIST_MAX_COLUMNS);
 
 	if( m_pHeader != NULL ) 
-	{ // ÉèÖÃheader¸÷×ÓÔªËØx×ø±ê,ÒòÎªÓĞĞ©listitemµÄsetposĞèÒªÓÃµ½(ÁÙÊ±ĞŞ¸´)
+	{ // è®¾ç½®headerå„å­å…ƒç´ xåæ ‡,å› ä¸ºæœ‰äº›listitemçš„setposéœ€è¦ç”¨åˆ°(ä¸´æ—¶ä¿®å¤)
 		int iLeft = rc.left + m_rcInset.left;
 		int iRight = rc.right - m_rcInset.right;
 		if( !m_pHeader->IsVisible() ) {
@@ -533,16 +533,16 @@ void CListUI::SetPos(RECT rc, bool bNeedInvalidate)
 
 			if (!pControl->IsVisible())
 			{
-				//#liulei ĞŞ¸´ÓÉÓÚÒş²Ø×îºóÒ»ÁĞµÄÊ±ºò£¬ÓÉÓÚ¿í¶È = m_ListInfo.rcColumn[lastcol].right - m_ListInfo.rcColumn[i].left
-				//ËùÒÔÕâÀïĞèÒªĞŞ¸´ÁĞ¿íµÄ¼ÆËã·½·¨ 20160616
+				//#liulei ä¿®å¤ç”±äºéšè—æœ€åä¸€åˆ—çš„æ—¶å€™ï¼Œç”±äºå®½åº¦ = m_ListInfo.rcColumn[lastcol].right - m_ListInfo.rcColumn[i].left
+				//æ‰€ä»¥è¿™é‡Œéœ€è¦ä¿®å¤åˆ—å®½çš„è®¡ç®—æ–¹æ³• 20160616
 				i == 0 ? m_ListInfo.rcColumn[i].left = m_ListInfo.rcColumn[i].right = 0 :
 					m_ListInfo.rcColumn[i].right = m_ListInfo.rcColumn[i].left = m_ListInfo.rcColumn[i - 1].right;
 				continue;
 			}
 			if (pControl->IsFloat())
 			{
-				//#liulei ĞŞ¸´ÓÉÓÚÒş²Ø×îºóÒ»ÁĞµÄÊ±ºò£¬ÓÉÓÚ¿í¶È = m_ListInfo.rcColumn[lastcol].right - m_ListInfo.rcColumn[i].left
-				//ËùÒÔÕâÀïĞèÒªĞŞ¸´ÁĞ¿íµÄ¼ÆËã·½·¨ 20160616
+				//#liulei ä¿®å¤ç”±äºéšè—æœ€åä¸€åˆ—çš„æ—¶å€™ï¼Œç”±äºå®½åº¦ = m_ListInfo.rcColumn[lastcol].right - m_ListInfo.rcColumn[i].left
+				//æ‰€ä»¥è¿™é‡Œéœ€è¦ä¿®å¤åˆ—å®½çš„è®¡ç®—æ–¹æ³• 20160616
 				i == 0 ? m_ListInfo.rcColumn[i].left = m_ListInfo.rcColumn[i].right = 0 :
 					m_ListInfo.rcColumn[i].right = m_ListInfo.rcColumn[i].left = m_ListInfo.rcColumn[i - 1].right;
 				continue;
@@ -568,7 +568,7 @@ void CListUI::SetPos(RECT rc, bool bNeedInvalidate)
 	}
 
 	CVerticalLayoutUI::SetPos(rc, bNeedInvalidate);
-	///> ÖØĞÂ¼ÆËãĞé±í»º³åÇø´óĞ¡
+	///> é‡æ–°è®¡ç®—è™šè¡¨ç¼“å†²åŒºå¤§å°
 	ResizeVirtualItemBuffer();
 	if( m_pHeader == NULL ) return;
 
@@ -599,8 +599,8 @@ void CListUI::SetPos(RECT rc, bool bNeedInvalidate)
 	}
 	iResizeOffset = m_pList->GetScrollPos().cx;
 
-	///> ½ÃÕı±íÍ·ÏîµÄÎ»ÖÃ£¬ÒòÎª±íÍ·ÊÇContain²¢ÇÒ²»ÊÇfloat£¬±íÍ·SetPosÖ®ºó»á¶ÔItemÖØÏÖÅÅĞò£¬Èç¹û´ËÊ±ºáÏò¹ö¶¯Ìõ²»ÔÚÎ»ÖÃÎª0µÄµØ·½
-	///> Ôò¿ÉÄÜ³öÏÖ±íÍ·ÏîÓÉÓÚÃ»ÓĞÆ«ÒÆ¶øµ¼ÖÂ±íÍ·ÏÔÊ¾²»¶Ô£¬listµÄÄÚÈİ²»ÊÜÓ°Ïì£¬ÖØĞÂµ÷ÕûlistHeader°üº¬ÏîµÄÎ»ÖÃ
+	///> çŸ«æ­£è¡¨å¤´é¡¹çš„ä½ç½®ï¼Œå› ä¸ºè¡¨å¤´æ˜¯Containå¹¶ä¸”ä¸æ˜¯floatï¼Œè¡¨å¤´SetPosä¹‹åä¼šå¯¹Itemé‡ç°æ’åºï¼Œå¦‚æœæ­¤æ—¶æ¨ªå‘æ»šåŠ¨æ¡ä¸åœ¨ä½ç½®ä¸º0çš„åœ°æ–¹
+	///> åˆ™å¯èƒ½å‡ºç°è¡¨å¤´é¡¹ç”±äºæ²¡æœ‰åç§»è€Œå¯¼è‡´è¡¨å¤´æ˜¾ç¤ºä¸å¯¹ï¼Œlistçš„å†…å®¹ä¸å—å½±å“ï¼Œé‡æ–°è°ƒæ•´listHeaderåŒ…å«é¡¹çš„ä½ç½®
 	for (int i = 0; i < m_pHeader->GetCount(); i++) {
 		CControlUI* pControl = static_cast<CControlUI*>(m_pHeader->GetItemAt(i));
 		if (!pControl->IsVisible()) continue;
@@ -614,7 +614,7 @@ void CListUI::SetPos(RECT rc, bool bNeedInvalidate)
 		}
 	}
 
-	///> ¸´ºÏÈİÆ÷µÄÔ­Òò£¬ÔÚÕâÀïµ÷Õûlist±íÍ·ÏîµÄ¶ÔÓ¦µÄÇøÓòÎ»ÖÃ
+	///> å¤åˆå®¹å™¨çš„åŸå› ï¼Œåœ¨è¿™é‡Œè°ƒæ•´listè¡¨å¤´é¡¹çš„å¯¹åº”çš„åŒºåŸŸä½ç½®
 	for( int i = 0; i < m_ListInfo.nColumns; i++ ) {
 		CControlUI* pControl = static_cast<CControlUI*>(ptrAry[i]);
 		if( !pControl->IsVisible() ) continue;
@@ -630,13 +630,13 @@ void CListUI::SetPos(RECT rc, bool bNeedInvalidate)
 	}
 
 
-	//#liulei Èç¹ûÎ»ÖÃ·¢Éú¸Ä±äÖ®Ç°ºÍÖ®ºó¹ö¶¯ÌõÇ°ºóÎ»ÖÃ²»Ò»ÑùÔòĞèÒªË¢ĞÂListBodyÖØĞÂ¼ÆËãÎ»ÖÃ,
+	//#liulei å¦‚æœä½ç½®å‘ç”Ÿæ”¹å˜ä¹‹å‰å’Œä¹‹åæ»šåŠ¨æ¡å‰åä½ç½®ä¸ä¸€æ ·åˆ™éœ€è¦åˆ·æ–°ListBodyé‡æ–°è®¡ç®—ä½ç½®,
 	if (iOffsetNow != iResizeOffset)
 		CVerticalLayoutUI::SetPos(rc, bNeedInvalidate);
 
 	///#liulei 20160823
-	///> ½ÃÕı±íÍ·ÏîµÄÎ»ÖÃ£¬ÒòÎª±íÍ·ÊÇContain²¢ÇÒ²»ÊÇfloat£¬±íÍ·SetPosÖ®ºó»á¶ÔItemÖØÏÖÅÅĞò£¬Èç¹û´ËÊ±ºáÏò¹ö¶¯Ìõ²»ÔÚÎ»ÖÃÎª0µÄµØ·½
-	///> Ôò¿ÉÄÜ³öÏÖ±íÍ·ÏîÓÉÓÚÃ»ÓĞÆ«ÒÆ¶øµ¼ÖÂ±íÍ·ÏÔÊ¾²»¶Ô£¬listµÄÄÚÈİ²»ÊÜÓ°Ïì
+	///> çŸ«æ­£è¡¨å¤´é¡¹çš„ä½ç½®ï¼Œå› ä¸ºè¡¨å¤´æ˜¯Containå¹¶ä¸”ä¸æ˜¯floatï¼Œè¡¨å¤´SetPosä¹‹åä¼šå¯¹Itemé‡ç°æ’åºï¼Œå¦‚æœæ­¤æ—¶æ¨ªå‘æ»šåŠ¨æ¡ä¸åœ¨ä½ç½®ä¸º0çš„åœ°æ–¹
+	///> åˆ™å¯èƒ½å‡ºç°è¡¨å¤´é¡¹ç”±äºæ²¡æœ‰åç§»è€Œå¯¼è‡´è¡¨å¤´æ˜¾ç¤ºä¸å¯¹ï¼Œlistçš„å†…å®¹ä¸å—å½±å“
 	for (int i = 0; i < m_ListInfo.nColumns; i++) {
 		CControlUI* pControl = static_cast<CControlUI*>(ptrAry[i]);
 		if (!pControl->IsVisible()) continue;
@@ -645,7 +645,7 @@ void CListUI::SetPos(RECT rc, bool bNeedInvalidate)
 	}
 
 	///#liulei 20161109
-	///#¼ÆËã¸¡¶¯PanelµÄÎ»ÖÃ
+	///#è®¡ç®—æµ®åŠ¨Panelçš„ä½ç½®
 	CalcPanelPos();
 }
 
@@ -673,7 +673,7 @@ void CListUI::DoEvent(TEventUI& event)
         m_bFocused = false;
         return;
     }
-	//#liulei 20161115 ¿ØÖÆÊó±êÊÇ·ñÏìÓ¦Êó±ê¹ö¶¯
+	//#liulei 20161115 æ§åˆ¶é¼ æ ‡æ˜¯å¦å“åº”é¼ æ ‡æ»šåŠ¨
 	if (event.Type == UIEVENT_LBUTTONDOWN ||
 		event.Type == UIEVENT_RBUTTONDOWN ||
 		event.Type == UIEVENT_LDBLCLICK)
@@ -798,7 +798,7 @@ void CListUI::SetVirtualItemFormat(PULVirtualItemFormat vrtualitemfroamt)
 {
 	if (!m_pList) return;
 	m_pVirutalItemFormat = vrtualitemfroamt;
-	///> ¼ì²âÊÇ·ñ¸Ã¹Ø±ÕĞé±íÓÅ»¯£¨ÊÇ·ñº¬ÓĞcombo£©
+	///> æ£€æµ‹æ˜¯å¦è¯¥å…³é—­è™šè¡¨ä¼˜åŒ–ï¼ˆæ˜¯å¦å«æœ‰comboï¼‰
 	CControlUI *pcontrol = m_pVirutalItemFormat ? m_pVirutalItemFormat():CreateTemplateControl();
 	if (pcontrol && pcontrol->GetInterface(DUI_CTR_CONTAINER))
 	{
@@ -806,10 +806,10 @@ void CListUI::SetVirtualItemFormat(PULVirtualItemFormat vrtualitemfroamt)
 		if (pContain && (pContain->IsIncludeClassControl(DUI_CTR_COMBO) || pContain->IsIncludeClassControl(DUI_CTR_COMBOBOX)))
 			EnableVirtualOptimize(false);
 	}
-	///> ÊÍ·Å×ÊÔ´
+	///> é‡Šæ”¾èµ„æº
 	pcontrol->Delete();
 
-	ResizeVirtualItemBuffer();//µ÷Õû»º³åÇø´óĞ¡
+	ResizeVirtualItemBuffer();//è°ƒæ•´ç¼“å†²åŒºå¤§å°
 }
 
 void CListUI::SetVirtual(bool bUse)
@@ -845,7 +845,7 @@ int CListUI::GetDrawStartIndex() const
 int CListUI::GetDrawLastIndex() const
 {
 	int nLastDrawIndex = min(m_nDrawStartIndex + m_nMaxShowCount, m_nVirtualItemCount);
-	//ÏÂ±ê´Ó0¿ªÊ¼ËùÒÔĞèÒª¼õÈ¥1
+	//ä¸‹æ ‡ä»0å¼€å§‹æ‰€ä»¥éœ€è¦å‡å»1
 	nLastDrawIndex -= 1;
 	return nLastDrawIndex;
 }
@@ -886,19 +886,19 @@ void CListUI::ResizeVirtualItemBuffer()
 	{
 		if (GetItemCount() == 0)
 		{
-			///> ×¼±¸×ÊÔ´
+			///> å‡†å¤‡èµ„æº
 			CControlUI *pControl = m_pVirutalItemFormat ? m_pVirutalItemFormat() : CreateTemplateControl();
 			if (pControl)
 			{
 				m_nVirtualItemHeight = max(pControl->GetFixedHeight(), pControl->GetHeight());
 				m_nVirtualItemHeight <= 0 ? m_nVirtualItemHeight = VIR_ITEM_HEIGHT : 0;
 			}
-			///> ÊÍ·Å×ÊÔ´
+			///> é‡Šæ”¾èµ„æº
 			pControl->Delete();
 		}
 
 		int nItemCount = m_pList->GetCount();
-		///> ²ÉÈ¡½ø1Ô­Ôò
+		///> é‡‡å–è¿›1åŸåˆ™
 		int nReverse = (m_pList->GetHeight() % m_nVirtualItemHeight != 0) ? 1:0;
 		//if ( m_pList->GetHeight() % m_nVirtualItemHeight > m_nVirtualItemHeight*0.8)
 		//	nReverse = 1;
@@ -993,7 +993,7 @@ void CListUI::CalcPanelPos()
 		int nHeightOffset = 0;
 		if (m_pHeader->IsVisible())
 			nHeightOffset = m_pHeader->GetHeight();
-		///> Ïà¶ÔÈİÆ÷µÄ¾ø¶ÔÎ»ÖÃ
+		///> ç›¸å¯¹å®¹å™¨çš„ç»å¯¹ä½ç½®
 		::OffsetRect(&rtPanel, -m_rcItem.left, -m_rcItem.top + nHeightOffset);
 		rtPanel.top += m_nPanelOffset;
 		rtPanel.bottom = rtPanel.top + m_nPanelHeight;
@@ -1040,7 +1040,7 @@ bool CListUI::SelectItem(int iIndex, bool bTakeFocus, bool bTriggerEvent)
         m_iCurSel = -1;
         return false;
     }
-	//#liulei 20160901 ²»±£Ö¤Ñ¡ÖĞµÄItemÊ¼ÖÕÔÚ´°¿Ú
+	//#liulei 20160901 ä¸ä¿è¯é€‰ä¸­çš„Itemå§‹ç»ˆåœ¨çª—å£
    // EnsureVisible(m_iCurSel);
 	if (IsUseVirtualList() && pControl->GetTag() != 0)
 	{
@@ -1556,11 +1556,11 @@ void CListUI::DrawVirtualItem(CControlUI *pControl, int nDrawRow, int nStartDrwR
 {
 	if (m_pManager)
 	{
-		//#liulei  20161014ÔÚÌî³äµÄ¹ı³ÌÖĞ±£³Ö²»¿É¼û£¬·ÀÖ¹Ë¢ĞÂÌ«¹ıÆµ·±
-		///> ÈİÆ÷ÊÇ·ñ»áµ¼ÖÂËÀÑ­»·Ë¢ĞÂ£¨ÓĞ´ı²âÊÔ£©
-		///> ListTextElement »áµ¼ÖÂÕâ¸öÎÊÌâ£¨Êµ²â£©listtext-¡·settext-¡·invadate-¡·¼¤·¢ListUiË¢ĞÂ-¡·¼¤·¢ListText´Ó¶øµ¼ÖÂËÀÑ­»·Ë¢ĞÂ
-		///> ÆôÓÃÓÅ»¯Ìî³äÊı¾İÖ®ºó£¬Èç¹ûItem»¹ÓĞcombo¿Ø¼ş£¬ÒòÎªcombo»áµ¯³ö´°¿Ú¼¤·¢ListUIË¢ĞÂ£¬Ë¢ĞÂµÄÊ±ºòÈç¹ûÆôÓÃÓÅ»¯Ôò»áÌî³äÊı¾İµÄÊ±ºòÒş²ØItem
-		///> Òş²ØItem»áµ¼ÖÂCombo²»¿É¼û£¬´Ó¶øÊ¹µ¯³ö´°¿ÚÏûÊ§¡£Òò´Ëµ¯³ö´°¿Ú¾ÍÒ»ÉÁ¶ø¹ı£¬Òò´ËÈç¹ûº¬ÓĞComboÔò²»ÄÜÆôÓÃË¢ĞÂ
+		//#liulei  20161014åœ¨å¡«å……çš„è¿‡ç¨‹ä¸­ä¿æŒä¸å¯è§ï¼Œé˜²æ­¢åˆ·æ–°å¤ªè¿‡é¢‘ç¹
+		///> å®¹å™¨æ˜¯å¦ä¼šå¯¼è‡´æ­»å¾ªç¯åˆ·æ–°ï¼ˆæœ‰å¾…æµ‹è¯•ï¼‰
+		///> ListTextElement ä¼šå¯¼è‡´è¿™ä¸ªé—®é¢˜ï¼ˆå®æµ‹ï¼‰listtext-ã€‹settext-ã€‹invadate-ã€‹æ¿€å‘ListUiåˆ·æ–°-ã€‹æ¿€å‘ListTextä»è€Œå¯¼è‡´æ­»å¾ªç¯åˆ·æ–°
+		///> å¯ç”¨ä¼˜åŒ–å¡«å……æ•°æ®ä¹‹åï¼Œå¦‚æœItemè¿˜æœ‰comboæ§ä»¶ï¼Œå› ä¸ºcomboä¼šå¼¹å‡ºçª—å£æ¿€å‘ListUIåˆ·æ–°ï¼Œåˆ·æ–°çš„æ—¶å€™å¦‚æœå¯ç”¨ä¼˜åŒ–åˆ™ä¼šå¡«å……æ•°æ®çš„æ—¶å€™éšè—Item
+		///> éšè—Itemä¼šå¯¼è‡´Comboä¸å¯è§ï¼Œä»è€Œä½¿å¼¹å‡ºçª—å£æ¶ˆå¤±ã€‚å› æ­¤å¼¹å‡ºçª—å£å°±ä¸€é—ªè€Œè¿‡ï¼Œå› æ­¤å¦‚æœå«æœ‰Comboåˆ™ä¸èƒ½å¯ç”¨åˆ·æ–°
 		m_nDrawStartIndex = nStartDrwRow;
 		if (m_bEnableVirtualO)
 		{
@@ -1634,7 +1634,7 @@ BOOL CListUI::Copy(int nMaxRowItemData, bool bUserDefine)
 	CControlUI *pItem = NULL;
 	if (IsUseVirtualList())
 	{
-		///> ×¼±¸Êı¾İ¸ñÊ½ÄÚ´æ£¬ĞèÒªÊÍ·ÅÊı¾İdelete
+		///> å‡†å¤‡æ•°æ®æ ¼å¼å†…å­˜ï¼Œéœ€è¦é‡Šæ”¾æ•°æ®delete
 		pItem = m_pVirutalItemFormat ? m_pVirutalItemFormat() : CreateTemplateControl();
 		assert(pItem);
 	}
@@ -1644,14 +1644,14 @@ BOOL CListUI::Copy(int nMaxRowItemData, bool bUserDefine)
 		
 		if (IsUseVirtualList())
 		{
-			///> Ìî³äµ±Ç°Êı¾İÏî
+			///> å¡«å……å½“å‰æ•°æ®é¡¹
 			if (m_pManager)
 			{
-				//#liulei  20161014ÔÚÌî³äµÄ¹ı³ÌÖĞ±£³Ö²»¿É¼û£¬·ÀÖ¹Ë¢ĞÂÌ«¹ıÆµ·±
-				///> ÈİÆ÷ÊÇ·ñ»áµ¼ÖÂËÀÑ­»·Ë¢ĞÂ£¨ÓĞ´ı²âÊÔ£©
-				///> ListTextElement »áµ¼ÖÂÕâ¸öÎÊÌâ£¨Êµ²â£©listtext-¡·settext-¡·invadate-¡·¼¤·¢ListUiË¢ĞÂ-¡·¼¤·¢ListText´Ó¶øµ¼ÖÂËÀÑ­»·Ë¢ĞÂ
-				///> ÆôÓÃÓÅ»¯Ìî³äÊı¾İÖ®ºó£¬Èç¹ûItem»¹ÓĞcombo¿Ø¼ş£¬ÒòÎªcombo»áµ¯³ö´°¿Ú¼¤·¢ListUIË¢ĞÂ£¬Ë¢ĞÂµÄÊ±ºòÈç¹ûÆôÓÃÓÅ»¯Ôò»áÌî³äÊı¾İµÄÊ±ºòÒş²ØItem
-				///> Òş²ØItem»áµ¼ÖÂCombo²»¿É¼û£¬´Ó¶øÊ¹µ¯³ö´°¿ÚÏûÊ§¡£Òò´Ëµ¯³ö´°¿Ú¾ÍÒ»ÉÁ¶ø¹ı£¬Òò´ËÈç¹ûº¬ÓĞComboÔò²»ÄÜÆôÓÃË¢ĞÂ
+				//#liulei  20161014åœ¨å¡«å……çš„è¿‡ç¨‹ä¸­ä¿æŒä¸å¯è§ï¼Œé˜²æ­¢åˆ·æ–°å¤ªè¿‡é¢‘ç¹
+				///> å®¹å™¨æ˜¯å¦ä¼šå¯¼è‡´æ­»å¾ªç¯åˆ·æ–°ï¼ˆæœ‰å¾…æµ‹è¯•ï¼‰
+				///> ListTextElement ä¼šå¯¼è‡´è¿™ä¸ªé—®é¢˜ï¼ˆå®æµ‹ï¼‰listtext-ã€‹settext-ã€‹invadate-ã€‹æ¿€å‘ListUiåˆ·æ–°-ã€‹æ¿€å‘ListTextä»è€Œå¯¼è‡´æ­»å¾ªç¯åˆ·æ–°
+				///> å¯ç”¨ä¼˜åŒ–å¡«å……æ•°æ®ä¹‹åï¼Œå¦‚æœItemè¿˜æœ‰comboæ§ä»¶ï¼Œå› ä¸ºcomboä¼šå¼¹å‡ºçª—å£æ¿€å‘ListUIåˆ·æ–°ï¼Œåˆ·æ–°çš„æ—¶å€™å¦‚æœå¯ç”¨ä¼˜åŒ–åˆ™ä¼šå¡«å……æ•°æ®çš„æ—¶å€™éšè—Item
+				///> éšè—Itemä¼šå¯¼è‡´Comboä¸å¯è§ï¼Œä»è€Œä½¿å¼¹å‡ºçª—å£æ¶ˆå¤±ã€‚å› æ­¤å¼¹å‡ºçª—å£å°±ä¸€é—ªè€Œè¿‡ï¼Œå› æ­¤å¦‚æœå«æœ‰Comboåˆ™ä¸èƒ½å¯ç”¨åˆ·æ–°
 				bool bOldVisible = pItem->IsVisible();
 				pItem->SetInternVisible(false);
 				m_pManager->SendNotify(this, DUI_MSGTYPE_DRAWITEM, (WPARAM)pItem, (LPARAM)iRow);
@@ -1663,11 +1663,11 @@ BOOL CListUI::Copy(int nMaxRowItemData, bool bUserDefine)
 			pItem = GetItemAt(iRow);
 		}
 		
-		///> ¶ÏÑÔµ±Ç°ÏîÒ»¶¨´æÔÚ
+		///> æ–­è¨€å½“å‰é¡¹ä¸€å®šå­˜åœ¨
 		ASSERT(pItem);
 		if (pItem == NULL) continue;
 
-		///> Èç¹ûÊ¹ÓÃÓÃ»§×Ô¶¨ÒåµÄCopyDataÊı¾İ
+		///> å¦‚æœä½¿ç”¨ç”¨æˆ·è‡ªå®šä¹‰çš„CopyDataæ•°æ®
 		if (bUserDefine)
 		{
 			item.nRow = iRow;
@@ -1681,7 +1681,7 @@ BOOL CListUI::Copy(int nMaxRowItemData, bool bUserDefine)
 				strText += _T("\t");
 			}
 		}
-		else///> Ê¹ÓÃÄ¬ÈÏµÄCopyItem·½Ê½
+		else///> ä½¿ç”¨é»˜è®¤çš„CopyItemæ–¹å¼
 		{
 			if (pItem->GetInterface(DUI_CTR_LISTTEXTELEMENT))
 			{
@@ -1724,7 +1724,7 @@ BOOL CListUI::Copy(int nMaxRowItemData, bool bUserDefine)
 	}
 
 	delete[]szBuffer;
-	///> Èç¹ûÊ¹ÓÃÁËĞé±íÊÍ·ÅĞé±í×¼±¸µÄÊı¾İ¸ñÊ½ÄÚ´æ
+	///> å¦‚æœä½¿ç”¨äº†è™šè¡¨é‡Šæ”¾è™šè¡¨å‡†å¤‡çš„æ•°æ®æ ¼å¼å†…å­˜
 	if (IsUseVirtualList() && pItem)
 	{
 		pItem->Delete();
@@ -1733,13 +1733,13 @@ BOOL CListUI::Copy(int nMaxRowItemData, bool bUserDefine)
 
 	if (strText.GetLength() > 0)
 	{
-		///> ¸´ÖÆ±íÍ·
+		///> å¤åˆ¶è¡¨å¤´
 		CListHeaderUI *pHeader = GetHeader();
-		///> ´ò¿ª¼ôÇĞ°å
+		///> æ‰“å¼€å‰ªåˆ‡æ¿
 		if (!OpenClipboard(NULL)) return FALSE;
-		///>  Çå¿Õ¼ôÇĞ°åÊı¾İ
+		///>  æ¸…ç©ºå‰ªåˆ‡æ¿æ•°æ®
 		::EmptyClipboard();
-		///> ·ÖÅäÈ«¾ÖÄÚ´æ
+		///> åˆ†é…å…¨å±€å†…å­˜
 		int nSize = (strText.GetLength() + 1)*sizeof(TCHAR);
 		HGLOBAL clipbuffer = ::GlobalAlloc(GMEM_DDESHARE, nSize);
 		if (clipbuffer == NULL)
@@ -1747,7 +1747,7 @@ BOOL CListUI::Copy(int nMaxRowItemData, bool bUserDefine)
 			::CloseClipboard();
 			return FALSE;
 		}
-		///> Ëø¶¨×ÊÔ´
+		///> é”å®šèµ„æº
 		TCHAR *szlockbuf = (TCHAR *)::GlobalLock(clipbuffer);
 		if (szlockbuf == NULL)
 		{
@@ -1757,10 +1757,10 @@ BOOL CListUI::Copy(int nMaxRowItemData, bool bUserDefine)
 		}
 		//memset(szlockbuf, 0, sizeof(TCHAR)*(strText.GetLength() + 1));
 		lstrcpyn(szlockbuf, strText.GetData(), strText.GetLength() + 1);
-		///> ½âËø×ÊÔ´
+		///> è§£é”èµ„æº
 		GlobalUnlock(clipbuffer);
 
-		///> ÉèÖÃ¼ôÇĞ°åÊı¾İ
+		///> è®¾ç½®å‰ªåˆ‡æ¿æ•°æ®
 #ifdef _UNICODE
 		::SetClipboardData(CF_UNICODETEXT, clipbuffer);
 #else
@@ -1768,7 +1768,7 @@ BOOL CListUI::Copy(int nMaxRowItemData, bool bUserDefine)
 #endif // _UNICODE
 
 		
-		///> ¹Ø±Õ¼ôÇĞ°å
+		///> å…³é—­å‰ªåˆ‡æ¿
 		::CloseClipboard();
 	}
 	return TRUE;
@@ -1939,7 +1939,7 @@ void CListBodyUI::SetScrollPos(SIZE szPos)
     if( cx != 0 && m_pOwner ) {
         CListHeaderUI* pHeader = m_pOwner->GetHeader();
         if( pHeader == NULL ) return;
-		//#liulei 20161118 ÒÆ¶¯±íÍ·ÄÚËùÓĞµÄ¿Ø¼ş,¸´ºÏ¿Ø¼şÊ¹ÓÃ
+		//#liulei 20161118 ç§»åŠ¨è¡¨å¤´å†…æ‰€æœ‰çš„æ§ä»¶,å¤åˆæ§ä»¶ä½¿ç”¨
 		for (int i = 0; i < pHeader->GetCount(); i++) {
 			CControlUI* pControl = static_cast<CControlUI*>(pHeader->GetItemAt(i));
 			if (!pControl->IsVisible()) continue;
@@ -1947,7 +1947,7 @@ void CListBodyUI::SetScrollPos(SIZE szPos)
 			pControl->Move(CDuiSize(-cx, -cy), false);
 		}
 
-		//#liulei µ÷Õû¸´ºÏ±íÍ·µÄlistheaderItem¶ÔÓ¦µÄÇøÓò¹ØÏµ
+		//#liulei è°ƒæ•´å¤åˆè¡¨å¤´çš„listheaderItemå¯¹åº”çš„åŒºåŸŸå…³ç³»
         TListInfoUI* pInfo = m_pOwner->GetListInfo();
 		CDuiPtrArray ptrAry;
 		GetInsideControl(ptrAry, pHeader, DUI_CTR_LISTHEADERITEM);
@@ -1986,8 +1986,8 @@ void CListBodyUI::SetPos(RECT rc, bool bNeedInvalidate)
             iChildPadding += pInfo->iHLineSize;
             if (pInfo->nColumns > 0)
 			{
-				//#liulei È¡ÏûÏŞÖÆlist ItemµÄ¿í¶ÈÊ¼ÖÕºÍÁĞ±£³ÖÒ»ÖÂ
-				//ÁĞµÄ¿í¶ÈÊ¼ÖÕºÍListUIµÄ¿í¶È±£³ÖÒ»ÖÂ
+				//#liulei å–æ¶ˆé™åˆ¶list Itemçš„å®½åº¦å§‹ç»ˆå’Œåˆ—ä¿æŒä¸€è‡´
+				//åˆ—çš„å®½åº¦å§‹ç»ˆå’ŒListUIçš„å®½åº¦ä¿æŒä¸€è‡´
                 //szAvailable.cx = pInfo->rcColumn[pInfo->nColumns - 1].right - pInfo->rcColumn[0].left;
             }
         }
@@ -2142,7 +2142,7 @@ bool CListBodyUI::DoPaint(HDC hDC, const RECT& rcPaint, CControlUI* pStopControl
         if( m_pVerticalScrollBar && m_pVerticalScrollBar->IsVisible() ) rc.right -= m_pVerticalScrollBar->GetFixedWidth();
         if( m_pHorizontalScrollBar && m_pHorizontalScrollBar->IsVisible() ) rc.bottom -= m_pHorizontalScrollBar->GetFixedHeight();
      
-		///> ¼ÆËãĞéÄâÁĞ±íµÄÆğÊ¼Î»ÖÃ
+		///> è®¡ç®—è™šæ‹Ÿåˆ—è¡¨çš„èµ·å§‹ä½ç½®
 		int nVirtualStartIndex = 0;
 		if (m_pOwner->IsUseVirtualList() && m_items.GetSize() > 0 && m_pVerticalScrollBar && m_pVerticalScrollBar->IsVisible())
 		{
@@ -2159,7 +2159,7 @@ bool CListBodyUI::DoPaint(HDC hDC, const RECT& rcPaint, CControlUI* pStopControl
 			int nSelectIndex = -1;
 			for (int it = 0; it < m_items.GetSize() && it < nItemSize; it++) {
                 CControlUI* pControl = static_cast<CControlUI*>(m_items[it]);
-				//> Èç¹ûÊ¹ÓÃĞéÄâÁĞ±í£¬ÔòÉèÖÃĞéÄâÁĞ±íÊı¾İ
+				//> å¦‚æœä½¿ç”¨è™šæ‹Ÿåˆ—è¡¨ï¼Œåˆ™è®¾ç½®è™šæ‹Ÿåˆ—è¡¨æ•°æ®
 				if (m_pOwner->IsUseVirtualList())
 				{
 					if (nVirtualStartIndex + it < m_pOwner->GetVirtualItemCount() &&
@@ -2204,7 +2204,7 @@ bool CListBodyUI::DoPaint(HDC hDC, const RECT& rcPaint, CControlUI* pStopControl
 			int nSelectIndex = -1;
             for( int it = 0; it < m_items.GetSize() && it < nItemSize; it++ ) {
                 CControlUI* pControl = static_cast<CControlUI*>(m_items[it]);
-				//> Èç¹ûÊ¹ÓÃĞéÄâÁĞ±í£¬ÔòÉèÖÃĞéÄâÁĞ±íÊı¾İ
+				//> å¦‚æœä½¿ç”¨è™šæ‹Ÿåˆ—è¡¨ï¼Œåˆ™è®¾ç½®è™šæ‹Ÿåˆ—è¡¨æ•°æ®
 				if (m_pOwner->IsUseVirtualList())
 				{
 					if (nVirtualStartIndex + it < m_pOwner->GetVirtualItemCount() &&
@@ -2234,7 +2234,7 @@ bool CListBodyUI::DoPaint(HDC hDC, const RECT& rcPaint, CControlUI* pStopControl
                         iDrawIndex += 1;
                     }
                     if (pListInfo && pListInfo->iHLineSize > 0) {
-                        // ÒòÎªÃ»ÓĞÎª×îºóÒ»¸öÔ¤Áô·Ö¸îÌõ³¤¶È£¬Èç¹ûlistÆÌÂú£¬×îºóÒ»Ìõ²»»áÏÔÊ¾
+                        // å› ä¸ºæ²¡æœ‰ä¸ºæœ€åä¸€ä¸ªé¢„ç•™åˆ†å‰²æ¡é•¿åº¦ï¼Œå¦‚æœlisté“ºæ»¡ï¼Œæœ€åä¸€æ¡ä¸ä¼šæ˜¾ç¤º
                         RECT rcPadding = pControl->GetPadding();
                         const RECT& rcPos = pControl->GetPos();
                         RECT rcBottomLine = { rcPos.left, rcPos.bottom + rcPadding.bottom, rcPos.right, rcPos.bottom + rcPadding.bottom + pListInfo->iHLineSize };
@@ -2329,7 +2329,7 @@ CListHeaderItemUI *CListHeaderUI::GetSortHeaderItem()
 	return NULL;
 }
 
-///> #liulei ĞŞ¸´±íÍ·É¾³ıËùÓĞµÄÊ±ºò£¬ListBodyÎ»ÖÃÃ»ÓĞÖØ¼ÆËãµÄÎÊÌâ
+///> #liulei ä¿®å¤è¡¨å¤´åˆ é™¤æ‰€æœ‰çš„æ—¶å€™ï¼ŒListBodyä½ç½®æ²¡æœ‰é‡è®¡ç®—çš„é—®é¢˜
 bool CListHeaderUI::Add(CControlUI* pControl)
 {
 	bool bRet = __super::Add(pControl);
@@ -2337,7 +2337,7 @@ bool CListHeaderUI::Add(CControlUI* pControl)
 		NeedParentUpdate();
 	return bRet;
 }
-///> #liulei ĞŞ¸´±íÍ·É¾³ıËùÓĞµÄÊ±ºò£¬ListBodyÎ»ÖÃÃ»ÓĞÖØ¼ÆËãµÄÎÊÌâ
+///> #liulei ä¿®å¤è¡¨å¤´åˆ é™¤æ‰€æœ‰çš„æ—¶å€™ï¼ŒListBodyä½ç½®æ²¡æœ‰é‡è®¡ç®—çš„é—®é¢˜
 bool CListHeaderUI::AddAt(CControlUI* pControl, int iIndex)
 {
 	bool bRet = __super::AddAt(pControl, iIndex);
@@ -2345,13 +2345,13 @@ bool CListHeaderUI::AddAt(CControlUI* pControl, int iIndex)
 		NeedParentUpdate();
 	return bRet;
 }
-///> #liulei ĞŞ¸´±íÍ·É¾³ıËùÓĞµÄÊ±ºò£¬ListBodyÎ»ÖÃÃ»ÓĞÖØ¼ÆËãµÄÎÊÌâ
+///> #liulei ä¿®å¤è¡¨å¤´åˆ é™¤æ‰€æœ‰çš„æ—¶å€™ï¼ŒListBodyä½ç½®æ²¡æœ‰é‡è®¡ç®—çš„é—®é¢˜
 void CListHeaderUI::RemoveAll()
 {
 	__super::RemoveAll();
 	NeedParentUpdate();
 }
-///> #liulei ĞŞ¸´±íÍ·É¾³ıËùÓĞµÄÊ±ºò£¬ListBodyÎ»ÖÃÃ»ÓĞÖØ¼ÆËãµÄÎÊÌâ
+///> #liulei ä¿®å¤è¡¨å¤´åˆ é™¤æ‰€æœ‰çš„æ—¶å€™ï¼ŒListBodyä½ç½®æ²¡æœ‰é‡è®¡ç®—çš„é—®é¢˜
 bool CListHeaderUI::Remove(CControlUI* pControl, bool bDoNotDestroy)
 {
 	bool bRet = __super::Remove(pControl, bDoNotDestroy);
@@ -2359,7 +2359,7 @@ bool CListHeaderUI::Remove(CControlUI* pControl, bool bDoNotDestroy)
 		NeedParentUpdate();
 	return bRet;
 }
-///> #liulei ĞŞ¸´±íÍ·É¾³ıËùÓĞµÄÊ±ºò£¬ListBodyÎ»ÖÃÃ»ÓĞÖØ¼ÆËãµÄÎÊÌâ
+///> #liulei ä¿®å¤è¡¨å¤´åˆ é™¤æ‰€æœ‰çš„æ—¶å€™ï¼ŒListBodyä½ç½®æ²¡æœ‰é‡è®¡ç®—çš„é—®é¢˜
 bool CListHeaderUI::RemoveAt(int iIndex, bool bDoNotDestroy)
 {
 	bool bRet = __super::RemoveAt(iIndex, bDoNotDestroy);
@@ -2367,7 +2367,7 @@ bool CListHeaderUI::RemoveAt(int iIndex, bool bDoNotDestroy)
 		NeedParentUpdate();
 	return bRet;
 }
-///> #liulei ĞŞ¸´±íÍ·¶¯Ì¬ÏÔÊ¾£¬ListBodyÎ»ÖÃÃ»ÓĞÖØ¼ÆËãµÄÎÊÌâ
+///> #liulei ä¿®å¤è¡¨å¤´åŠ¨æ€æ˜¾ç¤ºï¼ŒListBodyä½ç½®æ²¡æœ‰é‡è®¡ç®—çš„é—®é¢˜
 void CListHeaderUI::SetVisible(bool bVisible)
 {
 	__super::SetVisible(bVisible);
@@ -2413,7 +2413,7 @@ m_iFont(-1), m_bShowHtml(false)
 	m_bEnablebSort = false;
 	m_nSortHeight = 16;
 	m_nSortWidth = 16;
-	m_esrot = E_SORTNO;//Ä¬ÈÏ²»ÅÅĞò
+	m_esrot = E_SORTNO;//é»˜è®¤ä¸æ’åº
 	SetTextPadding(CDuiRect(2, 0, 2, 0));
     ptLastMouse.x = ptLastMouse.y = 0;
     SetMinWidth(16);
@@ -2444,7 +2444,7 @@ void CListHeaderItemUI::SetEnabled(bool bEnable)
     }
 }
 
-///> #liulei ĞŞ¸´±íÍ·¶¯Ì¬ÏÔÊ¾£¬½çÃæË¢ĞÂÎÊÌâ
+///> #liulei ä¿®å¤è¡¨å¤´åŠ¨æ€æ˜¾ç¤ºï¼Œç•Œé¢åˆ·æ–°é—®é¢˜
 void CListHeaderItemUI::SetVisible(bool bVisible)
 {
 	if (m_bVisible == bVisible) return;
@@ -2611,7 +2611,7 @@ void CListHeaderItemUI::SetEnabledSort(bool bEnableSort)
 
 void CListHeaderItemUI::SetSort(ESORT esort, bool bTriggerEvent)
 {
-	//> ²éÕÒ¸¸¼¶Item£¬ÖØÖÃÆäËûItemµÄ×´Ì¬
+	//> æŸ¥æ‰¾çˆ¶çº§Itemï¼Œé‡ç½®å…¶ä»–Itemçš„çŠ¶æ€
 	CControlUI *pParent = GetParent();
 	while (pParent && (pParent->GetInterface(DUI_CTR_LISTHEADER) == NULL))
 	{
@@ -2789,7 +2789,7 @@ void CListHeaderItemUI::SetPos(RECT rc, bool bNeedInvalidate)
 			//#liulei 20161127 calc the min item need width
 			CDuiPtrArray prtAry;
 			GetInsideControl(prtAry, GetParent(), DUI_CTR_LISTHEADERITEM);
-			//> ¼ÆËãÊ£Ê£ÓàÏîµÄ×îĞ¡¿í¶È
+			//> è®¡ç®—å‰©å‰©ä½™é¡¹çš„æœ€å°å®½åº¦
 			int nMinWidth = 0;
 			bool bAfterSelf = false;
 			for (int i = 0; i < prtAry.GetSize();++i)
@@ -2883,13 +2883,13 @@ void CListHeaderItemUI::DoEvent(TEventUI& event)
             if( rc.right - rc.left > GetMinWidth() ) {
                 m_cxyFixed.cx = rc.right - rc.left;
                 ptLastMouse = event.ptMouse;
-				///> #liulei ÎªÁËÊµÏÖ¶à±íÍ·ÓÅ»¯Ò»ÏÂ 20161117
+				///> #liulei ä¸ºäº†å®ç°å¤šè¡¨å¤´ä¼˜åŒ–ä¸€ä¸‹ 20161117
 				CControlUI *pParent = GetParent();
-				///> Ë¢ĞÂlistHeaderµÄ¸¸ÈİÆ÷
+				///> åˆ·æ–°listHeaderçš„çˆ¶å®¹å™¨
 				if (pParent)
 					pParent->NeedParentUpdate();
 
-				///> ¼ì²âPanretÊÇ·ñÎªListHeaderUI£¬Èç¹ûÊÇÔòË¢ĞÂHeader
+				///> æ£€æµ‹Panretæ˜¯å¦ä¸ºListHeaderUIï¼Œå¦‚æœæ˜¯åˆ™åˆ·æ–°Header
 				while (pParent && (pParent->GetInterface(DUI_CTR_LISTHEADER) == NULL))
 				{
 					pParent = pParent->GetParent();
@@ -2940,7 +2940,7 @@ void CListHeaderItemUI::DoEvent(TEventUI& event)
 
 SIZE CListHeaderItemUI::EstimateSize(SIZE szAvailable)
 {
-	///#liulei 20160613 ĞŞ¸´±íÍ·²»¿É¼ûµÄÊ±ºò Î»ÖÃ¼ÆËã,ĞŞ¸´Ë®Æ½¹ö¶¯ÌõÎ»ÖÃ¼ÆËã´íÎó
+	///#liulei 20160613 ä¿®å¤è¡¨å¤´ä¸å¯è§çš„æ—¶å€™ ä½ç½®è®¡ç®—,ä¿®å¤æ°´å¹³æ»šåŠ¨æ¡ä½ç½®è®¡ç®—é”™è¯¯
     if( m_cxyFixed.cy == 0 ) return CDuiSize(IsVisible() ? m_cxyFixed.cx:0, m_pManager->GetDefaultFontInfo()->tm.tmHeight + 8);
 	return __super::EstimateSize(szAvailable);
 }
@@ -3209,7 +3209,7 @@ void CListElementUI::DoEvent(TEventUI& event)
 		{
             Activate();
             Invalidate();
-			//#liulei Ôö¼ÓË«»÷ÊÂ¼ş 20160531
+			//#liulei å¢åŠ åŒå‡»äº‹ä»¶ 20160531
 			m_pManager->SendNotify(this, DUI_MSGTYPE_ITEMDBCLICK,0,0,true);
         }
         return;
@@ -3737,7 +3737,7 @@ void CListTextElementUI::DrawItemText(HDC hDC, const RECT& rcItem)
         for( int i = 0; i < pInfo->nColumns; i++ )
         {
             RECT rcItem = { pInfo->rcColumn[i].left, m_rcItem.top, pInfo->rcColumn[i].right, m_rcItem.bottom };
-			//#liulei Èç¹û±íÍ·Ïî²»¿É¼ûÔòitem ¿í¶ÈÖÃÎª0,µ±Ç°ÁĞÄÚÈİ²»»æ»­
+			//#liulei å¦‚æœè¡¨å¤´é¡¹ä¸å¯è§åˆ™item å®½åº¦ç½®ä¸º0,å½“å‰åˆ—å†…å®¹ä¸ç»˜ç”»
 			if (pHeader&&!pHeader->GetItemAt(i)->IsVisible())
 			{
 				rcItem.right = rcItem.left;
@@ -3755,7 +3755,7 @@ void CListTextElementUI::DrawItemText(HDC hDC, const RECT& rcItem)
             rcItem.top += pInfo->rcTextPadding.top;
             rcItem.bottom -= pInfo->rcTextPadding.bottom;
 
-            CDuiString strText;//²»Ê¹ÓÃLPCTSTR£¬·ñÔòÏŞÖÆÌ«¶à by cddjr 2011/10/20
+            CDuiString strText;//ä¸ä½¿ç”¨LPCTSTRï¼Œå¦åˆ™é™åˆ¶å¤ªå¤š by cddjr 2011/10/20
             if( pCallback ) strText = pCallback->GetItemText(this, m_iIndex, i);
             else strText.Assign(GetText(i));
             if( pInfo->bShowHtml )
@@ -3994,7 +3994,7 @@ void CListContainerElementUI::DoEvent(TEventUI& event)
 		{
             Activate();
             Invalidate();
-			//#liulei Ôö¼ÓË«»÷ÊÂ¼ş 20160531
+			//#liulei å¢åŠ åŒå‡»äº‹ä»¶ 20160531
 			m_pManager->SendNotify(this, DUI_MSGTYPE_ITEMDBCLICK,0,0,true);
         }
         return;
@@ -4170,7 +4170,7 @@ void CListHBoxElementUI::SetPos(RECT rc, bool bNeedInvalidate)
                 continue;
             }
 
-			//>#µ÷Õû¸´ºÏ±íÍ·¶ÔÓ¦µÄlistbodyµÄÇøÓò
+			//>#è°ƒæ•´å¤åˆè¡¨å¤´å¯¹åº”çš„listbodyçš„åŒºåŸŸ
 			while (iColumnIndex < pInfo->nColumns && pInfo->bUsedHeaderContain[iColumnIndex])
 				++iColumnIndex;
 

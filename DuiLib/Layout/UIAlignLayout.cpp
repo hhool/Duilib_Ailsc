@@ -110,9 +110,9 @@ namespace DuiLib
 			if( sz.cy < pControl->GetMinHeight() ) sz.cy = pControl->GetMinHeight();
 			if( sz.cy > pControl->GetMaxHeight() ) sz.cy = pControl->GetMaxHeight();
 
-			//´ËÊ±Ä£Ê½ÎªLEFT|TOP
+			//æ­¤æ—¶æ¨¡å¼ä¸ºLEFT|TOP
 			RECT rcCtrl = { rc.left, rc.top, rc.left + sz.cx, rc.top + sz.cy};
-			//Èç¹ûÓÒ¶ÔÆë
+			//å¦‚æœå³å¯¹é½
 			if (m_align & DT_RIGHT && sz.cx < szAvailable.cx)
 			{
 				rcCtrl.right = rc.right;
@@ -124,7 +124,7 @@ namespace DuiLib
 				rcCtrl.right = rcCtrl.left + sz.cx;
 			}
 
-			//µ×²¿¶ÔÆë
+			//åº•éƒ¨å¯¹é½
 			if (m_align & DT_BOTTOM && sz.cy < szAvailable.cy)
 			{
 				rcCtrl.bottom = rc.bottom;

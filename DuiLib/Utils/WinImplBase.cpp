@@ -117,7 +117,7 @@ LRESULT WindowImplBase::OnUrlImageUpdate(UINT uMsg, WPARAM wParam, LPARAM lParam
 	return 0;
 }
 
-//20180608LP: zip×ÊÔ´Ö»¼ÓÔØÒ»´ÎÖ»ÊÍ·ÅÒ»´Î
+//20180608LP: zipèµ„æºåªåŠ è½½ä¸€æ¬¡åªé‡Šæ”¾ä¸€æ¬¡
 void WindowImplBase::Cleanup()
 {
 	if (m_lpResourceZIPBuffer)
@@ -149,7 +149,7 @@ LRESULT WindowImplBase::OnNcCalcSize(UINT uMsg, WPARAM wParam, LPARAM lParam, BO
 	}
 
 	if ( ::IsZoomed(m_hWnd))
-	{	// ×î´ó»¯Ê±£¬¼ÆËãµ±Ç°ÏÔÊ¾Æ÷×îÊÊºÏ¿í¸ß¶È
+	{	// æœ€å¤§åŒ–æ—¶ï¼Œè®¡ç®—å½“å‰æ˜¾ç¤ºå™¨æœ€é€‚åˆå®½é«˜åº¦
 		MONITORINFO oMonitor = {};
 		oMonitor.cbSize = sizeof(oMonitor);
 		::GetMonitorInfo(::MonitorFromWindow(*this, MONITOR_DEFAULTTONEAREST), &oMonitor);
@@ -243,7 +243,7 @@ LRESULT WindowImplBase::OnGetMinMaxInfo(UINT uMsg, WPARAM wParam, LPARAM lParam,
 	CDuiRect rcMonitor = oMonitor.rcMonitor;
 	rcWork.Offset(-oMonitor.rcMonitor.left, -oMonitor.rcMonitor.top);
 
-	// ¼ÆËã×î´ó»¯Ê±£¬ÕıÈ·µÄÔ­µã×ø±ê
+	// è®¡ç®—æœ€å¤§åŒ–æ—¶ï¼Œæ­£ç¡®çš„åŸç‚¹åæ ‡
 	lpMMI->ptMaxPosition.x	= rcWork.left;
 	lpMMI->ptMaxPosition.y	= rcWork.top;
 
@@ -353,7 +353,7 @@ LRESULT WindowImplBase::OnCreate(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& 
 
 	CDialogBuilder builder;
 	if (m_PaintManager.GetResourcePath().IsEmpty())
-	{	// ÔÊĞí¸üÁé»îµÄ×ÊÔ´Â·¾¶¶¨Òå
+	{	// å…è®¸æ›´çµæ´»çš„èµ„æºè·¯å¾„å®šä¹‰
 		CDuiString strResourcePath=m_PaintManager.GetInstancePath();
 		strResourcePath+=GetSkinFolder().GetData();
 		m_PaintManager.SetResourcePath(strResourcePath.GetData());
@@ -381,7 +381,7 @@ LRESULT WindowImplBase::OnCreate(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& 
 			dwSize = ::SizeofResource(m_PaintManager.GetResourceDll(), hResource);
 			if (dwSize == 0)
 				return 0L;
-			//20180608LP£ºReleaseÏÂÖ»·ÖÅäÒ»´ÎÄÚ´æ·ñÔò»áÄÚ´æĞ¹Â©
+			//20180608LPï¼šReleaseä¸‹åªåˆ†é…ä¸€æ¬¡å†…å­˜å¦åˆ™ä¼šå†…å­˜æ³„æ¼
 			if (NULL == m_lpResourceZIPBuffer)
 			{
 				m_lpResourceZIPBuffer = new BYTE[dwSize];
@@ -409,7 +409,7 @@ LRESULT WindowImplBase::OnCreate(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& 
 	ASSERT(pRoot);
 	if (pRoot==NULL)
 	{
-		MessageBox(NULL,_T("¼ÓÔØ×ÊÔ´ÎÄ¼şÊ§°Ü"),_T("Duilib"),MB_OK|MB_ICONERROR);
+		MessageBox(NULL,_T("åŠ è½½èµ„æºæ–‡ä»¶å¤±è´¥"),_T("Duilib"),MB_OK|MB_ICONERROR);
 		ExitProcess(1);
 		return 0;
 	}

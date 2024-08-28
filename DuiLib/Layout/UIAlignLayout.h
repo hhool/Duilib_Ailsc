@@ -3,7 +3,7 @@
 
 #pragma once
 /*
-ÅÅÁĞ²¼¾Ö£¬½öÏŞÒ»¸ö×Ó¿Ø¼ş£¬
+æ’åˆ—å¸ƒå±€ï¼Œä»…é™ä¸€ä¸ªå­æ§ä»¶ï¼Œ
 align="left" "right" "center"
 valign="top" "bottom" "center"
 */
@@ -23,7 +23,7 @@ namespace DuiLib
 
 		void SetAlign(int align = DT_CENTER);
 	private:
-		int m_align;//Ä¬ÈÏ¾ÓÖĞ
+		int m_align;//é»˜è®¤å±…ä¸­
 
 	};
 }

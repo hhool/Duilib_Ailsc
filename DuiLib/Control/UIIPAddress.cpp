@@ -169,8 +169,8 @@ LRESULT CIPAddressWnd::OnKillFocus(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL
 	CDuiString strIPAddress;
 	strIPAddress.Format(_T("%u.%u.%u.%u"), m_pOwner->m_nField0, m_pOwner->m_nField1, m_pOwner->m_nField2, m_pOwner->m_nField3);
 	m_pOwner->SetText(strIPAddress);
-	///>#liulei 20161108 °Ñ½¹µã»¹¸ø¸¸´°¿Ú·ñÔò¿ÉÄÜHeap±ÀÀ£
-	///> ´¥·¢Çé¿ö£ºµã»÷IpCtrl Á½¸öipÖ®¼äµÄÄÇ¸öµã¾Í¿ÉÒÔÖØÏÖ
+	///>#liulei 20161108 æŠŠç„¦ç‚¹è¿˜ç»™çˆ¶çª—å£å¦åˆ™å¯èƒ½Heapå´©æºƒ
+	///> è§¦å‘æƒ…å†µï¼šç‚¹å‡»IpCtrl ä¸¤ä¸ªipä¹‹é—´çš„é‚£ä¸ªç‚¹å°±å¯ä»¥é‡çŽ°
 	SetFocus(m_pOwner->GetManager()->GetPaintWindow());
 	PostMessage(WM_CLOSE);
 	return lRes;

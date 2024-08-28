@@ -19,7 +19,7 @@ namespace DuiLib
 		void SetAttribute(LPCTSTR pstrName, LPCTSTR pstrValue);
 		void SetIconPaddding(RECT rtPaddding);
 		RECT GetIconPaddding();
-		//是否使用圆角模式
+		//鏄惁浣跨敤鍦嗚妯″紡
 		void SetCircleMode(bool bCircleMode);
 		bool isCircleMode();
 		void DoEvent(TEventUI& event);
@@ -31,7 +31,7 @@ namespace DuiLib
 		Gdiplus::Image *m_pImage;
 		CDuiString m_strBkImage;
 		bool m_bSetCursor;
-		bool m_bCircleMode;//圆角模式
+		bool m_bCircleMode;//鍦嗚妯″紡
 	};
 };
 

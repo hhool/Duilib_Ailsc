@@ -6,7 +6,7 @@ namespace DuiLib
 {
 	class CDateTimeWnd;
 
-	/// Ê±¼äÑ¡Ôñ¿Ø¼ş
+	/// æ—¶é—´é€‰æ‹©æ§ä»¶
 	class DUILIB_API CDateTimeUI : public CLabelUI
 	{
 		friend class CDateTimeWnd;
@@ -23,14 +23,14 @@ namespace DuiLib
 		void SetReadOnly(bool bReadOnly);
 		bool IsReadOnly() const;
 		/*
-		#liulei 20160714 Ôö¼ÓÉèÖÃÊ±¼ä·¶Î§
-		ÉèÖÃ×îĞ¡ÆğÊ¼Ê±¼ä
-		@bSet ÊÇ·ñÉèÖÃ£¬Èç¹ûbSet = false  ÔòÈ¡ÏûÊ±¼äÏŞÖÆ
+		#liulei 20160714 å¢åŠ è®¾ç½®æ—¶é—´èŒƒå›´
+		è®¾ç½®æœ€å°èµ·å§‹æ—¶é—´
+		@bSet æ˜¯å¦è®¾ç½®ï¼Œå¦‚æœbSet = false  åˆ™å–æ¶ˆæ—¶é—´é™åˆ¶
 		*/
 		void SetMinDateTime(const SYSTEMTIME &minsystem,bool bSet = true);
 		void SetMaxDateTime(const SYSTEMTIME &maxsystem, bool bSet = true);
 		/*
-		·µ»ØÊ±¼ä¶şÎ¬Êı×é£¬0 - min 1 - max
+		è¿”å›æ—¶é—´äºŒç»´æ•°ç»„ï¼Œ0 - min 1 - max
 		*/
 		SYSTEMTIME* GetRange(bool &bSetMin,bool &bSetMax);
 

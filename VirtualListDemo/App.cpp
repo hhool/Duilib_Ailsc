@@ -3,34 +3,34 @@
 
 #include "stdafx.h"
 
-/***ĞéÄâÁĞ±íÊ¹ÓÃËµÃ÷**
-1.ÔÚÊôĞÔÀïÃæÉèÖÃvirtualÊôĞÔÎªtrue£¬»òÕßÔÚ´úÂëÀïÃæSetVirtual
-2.ÉèÖÃĞéÄâÁĞ±íµÄÊı¾İ¸ñÊ½SetVirtualItemFormat£¬ÉèÖÃ¸ñÊ½µÄÊ±ºòÇëÉèÖÃĞĞ¸ß
-3.ÉèÖÃĞé±íÊı¾İ¸öÊıSetVirtualItemCount
-4.ÏìÓ¦DUI_MSGTYPE_DRAWITEM»æ»­Ğé±íÄÚÈİ
-5.ÏìÓ¦DUI_MSGTYPE_SORT ÉèÖÃÊı¾İÅÅĞò£¬ÅÅĞòºóÄÚÈİ·¢Éú¸Ä±äÔÙ´ÎÉèÖÃ¸Ä±äºóµÄÊı¾İ¸öÊı
+/***è™šæ‹Ÿåˆ—è¡¨ä½¿ç”¨è¯´æ˜**
+1.åœ¨å±æ€§é‡Œé¢è®¾ç½®virtualå±æ€§ä¸ºtrueï¼Œæˆ–è€…åœ¨ä»£ç é‡Œé¢SetVirtual
+2.è®¾ç½®è™šæ‹Ÿåˆ—è¡¨çš„æ•°æ®æ ¼å¼SetVirtualItemFormatï¼Œè®¾ç½®æ ¼å¼çš„æ—¶å€™è¯·è®¾ç½®è¡Œé«˜
+3.è®¾ç½®è™šè¡¨æ•°æ®ä¸ªæ•°SetVirtualItemCount
+4.å“åº”DUI_MSGTYPE_DRAWITEMç»˜ç”»è™šè¡¨å†…å®¹
+5.å“åº”DUI_MSGTYPE_SORT è®¾ç½®æ•°æ®æ’åºï¼Œæ’åºåå†…å®¹å‘ç”Ÿæ”¹å˜å†æ¬¡è®¾ç½®æ”¹å˜åçš„æ•°æ®ä¸ªæ•°
 */
 CControlUI* CreateVirtualItem()
 {
 	CListHBoxElementUI *pHBox = new CListHBoxElementUI;
-	//> ÉèÖÃĞĞ¸ß
+	//> è®¾ç½®è¡Œé«˜
 	pHBox->SetFixedHeight(28);
-	///> Î»ÖÃ
+	///> ä½ç½®
 	CCheckBoxUI *pCheckBox = new CCheckBoxUI;
 	pCheckBox->SetAttributeList(_T("selectedimage=\"file='skin\\res\\checked.png' dest='0,2,16,18'\" normalimage=\"file='skin\\res\\unchecked.png' dest='0,2,16,18'\""));
 	pCheckBox->SetFixedHeight(16);
 	pCheckBox->SetFixedWidth(30);
 
-	//> Ãû³Æ
+	//> åç§°
 	CLabelUI *pLabel = new CLabelUI;
 
-	///> ²Ù×÷ÇøÓò
+	///> æ“ä½œåŒºåŸŸ
 	CHorizontalLayoutUI *pHorizon = new CHorizontalLayoutUI;
 	CButtonUI *pButton = new CButtonUI;
 	pButton->SetAttributeList(_T("normalimage=\"file='skin\\res\\btn_normal.png'\" hotimage=\"file='skin\\res\\btn_hot.png'\" pushedimage=\"file='skin\\res\\btn_pushed.png'\""));
 	pButton->SetFixedHeight(16);
 	pButton->SetFixedWidth(30);
-	pButton->SetText(_T("±à¼­"));
+	pButton->SetText(_T("ç¼–è¾‘"));
 	CHorizontalLayoutUI *pAxis = new CHorizontalLayoutUI;
 	pAxis->SetFixedWidth(20);
 
@@ -38,7 +38,7 @@ CControlUI* CreateVirtualItem()
 	pButton2->SetAttributeList(_T("normalimage=\"file='skin\\res\\btn_normal.png'\" hotimage=\"file='skin\\res\\btn_hot.png'\" pushedimage=\"file='skin\\res\\btn_pushed.png'\""));
 	pButton2->SetFixedHeight(16);
 	pButton2->SetFixedWidth(30);
-	pButton2->SetText(_T("É¾³ı"));
+	pButton2->SetText(_T("åˆ é™¤"));
 
 	pHorizon->Add(pButton);
 	pHorizon->Add(pAxis);
@@ -64,7 +64,7 @@ public:
 		__super::InitWindow();
 		m_plist = static_cast<CListUI*>(m_PaintManager.FindControl(_T("list")));
 		m_plist1 = static_cast<CListUI*>(m_PaintManager.FindControl(_T("list1")));
-		///> ÉèÖÃÊı¾İĞĞÎª¸ñÊ½,ÕâÀïÊ¹ÓÃÄ£°åÊı¾İ£¬ËùÒÔ²»ĞèÒªÉèÖÃCreateVirtualItem
+		///> è®¾ç½®æ•°æ®è¡Œä¸ºæ ¼å¼,è¿™é‡Œä½¿ç”¨æ¨¡æ¿æ•°æ®ï¼Œæ‰€ä»¥ä¸éœ€è¦è®¾ç½®CreateVirtualItem
 		//m_plist->SetVirtualItemFormat(CreateVirtualItem);
 		TCHAR szBuf[10] = _T("");
 		for (int i = 1;i <= ITEMCOUNT;++i)
@@ -74,7 +74,7 @@ public:
 		}
 		m_plist->SetVirtualItemCount(ITEMCOUNT);
 
-		//·ÇĞé±íÉèÖÃÊı¾İ
+		//éè™šè¡¨è®¾ç½®æ•°æ®
 		CDuiString strFormat;
 		for (int i = 0; i < 50;++i)
 		{
@@ -88,10 +88,10 @@ public:
 
 	virtual void Notify(TNotifyUI& msg)
 	{
-		///> Èç¹ûÊÇÅÅĞò
+		///> å¦‚æœæ˜¯æ’åº
 		if(msg.sType == DUI_MSGTYPE_SORT)
 		{
-			///> ÉıĞòÅÅĞò
+			///> å‡åºæ’åº
 			if(msg.wParam == ESORT::E_SORT_ASC)
 			{
 				std::sort(m_vdata.begin(),m_vdata.end(),[](CDuiString &item1,CDuiString &item2)
@@ -144,7 +144,7 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE /*hPrevInstance*/, LPSTR /*l
 
     CFrameWindowWnd* pFrame = new CFrameWindowWnd();
     if( pFrame == NULL ) return 0;
-    pFrame->Create(NULL, _T("ÕâÊÇÒ»¸ö×î¼òµ¥µÄ²âÊÔÓÃexe£¬ĞŞ¸Ätest1.xml¾Í¿ÉÒÔ¿´µ½Ğ§¹û"), UI_WNDSTYLE_FRAME|WS_CLIPCHILDREN, WS_EX_WINDOWEDGE);
+    pFrame->Create(NULL, _T("è¿™æ˜¯ä¸€ä¸ªæœ€ç®€å•çš„æµ‹è¯•ç”¨exeï¼Œä¿®æ”¹test1.xmlå°±å¯ä»¥çœ‹åˆ°æ•ˆæœ"), UI_WNDSTYLE_FRAME|WS_CLIPCHILDREN, WS_EX_WINDOWEDGE);
     pFrame->CenterWindow();
     pFrame->ShowModal();
     ::CoUninitialize();

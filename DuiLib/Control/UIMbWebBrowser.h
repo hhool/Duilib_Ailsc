@@ -1,8 +1,8 @@
 #pragma once
 /*
-miniblink ¿Ø¼ş
-Èç¹ûÍâ²¿ĞèÒªÊ¹ÓÃwkeÏà¹Øº¯ÊıĞèÒª³õÊ¼»¯mb INIT_MB
-jsÄ¬ÈÏÖ§³Öwindow.CallDuiMsg ·½·¨£¬
+miniblink æ§ä»¶
+å¦‚æœå¤–éƒ¨éœ€è¦ä½¿ç”¨wkeç›¸å…³å‡½æ•°éœ€è¦åˆå§‹åŒ–mb INIT_MB
+jsé»˜è®¤æ”¯æŒwindow.CallDuiMsg æ–¹æ³•ï¼Œ
 */
 namespace DuiLib
 {
@@ -32,7 +32,7 @@ namespace DuiLib
 	{
 	public:
 		CMbWebBrowserUI();
-		//ÓÃÓÚ¶ÀÁ¢´°¿Ú
+		//ç”¨äºç‹¬ç«‹çª—å£
 		CMbWebBrowserUI(wkeWebView m_webView);
 		~CMbWebBrowserUI();
 		static bool InitMb();
@@ -48,8 +48,8 @@ namespace DuiLib
 		virtual void SetAttribute(LPCTSTR pstrName, LPCTSTR pstrValue);
 		virtual void Delete();
 
-		//web ³£ÓÃÊÂ¼ş,ÕâÀï½ö½ö·â×°³£ÓÃµÄwebÊÂ¼ş£¬¸ü¶à¿É²Î¿¼wek.h 
-		//Èç¹ûÔÚÆäËûÄ£¿é(exe)µ÷ÓÃwkeº¯ÊıĞèÒª³õÊ¼»¯wke INIT_MB
+		//web å¸¸ç”¨äº‹ä»¶,è¿™é‡Œä»…ä»…å°è£…å¸¸ç”¨çš„webäº‹ä»¶ï¼Œæ›´å¤šå¯å‚è€ƒwek.h 
+		//å¦‚æœåœ¨å…¶ä»–æ¨¡å—(exe)è°ƒç”¨wkeå‡½æ•°éœ€è¦åˆå§‹åŒ–wke INIT_MB
 		wkeWebView GetWebView();
 		HWND GetwkeWindowHandle();
 		void SetHomePage(LPCWSTR lpszUrl);
@@ -62,11 +62,11 @@ namespace DuiLib
 		bool GoBack();
 		bool CanGoForward() const;
 		bool GoForward();
-		//cookieÉèÖÃ
+		//cookieè®¾ç½®
 		void SetCookieEnabled(bool enable);
 		bool IsCookieEnabled() const;
 		const wchar_t* GetCookie();
-		//cookie¸ñÊ½±ØĞëÊÇÀàËÆ:cna=4UvTFE12fEECAXFKf4SFW5eo; expires=Tue, 23-Jan-2029 13:17:21 GMT; path=/; domain=.youku.com
+		//cookieæ ¼å¼å¿…é¡»æ˜¯ç±»ä¼¼:cna=4UvTFE12fEECAXFKf4SFW5eo; expires=Tue, 23-Jan-2029 13:17:21 GMT; path=/; domain=.youku.com
 		void SetCookie(const char* utf8_url, const char* utf_8_cookie);
 		void SetCookieJarPath(const WCHAR* path);
 		void SetCookieJarFullPath(const WCHAR* path);
@@ -75,17 +75,17 @@ namespace DuiLib
 		//
 		void SetLocalStorageFullPath(const WCHAR* path);
 		void AddPluginDirectory(const WCHAR* path);
-		//c++ js ½»»¥
-		//µ÷ÓÃjs
+		//c++ js äº¤äº’
+		//è°ƒç”¨js
 		jsValue CallJs(const char* funcname, jsValue* params, int params_count);
 		static jsValue CallJs(jsExecState es, const char* funcname, jsValue* params, int params_count);
-		//×¢²áÄ¬ÈÏ¿É¹©jsµ÷ÓÃµÄº¯Êı,js¿ÉÖ±½Óµ÷ÓÃDuiCallMsg´«µİ²ÎÊı
+		//æ³¨å†Œé»˜è®¤å¯ä¾›jsè°ƒç”¨çš„å‡½æ•°,jså¯ç›´æ¥è°ƒç”¨DuiCallMsgä¼ é€’å‚æ•°
 		static friend jsValue WKE_CALL_TYPE CallDuiMsg(jsExecState es, void* param);
-		//²ÎÊı»ñÈ¡
+		//å‚æ•°è·å–
 		static int JsArgCount(jsExecState es);
 		static jsType JsArgType(jsExecState es, int argIdx);
 		static jsValue JsArg(jsExecState es, int argIdx);
-		//js ºÍ C++ ÀàĞÍ×ª»»
+		//js å’Œ C++ ç±»å‹è½¬æ¢
 		jsValue JsString(const wchar_t* val);
 		static jsValue JsString(jsExecState es, const wchar_t* val);
 		static jsValue JsNull();
@@ -117,7 +117,7 @@ namespace DuiLib
 
 	protected:
 		void InitWebEventHandle();
-		//web³£ÓÃ¼àÌıÊÂ¼ş
+		//webå¸¸ç”¨ç›‘å¬äº‹ä»¶
 		static friend void WKE_CALL_TYPE onDidCreateScriptContextCallback(wkeWebView webView, void* param, wkeWebFrameHandle frameId, void* context, int extensionGroup, int worldId);
 		static friend void WKE_CALL_TYPE handleTitleChanged(wkeWebView webWindow, void* param, const wkeString title);
 		static friend void WKE_CALL_TYPE handleDocumentReady(wkeWebView webWindow, void* param);
@@ -133,7 +133,7 @@ namespace DuiLib
 	private:
 		wkeWebView m_webView;
 		IMBWenviewEvent *m_pIWebEvent;
-		std::wstring m_sHomePage;	// Ä¬ÈÏÒ³Ãæ
+		std::wstring m_sHomePage;	// é»˜è®¤é¡µé¢
 		static bool m_bInit;
 	};
 }

@@ -3,7 +3,7 @@
 
 #pragma once
 /*
-TabLayout仅仅包括展示区，不包括标签区域，标签区域自己定制
+TabLayout浠呬粎鍖呮嫭灞曠ず鍖猴紝涓嶅寘鎷爣绛惧尯鍩燂紝鏍囩鍖哄煙鑷繁瀹氬埗
 */
 namespace DuiLib
 {
