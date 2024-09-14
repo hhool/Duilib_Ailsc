@@ -794,12 +794,12 @@ int CListUI::GetCurSel() const
     return m_iCurSel;
 }
 
-void CListUI::SetVirtualItemFormat(PULVirtualItemFormat vrtualitemfroamt)
+void CListUI::SetVirtualItemFormat(IListVirtalCallbackUI* vrtualitemfroamt)
 {
 	if (!m_pList) return;
 	m_pVirutalItemFormat = vrtualitemfroamt;
 	///> 检测是否该关闭虚表优化（是否含有combo）
-	CControlUI *pcontrol = m_pVirutalItemFormat ? m_pVirutalItemFormat():CreateTemplateControl();
+	CControlUI *pcontrol = m_pVirutalItemFormat ? vrtualitemfroamt->CreateVirtualItem():CreateTemplateControl();
 	if (pcontrol && pcontrol->GetInterface(DUI_CTR_CONTAINER))
 	{
 		CContainerUI *pContain = static_cast<CContainerUI *>(pcontrol->GetInterface(DUI_CTR_CONTAINER));
@@ -807,8 +807,10 @@ void CListUI::SetVirtualItemFormat(PULVirtualItemFormat vrtualitemfroamt)
 			EnableVirtualOptimize(false);
 	}
 	///> 释放资源
-	pcontrol->Delete();
-
+	if (pcontrol) 
+	{
+		pcontrol->Delete();
+	}
 	ResizeVirtualItemBuffer();//调整缓冲区大小
 }
 
@@ -887,14 +889,14 @@ void CListUI::ResizeVirtualItemBuffer()
 		if (GetItemCount() == 0)
 		{
 			///> 准备资源
-			CControlUI *pControl = m_pVirutalItemFormat ? m_pVirutalItemFormat() : CreateTemplateControl();
+			CControlUI *pControl = m_pVirutalItemFormat ? m_pVirutalItemFormat->CreateVirtualItem() : CreateTemplateControl();
 			if (pControl)
 			{
 				m_nVirtualItemHeight = max(pControl->GetFixedHeight(), pControl->GetHeight());
 				m_nVirtualItemHeight <= 0 ? m_nVirtualItemHeight = VIR_ITEM_HEIGHT : 0;
+				///> 释放资源
+				pControl->Delete();
 			}
-			///> 释放资源
-			pControl->Delete();
 		}
 
 		int nItemCount = m_pList->GetCount();
@@ -908,7 +910,7 @@ void CListUI::ResizeVirtualItemBuffer()
 
 		for (int i = nItemCount; i < nItemSize; ++i)
 		{
-			CControlUI *pControl = m_pVirutalItemFormat ? m_pVirutalItemFormat() : CreateTemplateControl();
+			CControlUI *pControl = m_pVirutalItemFormat ? m_pVirutalItemFormat->CreateVirtualItem() : CreateTemplateControl();
 			if (pControl)
 			{
 				AddVirtualItem(pControl);
@@ -1635,7 +1637,7 @@ BOOL CListUI::Copy(int nMaxRowItemData, bool bUserDefine)
 	if (IsUseVirtualList())
 	{
 		///> 准备数据格式内存，需要释放数据delete
-		pItem = m_pVirutalItemFormat ? m_pVirutalItemFormat() : CreateTemplateControl();
+		pItem = m_pVirutalItemFormat ? m_pVirutalItemFormat->CreateVirtualItem() : CreateTemplateControl();
 		assert(pItem);
 	}
 

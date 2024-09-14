@@ -329,7 +329,7 @@ namespace DuiLib
 	}
 	bool CEditUI::Activate()
 	{
-		::OutputDebugString(_T("Activate()\r\n"));
+		//::OutputDebugString(_T("Activate()\r\n"));
 		if (m_pWindow)
 		{
 			return __super::Activate();

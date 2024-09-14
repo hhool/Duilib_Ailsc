@@ -70,6 +70,11 @@ public:
     virtual LPCTSTR GetItemText(CControlUI* pList, int iItem, int iSubItem) = 0;
 };
 
+class IListVirtalCallbackUI {
+public:
+	virtual CControlUI* CreateVirtualItem() = 0;
+};
+
 class IListOwnerUI
 {
 public:
@@ -124,7 +129,7 @@ public:
 	///////////////////////////////虚拟列表接口 #liulei 20160627/////////////////////////////////////////
 	//如果使用了虚拟列表则外部调用Rmove,RemoveAt,Add,AddAt,RemoveAll 无效
 	//> 设置虚表行的数据格式,需要指定行高（原理类似于MFC的虚表）
-	void SetVirtualItemFormat(PULVirtualItemFormat vrtualitemfroamt);
+	void SetVirtualItemFormat(IListVirtalCallbackUI* vrtualitemfroamt);
 	//> 设置是否为虚表显示数据
 	void SetVirtual(bool bUse = false);
 	//> 设置虚表数据个数
@@ -304,7 +309,7 @@ protected:
 	int				m_nPanelHeight;//Panel高度
 	int				m_nPanelOffset;//panel的位置便宜量
     TListInfoUI m_ListInfo;
-	PULVirtualItemFormat  m_pVirutalItemFormat;//虚拟数据格式指针
+	IListVirtalCallbackUI*  m_pVirutalItemFormat;//虚拟数据格式指针
 	int m_nVirtualItemHeight;
 	int m_nVirtualItemCount;
 	int	m_nMaxShowCount;
